@@ -4,39 +4,52 @@
 # =====================================================================
 #  Jedno narzedzie w miejsce trzech makr Tcl (raport jakosci siatki,
 #  delta jakosci REF <-> INF, zrzuty ekranu / widoki) rozszerzone o:
-#   - WIELE METRYK NARAZ: Aspect Ratio, Jacobian Ratio, Jacobian Zero,
-#     Skewness czytane w jednym przebiegu po elementach,
-#   - PODZIAL WG PROGU: elementy w normie -> jedna grupa bazowa
-#     (zielona), poza norma -> pasma kolorow (np. AR 4-5 niebieski ...
-#     12-15 czerwony), wartosci poza skala -> osobna grupa,
-#   - LEGENDA reczna (liczba kolorow, granice, kolory) i automatyczna
-#     (przedzialy z wartosci skrajnych i zadanej liczby pasm),
+#   - AUTOMAT REF vs INF (jeden przycisk): dwa pliki .hm + folder ->
+#     delta WSZYSTKICH metryk, zrzuty wybranych widokow (inne metryki
+#     i komponenty spoza narzedzia wygaszone, "bez zmian" bezbarwne),
+#     raport jakosci, analiza powierzchni, prezentacja PPTX - wyniki
+#     posegregowane w podfolderach (01_delta, 02_raport_jakosci,
+#     03_powierzchnie, 04_prezentacja) + index.html,
+#   - DELTA WIELU METRYK NARAZ: Aspect Ratio, Jacobian, Skewness,
+#     przesuniecie wezlow czytane w jednym przebiegu po elementach
+#     kazdego modelu; na siatce jedna metryka (widok), przelaczana bez
+#     ponownego czytania; elementy "bez zmian" bezbarwne (biale)
+#     i przezroczyste (poziom zmieniany NA ZYWO), reszta wygaszona,
+#   - ELEMENTY KRYTYCZNE Z POWIERZCHNI: wskazane powierzchnie ->
+#     przylegajace elementy 3D -> metryki w zadanych przedzialach
+#     tolerancji -> % w normie w REF i INF + delta (TXT/CSV/XLSX/HTML),
+#   - WIELE METRYK NARAZ (jeden model): Aspect Ratio, Jacobian Ratio,
+#     Jacobian Zero, Skewness; PODZIAL WG PROGU: w normie -> zielona
+#     grupa, poza norma -> pasma kolorow, poza skala -> osobna grupa,
+#   - LEGENDA w stylu paletyzatora ANSYS (24 punkty gradientu, gladkie
+#     przejscia); komponenty dostaja DOKLADNY kolor RGB (HM 2021+:
+#     color_rgb) albo najblizszy z palety 64 kolorow,
 #   - PREZENTACJA POWERPOINT z PODGLADEM SLAJDU (jak w makrze ANSYS
-#     SHOTS): karta "Podglad slajdu" tylko do odczytu, okno "Podglad na
-#     zywo" (F6) odswiezane po kazdej zmianie opcji, INTERAKTYWNY kadr
-#     (przeciaganie obrazu na slajdzie, szybkie dopasowania, zapisane
-#     kadry), podglad WSZYSTKICH slajdow przed zapisem (Utworz / Anuluj)
-#     i galeria wyeksportowanych slajdow po zapisie; seria metryka x
-#     kamera, slajd zbiorczy, widoki, delta, raport - nowa prezentacja
-#     albo dopisanie slajdow do istniejacej (np. firmowego szablonu),
-#   - RAPORT POROWNAWCZY z ZESTAWIENIEM WEZLOW (model A vs B: wspolne
-#     ID, tylko A / tylko B, wezly przesuniete, maks. przesuniecie),
-#   - DIAGNOSTYKA: sprawdzenie API, nazw danych HM dla kazdej metryki,
-#     zgodnosci odczytu hurtowego z pojedynczym i wzorcow geometrii.
+#     SHOTS): podglad na zywo (F6), interaktywny kadr, podglad wszystkich
+#     slajdow przed zapisem, galeria po zapisie; seria metryka x kamera,
+#     delta metryki x widoki, slajdy zbiorcze, raport, powierzchnie,
+#   - RAPORT POROWNAWCZY z ZESTAWIENIEM WEZLOW (model A vs B),
+#   - DIAGNOSTYKA: API, nazwy danych HM, odczyt hurtowy, kolory RGB,
+#     przezroczystosc, wzorce geometrii.
 #
-#  NOWE W 3.0 (wzgledem 2.1):
-#   * przyciski radiowe "Metryka" i "Typ elementow" (delta) oraz
-#     "Metryka" i "tryb legendy" (edytor) sa w OSOBNYCH grupach - wybor
-#     2D/3D nie odznacza juz metryki (blad Qt: radio w jednym rodzicu),
-#   * "Sprawdz delte" (po ID elementu) dziala z danych OSTATNIEJ analizy
-#     i nie zalezy od aktualnego stanu okna ani od API atrybutow,
-#   * odczyt hurtowy PARUJE wartosci z ID (dataname=id) zamiast zakladac
-#     kolejnosc znacznika; nazwy danych HM sa dobierane z listy
-#     kandydatow (aspect / aspectratio, skew / skewness ...),
-#   * tryb delty wybierany jednym przelacznikiem (delta / jeden model /
-#     podzial wg progu) zamiast dwoch nakladajacych sie opcji,
-#   * pasek postepu, globalne "Przerwij", skroty F5 / F6 / F7, karta
-#     "Start" z przegladem stanu pracy, podpowiedzi przy kontrolkach.
+#  NOWE W 4.0 (wzgledem 3.0):
+#   * karta "Automat REF vs INF" (F8) - caly przebieg jednym przyciskiem,
+#     struktura podfolderow, podsumowanie.txt + index.html z galeria,
+#   * delta wielu metryk w jednym przebiegu (REF i INF wczytywane RAZ);
+#     "Pokaz na siatce" przelacza metryke; komponenty innych metryk
+#     i spoza narzedzia sa wygaszane (opcja), "bez zmian" bezbarwne,
+#   * PRZEZROCZYSTOSC: kilka sposobow ustawiania (setvalue / Tcl mark /
+#     API) z odczytem kontrolnym, zapamietany dzialajacy; poziom i kolor
+#     zmieniane po analizie od razu (suwak) - nie tylko przy analizie,
+#   * nowa karta "Powierzchnie": elementy krytyczne z powierzchni
+#     (ID / wskazanie w HM / zaznaczenie / komponent / zestaw / ID),
+#     osobne przedzialy tolerancji, % w normie REF / INF / delta,
+#   * legenda i pasma kolorow jak w ANSYS (gradient), dokladne RGB
+#     na komponentach (gdy HM na to pozwala), legenda = siatka,
+#   * nowy uklad okna: pasek boczny z kartami i narzedziami, karta Start
+#     jako pulpit, opcje zaawansowane zwiniete, jednolite kolory
+#     przyciskow (zielony = analiza, jasnozielony = generuj, niebieski =
+#     nawigacja), naglowki kart z jednym zdaniem "co tu robisz".
 #
 #  Srodowisko: Altair HyperMesh 2023+ (API Pythona "hm"); sprawdzone
 #  w HyperMesh 2024.0 (Python 3.8, PyQt5 / Qt 5.12, python-pptx,
@@ -47,7 +60,7 @@
 #  zostaje jako sciezka zapasowa (tryb wsadowy, brak mostu Tcl).
 # =====================================================================
 
-VERSION = "3.0"
+VERSION = "4.0"
 APP_TITLE = "HM Quality Studio"
 
 # ---------------------------- JAK URUCHOMIC --------------------------
@@ -71,39 +84,45 @@ APP_TITLE = "HM Quality Studio"
 #   KOMUNIKATY, POSTEP, PRZERWANIE (BUS)
 #   NARZEDZIA: LICZBY, KOLORY, PLIKI
 #   KLASYFIKACJA ELEMENTOW (CONFIG)
-#   DOSTEP DO HYPERMESHA (API hm)
+#   DOSTEP DO HYPERMESHA (API hm)  - takze kolor RGB, przezroczystosc,
+#                                    powierzchnie -> wezly -> elementy
 #   GEOMETRIA ELEMENTU: JACOBIAN ZERO, TET COLLAPSE
-#   SKALE, PASMA I PALETA HYPERMESHA
+#   SKALE, PASMA I PALETA HYPERMESHA (+ paleta ANSYS)
 #   STAN SIATKI I PRZYWRACANIE
 #   WIELE METRYK -> GRUPY KOLOROW
-#   DELTA JAKOSCI REF <-> INF
+#   DELTA JAKOSCI REF <-> INF (wiele metryk, widoki, fazy)
 #   RAPORT JAKOSCI SIATKI
 #   ZAPIS RAPORTU: TXT / CSV / XLSX / HTML
 #   RAPORT POROWNAWCZY REF vs INF
+#   ANALIZA KRYTYCZNYCH ELEMENTOW Z POWIERZCHNI
 #   OBRAZY: MINIATURY, TLO, KONWERSJE
 #   WIDOKI I ZRZUTY EKRANU
 #   UKLAD SLAJDU (PRYMITYWY WSPOLNE DLA PODGLADU I PPTX)
 #   PREZENTACJA POWERPOINT (.pptx)
 #   ELEMENTY PREZENTACJI (SLAJDY Z MODULOW)
+#   WORKFLOW: AUTOMAT POROWNANIA REF vs INF
 #   USTAWIENIA UZYTKOWNIKA
 #   GUI: WSPOLNE KONTROLKI I RYSOWANIE
 #   GUI: LEGENDA, EDYTOR LEGENDY, PALETA
 #   GUI: PODGLAD SLAJDU (PLOTNO, KADR, PODGLAD SERII, NA ZYWO, PO EKSPORCIE)
+#   GUI: DIAGNOSTYKA
 #   GUI: KARTA "START"
+#   GUI: KARTA "AUTOMAT REF vs INF"
 #   GUI: KARTA "METRYKI I GRUPY"
 #   GUI: KARTA "DELTA REF / INF"
+#   GUI: KARTA "POWIERZCHNIE - ELEMENTY KRYTYCZNE"
 #   GUI: KARTA "RAPORT JAKOSCI"
 #   GUI: KARTA "WIDOKI I ZRZUTY"
 #   GUI: KARTA "PREZENTACJA PPTX"
 #   GUI: KARTA "PODGLAD SLAJDU"
-#   GUI: DIAGNOSTYKA
-#   GUI: OKNO GLOWNE
+#   GUI: OKNO GLOWNE (pasek boczny)
 #   POMOC
 #   START
-# Okno (klasa StudioWindow) - karty: Start, 1 Metryki i grupy, 2 Delta
-# REF/INF, 3 Raport jakosci, 4 Widoki i zrzuty, 5 Prezentacja PPTX,
-# Podglad slajdu. Skroty: F5 analiza, F6 podglad na zywo, F7 seria PPTX,
-# 1 zapamietaj widok, K zrzuty, F1 pomoc.
+# Okno (klasa StudioWindow) - pasek boczny: Start, Automat REF vs INF,
+# Metryki i grupy, Delta REF/INF, Powierzchnie, Raport jakosci, Widoki
+# i zrzuty, Prezentacja PPTX, Podglad slajdu. Skroty: F8 automat, F5
+# analiza, F6 podglad na zywo, F7 seria PPTX, 1 zapamietaj widok,
+# K zrzuty, F1 pomoc.
 
 # ---------------------------- KONFIGURACJA ---------------------------
 LANG             = "PL"      # jezyk startowy ("PL" / "EN"); przelacznik
@@ -168,14 +187,26 @@ MQ_DEFAULTS = {
     "skew": {"thr": 60.0, "mode": "manual", "nb": 5, "edges": [60, 65, 70, 75, 80, 90]},
 }
 
-# Modul "Delta": punkty gradientu {R G B} od minimum do maksimum skali
-# (jak legenda "quality index" HM). Kolor pasma = najblizszy z palety HM.
-GRADIENT_STOPS = [
-    (0, 0, 205), (0, 80, 255), (0, 170, 255), (0, 240, 240), (0, 230, 120),
-    (60, 215, 0), (210, 235, 0), (255, 210, 0), (255, 120, 0), (235, 0, 0),
+# Paleta legendy "ANSYS": 24 pasma jak w domyslnym paletyzatorze ANSYS
+# Mechanical (od minimum = niebieski, przez cyjan, zielony, zolty, do
+# maksimum = czerwony). Kolory pasm delty i domyslne kolory pasm metryk sa
+# interpolowane z tych punktow (gladkie przejscia). Na komponent trafia
+# DOKLADNIE ten kolor (HM 2021+: dana color_rgb), a w starszych wersjach
+# najblizszy z palety 64 kolorow - legenda zawsze pokazuje kolor faktyczny.
+ANSYS_STOPS = [
+    (75, 55, 244), (81, 88, 245), (92, 123, 246), (104, 155, 247), (120, 191, 248), (137, 226, 249),
+    (149, 251, 246), (146, 250, 214), (144, 250, 185), (143, 250, 154), (142, 250, 126), (141, 250, 102),
+    (146, 250, 93), (159, 251, 95), (176, 250, 95), (196, 251, 96), (221, 252, 99), (243, 254, 100),
+    (244, 227, 93), (237, 194, 84), (232, 161, 75), (226, 131, 71), (222, 100, 67), (222, 74, 63),
 ]
-DELTA_GRAY_IDX      = 11   # "bez zmian"
-DELTA_UNMATCHED_IDX = 8    # "bez odpowiednika" / "poprawione"
+# Pasma "poza norma" (podzial wg progu): bez zieleni, bo zielony = "w normie".
+BAD_STOPS = ANSYS_STOPS[0:7] + ANSYS_STOPS[17:24]
+DELTA_GRAY_RGB      = (163, 163, 163)   # "bez zmian" (szare)
+DELTA_WHITE_RGB     = (255, 255, 255)   # "bez zmian" (bezbarwne)
+DELTA_UNMATCHED_RGB = (255, 0, 255)     # "bez odpowiednika" (magenta)
+DELTA_IMPROVED_RGB  = (53, 125, 44)     # "poprawione" (ciemnozielony)
+DELTA_OK_RGB        = (90, 236, 100)    # podzial wg progu: w normie
+DELTA_BAD_RGB       = (255, 0, 0)       # podzial wg progu: poza norma
 
 # Raport jakosci: metryki, progi i biny histogramu -> REPORT_METRICS
 # w sekcji "RAPORT JAKOSCI SIATKI".
@@ -840,6 +871,8 @@ class HmApi(object):
         self._palette = None
         self._names = {}          # nazwa preferowana -> dzialajaca nazwa danej HM
         self._order = {}          # typ encji -> kolejnosc ID w odpowiedziach mark=1
+        self._rgb_ok = None       # czy dziala dokladny kolor RGB komponentu (color_rgb)
+        self._transp_method = ""  # sposob ustawiania przezroczystosci, ktory zadzialal
         self.error = ""
 
     # ---------------------------------------------------------- srodowisko
@@ -1321,8 +1354,10 @@ class HmApi(object):
         idx = index if index is not None else self.comp_index()
         return idx.get(name, 0)
 
-    def ensure_comp(self, name, color_idx=None, index=None):
-        """ID komponentu o nazwie (tworzy, gdy brak); opcjonalnie kolor."""
+    def ensure_comp(self, name, color=None, index=None):
+        """ID komponentu o nazwie (tworzy, gdy brak). color: indeks palety
+        (int) albo krotka RGB - wtedy kolor DOKLADNY (color_rgb) albo
+        najblizszy z palety (patrz set_comp_rgb)."""
         cid = self.comp_id(name, index)
         if not cid:
             c = self.ent.Component(self.model())
@@ -1330,8 +1365,11 @@ class HmApi(object):
             cid = c.id
             if index is not None:
                 index[name] = cid
-        if color_idx:
-            self.set_comp_color(cid, color_idx)
+        if color is not None:
+            if isinstance(color, (tuple, list)):
+                self.set_comp_rgb(cid, color)
+            elif color:
+                self.set_comp_color(cid, color)
         return cid
 
     def set_comp_color(self, cid, idx):
@@ -1342,6 +1380,62 @@ class HmApi(object):
         except Exception:
             return False
 
+    def set_comp_rgb(self, cid, rgb):
+        """Kolor komponentu: DOKLADNY RGB (HM 2021+: dana color_rgb) albo -
+        gdy wersja HM tego nie ma - najblizszy indeks palety 64 kolorow.
+        Zwraca (r, g, b) FAKTYCZNIE ustawione (legenda pokazuje ten kolor).
+        Sprawdzenie dostepnosci color_rgb robione jest raz na sesje."""
+        rgb = tuple(int(round(max(0, min(255, c)))) for c in rgb[:3])
+        if self._rgb_ok is not False:
+            got = None
+            try:
+                got = self._try_rgb(cid, rgb)
+            except Exception:
+                got = None
+            if got is not None:
+                if self._rgb_ok is None:
+                    self._rgb_ok = True
+                    BUS.log(T("Kolory komponent\u00f3w: dok\u0142adne RGB (color_rgb).", "Component colors: exact RGB (color_rgb)."))
+                return got
+            if self._rgb_ok is None:
+                self._rgb_ok = False
+                BUS.log(T("Kolory komponent\u00f3w: brak color_rgb \u2013 najbli\u017cszy kolor z palety 64.",
+                          "Component colors: no color_rgb \u2013 nearest of the 64-color palette."))
+        pm = palette_map()
+        idx = pm.index_of(rgb)
+        self.set_comp_color(cid, idx)
+        return pm.rgb(idx)
+
+    def _try_rgb(self, cid, rgb):
+        """Proba ustawienia dokladnego RGB (Tcl *setvalue color_rgb, potem
+        atrybut API Pythona) z odczytem kontrolnym. None = nie zadzialalo."""
+        cid = int(cid)
+        if self.has_tcl():
+            r = self.tcl("*setvalue comps id=%d color_rgb={%d %d %d}" % ((cid,) + rgb))
+            if r is not None and self.comp_rgb(cid) == rgb:
+                return rgb
+        try:
+            c = self.ent.Component(self.model(), cid)
+            c.color_rgb = rgb
+            back = attr(c, "color_rgb")
+            if back is not None and tuple(int(x) for x in list(back)[:3]) == rgb:
+                return rgb
+        except Exception:
+            pass
+        return None
+
+    def comp_rgb(self, cid):
+        """Faktyczny kolor RGB komponentu (dana color_rgb) albo None."""
+        s = self.tcl("hm_getvalue comps id=%d dataname=color_rgb" % int(cid))
+        if s:
+            nums = re.findall(r"-?\d+", "%s" % s)
+            if len(nums) >= 3:
+                return tuple(int(x) for x in nums[:3])
+        return None
+
+    def rgb_exact(self):
+        """Czy w tej sesji komponenty przyjmuja dokladne kolory RGB."""
+        return bool(self._rgb_ok)
     def comp_elem_ids(self, cid):
         m = self.model()
         src = self.hm.Collection(m, self.ent.Component, [int(cid)])
@@ -1388,6 +1482,17 @@ class HmApi(object):
         except Exception:
             pass
 
+    def hide_comps_except(self, keep_ids):
+        """Wygasza WSZYSTKIE komponenty poza podanymi (te sa wlaczane).
+        Zwraca liczbe komponentow, ktore zostaly wygaszone."""
+        keep = set(int(c) for c in keep_ids)
+        idx = self.comp_index()
+        others = [cid for cid in idx.values() if cid not in keep]
+        if others:
+            self.show_comps(others, False)
+        if keep:
+            self.show_comps(sorted(keep), True)
+        return len(others)
     def move_elements(self, ids, comp_name):
         """Przenosi elementy do komponentu (po nazwie); True gdy bez bledu."""
         self._clear_marks()
@@ -1399,17 +1504,212 @@ class HmApi(object):
         except Exception:
             return False
 
+    # ---------------------------------------------------------- przezroczystosc
+    # Rozne wersje HyperMesha ustawiaja przezroczystosc komponentu innymi
+    # poleceniami. Kazdy sposob jest probowany po kolei, a wynik SPRAWDZANY
+    # odczytem (hm_getvalue ... transparency), gdy wersja HM go udostepnia.
+    # Sposob, ktory zadzialal, jest zapamietywany na sesje - kolejne zmiany
+    # poziomu (np. suwak w oknie) ida od razu ta sciezka.
+    TRANSP_METHODS = ("setvalue", "tclmark", "pyapi")
+
     def set_transparency(self, comp_ids, level):
-        col = self.collection(self.ent.Component, comp_ids)
-        if col is None:
-            return False
-        try:
+        """Przezroczystosc komponentow 0-100 % (0 = nieprzezroczysty).
+        Zwraca nazwe sposobu, ktory zadzialal, albo "" (brak obslugi)."""
+        ids = [int(c) for c in (comp_ids if isinstance(comp_ids, (list, tuple, set)) else [comp_ids])]
+        if not ids:
+            return ""
+        level = max(0, min(100, int(round(to_float(level, 0.0) or 0.0))))
+        order = [self._transp_method] if self._transp_method else []
+        order += [m for m in self.TRANSP_METHODS if m not in order]
+        for m in order:
+            try:
+                ok = self._transparency_via(m, ids, level)
+            except Exception as e:
+                BUS.log("transparency %s: %s" % (m, e))
+                ok = False
+            if ok:
+                if m != self._transp_method:
+                    self._transp_method = m
+                    BUS.log(T("Przezroczysto\u015b\u0107: dzia\u0142a sposobem \u201e%s\u201d.", "Transparency: works via \u201c%s\u201d.", m))
+                return m
+        return ""
+
+    def _transparency_via(self, method, ids, level):
+        if method == "setvalue":
+            if not self.has_tcl():
+                return False
+            for cid in ids:
+                if self.tcl("*setvalue comps id=%d transparency=%d" % (cid, level)) is None:
+                    return False
+            return self._transp_verify(ids, level, strict=True)
+        if method == "tclmark":
+            if not self.has_tcl():
+                return False
+            self._clear_marks()
+            if self.tcl("*createmark comps 1 %s" % " ".join("%d" % c for c in ids)) is None:
+                return False
+            if self.tcl("*transparencyvalue %d" % level) is None:
+                return False
+            ok = self.tcl("*transparencymark comps 1") is not None
+            self.tcl("*clearmark comps 1")
+            return ok and self._transp_verify(ids, level, strict=False)
+        if method == "pyapi":
+            col = self.collection(self.ent.Component, ids)
+            if col is None:
+                return False
             m = self.model()
             m.transparencyvalue(int(level))
-            return self.status_of(m.transparencymark(col))[0] == 0
-        except Exception:
-            return False
+            if self.status_of(m.transparencymark(col))[0] != 0:
+                return False
+            return self._transp_verify(ids, level, strict=False)
+        return False
 
+    def _transp_verify(self, ids, level, strict):
+        """Odczyt kontrolny przezroczystosci. strict=True: brak odczytu = porazka
+        (sposob "setvalue" musi byc potwierdzony); False: brak odczytu = ufamy
+        poleceniu, ktore nie zglosilo bledu."""
+        got = self.comp_transparency(ids[0])
+        if got is None:
+            return not strict
+        return abs(got - level) <= 1.0 or (0.0 <= got <= 1.0 and abs(got * 100.0 - level) <= 1.0)
+
+    def comp_transparency(self, cid):
+        """Przezroczystosc komponentu z HM (0-100) albo None, gdy nie do odczytu."""
+        for dn in ("transparency", "transparencyvalue"):
+            s = self.tcl("hm_getvalue comps id=%d dataname=%s" % (int(cid), dn))
+            v = to_float((s or "").strip() if isinstance(s, str) else s)
+            if v is not None:
+                return v
+        return None
+
+    def transparency_note(self):
+        """Krotki opis stanu obslugi przezroczystosci (diagnostyka, legenda)."""
+        if self._transp_method:
+            return T("przezroczysto\u015b\u0107: %s", "transparency: %s", self._transp_method)
+        return T("przezroczysto\u015b\u0107: jeszcze nie u\u017cyta", "transparency: not used yet")
+
+    # ---------------------------------------------------------- powierzchnie, zaznaczenie
+    def mark_ids(self, etype):
+        """ID encji w znaczniku 1 HyperMesha (np. zaznaczone w panelu / oknie)."""
+        s = self.tcl("hm_getmark %s 1" % etype)
+        if not s:
+            return []
+        return [int(float(x)) for x in s.split() if x.strip()]
+
+    def interactive_ids(self, cls_name, title=""):
+        """Interaktywne wskazanie encji w oknie graficznym HM (API Pythona
+        CollectionByInteractiveSelection). Zwraca liste ID albo None, gdy
+        ta wersja HM nie ma takiej mozliwosci."""
+        fn = getattr(self.hm, "CollectionByInteractiveSelection", None)
+        if fn is None:
+            return None
+        cls = getattr(self.ent, cls_name, None)
+        if cls is None:
+            return None
+        try:
+            col = fn(self.model(), cls)
+            return [int(x.id) for x in list(col)]
+        except Exception as e:
+            BUS.log("interactive selection: %s" % e)
+            return None
+
+    def surface_node_ids(self, surf_ids):
+        """ID wezlow lezacych na powierzchniach (siatka skojarzona z geometria).
+        Kolejne warianty zaznaczenia "by geoms" (rozne wersje HM); pierwszy,
+        ktory zwroci wezly, wygrywa."""
+        ids = sorted(set(int(s) for s in surf_ids))
+        if not ids or not self.has_tcl():
+            return []
+        lst = " ".join("%d" % i for i in ids)
+        out = []
+        for cmd in ('*createmark nodes 1 "by geoms" surfs %s' % lst,
+                    '*createmark nodes 1 "by geoms" surfs {%s}' % lst,
+                    '*createmark nodes 1 "by surface" %s' % lst,
+                    '*createmark nodes 1 "by surfs" %s' % lst,
+                    '*createmark nodes 1 "on surfs" %s' % lst):
+            self.tcl("*clearmark nodes 1")
+            if self.tcl(cmd) is None:
+                continue
+            out = self.mark_ids("nodes")
+            if out:
+                break
+        self.tcl("*clearmark nodes 1")
+        self._order.pop("nodes", None)
+        return out
+
+    def surface_elem_ids(self, surf_ids):
+        """ID elementow skojarzonych bezposrednio z powierzchniami (2D)."""
+        ids = sorted(set(int(s) for s in surf_ids))
+        if not ids or not self.has_tcl():
+            return []
+        lst = " ".join("%d" % i for i in ids)
+        out = []
+        for cmd in ('*createmark elems 1 "by geoms" surfs %s' % lst,
+                    '*createmark elems 1 "by geoms" surfs {%s}' % lst,
+                    '*createmark elems 1 "by surface" %s' % lst):
+            self.tcl("*clearmark elems 1")
+            if self.tcl(cmd) is None:
+                continue
+            out = self.mark_ids("elems")
+            if out:
+                break
+        self.tcl("*clearmark elems 1")
+        self._order.pop("elems", None)
+        return out
+
+    def surface_ids(self):
+        """ID wszystkich powierzchni modelu (do sprawdzenia wpisanych ID)."""
+        try:
+            return [int(s.id) for s in self.items(self.ent.Surface)]
+        except Exception:
+            return []
+
+    def set_elem_ids(self, name):
+        """ID elementow zestawu (set) o nazwie; [] gdy brak."""
+        for s in self.items(self.ent.Set):
+            if attr(s, "name") != name:
+                continue
+            try:
+                sid = int(s.id)
+            except Exception:
+                continue
+            txt = self.tcl("hm_getvalue sets id=%d dataname=ids" % sid)
+            if txt:
+                try:
+                    return [int(float(x)) for x in tcl_items(txt) if x.strip()]
+                except Exception:
+                    pass
+            for an in ("elements", "ids", "entityids"):
+                els = attr(s, an)
+                if els:
+                    out = []
+                    for e in els:
+                        try:
+                            out.append(int(getattr(e, "id", e)))
+                        except Exception:
+                            pass
+                    if out:
+                        return out
+        return []
+
+    def elems_touching(self, nids, keep=None, min_shared=3):
+        """Elementy (filtr keep(config)), ktore maja >= min_shared wezlow z
+        podanego zbioru - np. elementy 3D przylegajace do powierzchni."""
+        nids = set(int(n) for n in nids)
+        if not nids:
+            return []
+        D = self.read_elements(keep=keep, names=(), nodes=True)
+        out = []
+        need = max(1, int(min_shared))
+        for eid, ns in zip(D.ids, D.nodes or []):
+            k = 0
+            for n in ns:
+                if n in nids:
+                    k += 1
+                    if k >= need:
+                        out.append(eid)
+                        break
+        return out
     # ---------------------------------------------------------- zestawy, tagi
     def create_set(self, name, ids):
         self._clear_marks()
@@ -1774,6 +2074,24 @@ class HmApi(object):
             self._clear_marks()
             out.append((T("Kolejno\u015b\u0107 odpowiedzi mark=1 vs znacznik", "mark=1 reply order vs mark"), True,
                         T("identyczna", "identical") if order == ids2 else T("R\u00d3\u017bNA \u2013 warto\u015bci parowane po ID (obs\u0142u\u017cone)", "DIFFERENT \u2013 values paired by ID (handled)")))
+        # kolor RGB i przezroczystosc: proba na komponencie tymczasowym
+        tmp_name = "HMQS_diag_tmp"
+        try:
+            cid = self.ensure_comp(tmp_name)
+            got = self.set_comp_rgb(cid, (222, 74, 63))
+            out.append((T("Dok\u0142adne kolory RGB komponent\u00f3w (color_rgb)", "Exact RGB component colors (color_rgb)"), self.rgb_exact(),
+                        T("tak \u2013 legenda = siatka", "yes \u2013 legend = mesh") if self.rgb_exact() else
+                        T("nie \u2013 najbli\u017cszy kolor z palety 64 (np. %s)", "no \u2013 nearest of the 64-color palette (e.g. %s)", rgb_hex(got))))
+            meth = self.set_transparency([cid], 60)
+            back = self.comp_transparency(cid)
+            out.append((T("Przezroczysto\u015b\u0107 komponent\u00f3w", "Component transparency"), bool(meth),
+                        (T("dzia\u0142a (%s)", "works (%s)", meth) + (T(", odczyt: %s %%", ", read back: %s %%", fmt_num(back, 0)) if back is not None else
+                                                                   T(", bez odczytu kontrolnego", ", no read-back"))) if meth else
+                        T("brak \u2013 elementy \u201ebez zmian\u201d b\u0119d\u0105 bezbarwne (bia\u0142e) albo ukryte", "unavailable \u2013 \u201cno change\u201d elements will be colorless (white) or hidden")))
+            if self.comp_elem_count(cid) == 0:
+                self.delete_comps([cid])
+        except Exception as e:
+            out.append((T("Kolor RGB / przezroczysto\u015b\u0107", "RGB color / transparency"), False, "%s" % e))
         g = geometry_selftest()
         out.append((T("Wzorce geometrii (Jacobian Zero, tet collapse)", "Geometry references (Jacobian Zero, tet collapse)"), not g, g or "OK"))
         p = tmp_file("png", "diag")
@@ -2033,20 +2351,29 @@ def ramp_indices(k, ramp):
     return [pm.index_of(grad_at(stops, i / float(k - 1))) for i in range(k)]
 
 
+def rainbow_colors(k, stops=None):
+    """k kolorow RGB rozlozonych rowno wzdluz palety ANSYS (niebieski ->
+    czerwony), gladkie przejscia takze dla duzej liczby pasm."""
+    stops = stops or ANSYS_STOPS
+    k = int(k)
+    if k <= 0:
+        return []
+    if k == 1:
+        return [tuple(stops[-1])]
+    return [grad_at(stops, i / float(k - 1)) for i in range(k)]
+
+
 def default_band_colors(direction, k, thr_on):
     """Kolory k pasm w kolejnosci ROSNACYCH wartosci. Z progiem: od pasma
-    najblizszego normie (niebieski) do najgorszego (czerwony); bez progu:
-    pelna rampa. Dla metryk "nizsze gorsze" kolejnosc jest odwrocona."""
-    ramp = RAMP_BAD if thr_on else RAMP_FULL
-    idx = ramp_indices(k, ramp)
-    pm = PaletteMap()
+    najblizszego normie (niebieski) do najgorszego (czerwony) - bez zieleni,
+    ktora oznacza "w normie"; bez progu: pelna paleta ANSYS. Dla metryk
+    "nizsze gorsze" kolejnosc jest odwrocona."""
+    cols = rainbow_colors(k, BAD_STOPS if thr_on else ANSYS_STOPS)
     out = []
     for i in range(k):
         rank = i if direction == "above" else k - 1 - i
-        out.append(pm.rgb(idx[rank]))
+        out.append(cols[rank])
     return out
-
-
 def manual_edges(edges, thr_on, thr, direction):
     """Granice trybu recznego: liczby, rosnaco, granica po stronie normy = prog."""
     E = sorted(set(f for f in (to_float(e) for e in edges) if f is not None))
@@ -2484,7 +2811,7 @@ class MultiMetric(object):
                                  "No HyperMesh API (run the tool inside HyperMesh 2023+)."))
         HM.refresh_palette()
         if not MESH.active():
-            old = HM.leftover_comps([self.clean_prefix(), DELTA.clean_prefix("dAR")])
+            old = HM.leftover_comps([self.clean_prefix()] + DELTA.own_prefixes())
             if old:
                 BUS.log(T("Uwaga: model zawiera komponenty z wcze\u015bniejszego kolorowania (zapisany pokolorowany model?): %s. "
                           "S\u0105 traktowane jak zwyk\u0142e komponenty \u2013 po \u201ePrzywr\u00f3\u0107 siatk\u0119\u201d ich elementy trafi\u0105 do %s.",
@@ -2668,7 +2995,7 @@ class MultiMetric(object):
             n = self.count(v, g.key)
             if g.key in (Scale.NA, Scale.OVER, Scale.UNDER) and n == 0:
                 continue
-            rgb = self.act_col.get((v, g.key)) or pm.snap(g.rgb)
+            rgb = self.act_col.get((v, g.key)) or (g.rgb if (HM.ok() and HM.rgb_exact()) else pm.snap(g.rgb))
             out.append({"key": g.key, "rgb": rgb, "label": g.label, "count": n,
                         "pct": pct(n, tot), "comp": g.name})
         return out
@@ -2735,18 +3062,16 @@ class MultiMetric(object):
         for k, eid in zip(self.cls[v], self.elems):
             buckets.setdefault(k, []).append(eid)
         with HM.quiet():
-            pm = palette_map()
             idx = HM.comp_index()
             new, fail, ok_name = [], 0, ""
             for g in self.group_defs(v):
                 ids = buckets.get(g.key, [])
                 if not ids and (g.key < 0 or v == "all"):
                     continue          # pasma zostaja (pelna skala w Model Browser), reszta tylko niepuste
-                ci = pm.index_of(g.rgb)
-                self.act_col[(v, g.key)] = pm.rgb(ci)
                 existed = g.name in idx
                 try:
-                    cid = HM.ensure_comp(g.name, ci, index=idx)
+                    cid = HM.ensure_comp(g.name, index=idx)
+                    self.act_col[(v, g.key)] = HM.set_comp_rgb(cid, g.rgb)
                 except Exception:
                     fail += 1
                     continue
@@ -2917,29 +3242,66 @@ MQ = MultiMetric()
 
 # ===================== DELTA JAKOSCI REF <-> INF ======================
 # Dwa pliki .hm: REF (baza) i INF (po zmianie ksztaltu). Wczytywanie
-# SEKWENCYJNE: najpierw REF (zapamietuje metryke kazdego elementu wg ID),
-# potem INF. Dla elementu INF bierzemy element REF o TYM SAMYM ID i liczymy
-# POGORSZENIE D (zawsze "w gore" = gorzej):
+# SEKWENCYJNE: najpierw REF (zapamietuje metryki kazdego elementu wg ID),
+# potem INF. WSZYSTKIE zaznaczone metryki sa czytane w JEDNYM przebiegu po
+# elementach kazdego modelu. Dla elementu INF bierzemy element REF o TYM
+# SAMYM ID i liczymy POGORSZENIE D (zawsze "w gore" = gorzej):
 #     Aspect Ratio, Skewness:  D = Q(INF) - Q(REF)
 #     Jacobian:                D = Q(REF) - Q(INF)   (spadek = gorzej)
 #     Przesuniecie [mm]:       D = maks. |xyz(INF) - xyz(REF)| wezlow elementu
-# Siatka INF jest kolorowana gradientem (pasma), D ponizej progu "bez zmian"
-# (w tym poprawa) -> SZARY, element bez odpowiednika -> MAGENTA.
-# Tryby dodatkowe:
+# Wynik kazdej metryki (DeltaResult) zostaje w pamieci. Na siatce jest
+# pokazywana JEDNA metryka naraz ("widok"): jej elementy trafiaja do
+# komponentow pasm (paleta ANSYS: niebieski -> czerwony), komponenty
+# POZOSTALYCH metryk sa wtedy puste i wygaszone, a komponenty spoza
+# narzedzia (opcjonalnie) tez wygaszone - na ekranie zostaja tylko pasma
+# aktualnej metryki i BEZBARWNE (biale, przezroczyste) elementy "bez zmian".
+# Przelaczenie widoku nie czyta niczego z HyperMesha.
+# Tryby dodatkowe (tez wiele metryk naraz):
 #  - JEDEN MODEL: podzial elementow na pasma wg WARTOSCI metryki,
-#  - PODZIAL WG PROGU (jeden model): poza norma -> <prefiks>_poza_norma
-#    (czerwony), reszta -> <prefiks>_w_normie (zielony),
-#  - "pokaz poprawione" (magenta), nakladka REF (plik REF dolaczony do sesji
-#    jako ukryty komponent), zbieranie pozostalych elementow INF,
-#  - etykiety MIN / MAX (tagi) z wspolrzednymi srodka elementu,
-#  - wyciszanie "bez zmian" (przezroczystosc, a gdy sie nie da - ukrycie).
+#  - PODZIAL WG PROGU (jeden model): poza norma -> <prefiks>_<TAG>_poza_norma
+#    (czerwony), reszta -> <prefiks>_<TAG>_w_normie (zielony),
+#  - "pokaz poprawione", nakladka REF (plik REF dolaczony do sesji jako
+#    ukryty komponent), zbieranie pozostalych elementow INF,
+#  - etykiety MIN / MAX (tagi) z wspolrzednymi srodka elementu.
+# Fazy (begin / load_ref / read_ref / load_inf / read_inf / compute /
+# apply_view) sa osobnymi metodami, zeby WORKFLOW mogl miedzy nimi policzyc
+# raport jakosci i analize powierzchni na tym samym wczytanym modelu.
 # UWAGA: wczytanie plikow ZASTEPUJE model w sesji (okno pyta przed startem).
-DELTA_METRICS = [("ar", "Aspect Ratio", "aspect"), ("jac", "Jacobian", "jacobian"),
-                 ("skew", "Skewness", "skew"), ("disp", "", "")]
+DELTA_METRICS = [("ar", "Aspect Ratio", "aspect", "AR"), ("jac", "Jacobian", "jacobian", "Jac"),
+                 ("skew", "Skewness", "skew", "Skew"), ("disp", "", "", "XYZ")]
+DELTA_ORDER = [m[0] for m in DELTA_METRICS]
+DELTA_ATTR = dict((m[0], m[2]) for m in DELTA_METRICS)
+DELTA_TAG = dict((m[0], m[3]) for m in DELTA_METRICS)
+DELTA_DEADBAND = {"ar": 0.01, "jac": 0.01, "skew": 0.5, "disp": 0.01}   # prog "bez zmian" / tolerancja
+DELTA_FAIL = {"ar": 5.0, "jac": 0.6, "skew": 60.0, "disp": 1.0}          # podzial wg progu (jeden model)
+
+
+class DeltaResult(object):
+    """Wynik delty JEDNEJ metryki - czyste dane (bez HyperMesha)."""
+
+    def __init__(self, m):
+        self.m = m
+        self.bounds, self.k, self.uniform = [], 0, True
+        self.scale_mode = "auto"
+        self.delta = {}            # id -> D (pogorszenie) albo wartosc (jeden model)
+        self.ref_q, self.inf_q = {}, {}
+        self.disp_node = {}        # id -> wezel o najwiekszym przesunieciu
+        self.buckets = {}          # pasmo (int) / "ok" / "bad" -> [id]
+        self.gray, self.imp, self.unmatched = [], [], []
+        self.counts = {"band": 0, "gray": 0, "unm": 0, "imp": 0}
+        self.band_rgb = []
+        self.clamped = 0
+        self.min_info = self.max_info = None
+        self.fail_info = None
+        self.fail_active = False
+        self.dec = 3
+        self.comps = []            # nazwy komponentow tej metryki (w kolejnosci legendy)
+        self.gray_name = ""
+        self.act = {}              # nazwa komponentu -> faktyczny RGB na siatce
 
 
 class DeltaEngine(object):
-    AUTO_PREFIXES = ("dAR", "dJac", "dSkew", "dXYZ", "AR", "Jac", "Skew", "XYZ", "Q")
+    AUTO_PREFIXES = ("D", "dAR", "dJac", "dSkew", "dXYZ", "AR", "Jac", "Skew", "XYZ", "Q")
 
     def __init__(self):
         self.ref_file = ""
@@ -2947,19 +3309,23 @@ class DeltaEngine(object):
         self.use_open_inf = False     # INF = aktualnie otwarty model (przeladowany z dysku)
         self.single_only = False      # analizuj tylko jeden model (REF)
         self.fail_mode = False        # podzial wg progu (jeden model)
-        self.fail_limit = 5.0
-        self.metric = "ar"            # ar | jac | skew | disp
-        self.dim = "2d"               # 2d | 3d
-        self.prefix = "dAR"
+        self.metrics = {"ar": True, "jac": True, "skew": True, "disp": False}
+        self.metric = "ar"            # metryka pokazywana na siatce po analizie
+        self.dim2 = True
+        self.dim3 = True
+        self.prefix = "D"
         self.restore_target = ""      # opcjonalnie: wszystko do jednego komponentu
         self.auto_scale = True
-        self.deadband = 0.01          # prog "bez zmian" / tolerancja [mm]
+        self.deadband = dict(DELTA_DEADBAND)
+        self.fail_limit = dict(DELTA_FAIL)
         self.band_count = 10
         self.nice_round = True
-        self.manual_bounds = []       # reczna skala: K+1 granic rosnaco
+        self.manual_bounds = {}       # metryka -> reczna skala: K+1 granic rosnaco
         self.mark_extremes = True
-        self.fade_gray = True
-        self.fade_level = 85
+        self.fade_gray = True         # wycisz "bez zmian": bezbarwne + przezroczyste
+        self.fade_level = 85          # przezroczystosc [%]
+        self.fade_style = "white"     # white (bezbarwne) | gray
+        self.hide_others = True       # wygas komponenty spoza narzedzia i innych metryk
         self.show_improved = False
         self.mk_ref_comp = False      # dolacz REF jako ukryta nakladka
         self.mk_inf_comp = False      # pozostale elementy INF w komponencie
@@ -2977,63 +3343,81 @@ class DeltaEngine(object):
         self.fail_mode = mode == "fail"
         self.single_only = mode == "single"
 
-    def cur_metric(self):
-        """Metryka OSTATNIEJ analizy (gdy jest wynik) - legendy, tagi i
-        "Sprawdz delte" opisuja wynik na siatce, nie biezacy wybor w oknie."""
-        return self.last_metric if (self.done and self.last_metric) else self.metric
+    def selected(self):
+        """Metryki zaznaczone do analizy (przesuniecie tylko dla dwoch modeli)."""
+        sel = [m for m in DELTA_ORDER if self.metrics.get(m)]
+        if self.mode() != "delta":
+            sel = [m for m in sel if m != "disp"]
+        return sel
 
-    def cur_dim(self):
-        return self.last_dim if (self.done and self.last_dim) else self.dim
+    def views(self):
+        return list(self.analyzed)
+
+    def cur_metric(self):
+        """Metryka pokazywana na siatce (gdy jest wynik) albo wybrana w oknie."""
+        if self.done and self.view:
+            return self.view
+        if self.done and self.analyzed:
+            return self.analyzed[0]
+        return self.metric if self.metric in DELTA_ORDER else "ar"
+
+    def dims(self):
+        return set(d for d, on in (("2d", self.dim2), ("3d", self.dim3)) if on)
+
+    def dim_label(self):
+        if self.done and self.last_dims:
+            return self.last_dims
+        return "+".join(d.upper() for d in sorted(self.dims())) or "-"
 
     def clear_results(self):
-        self.bounds, self.k, self.uniform = [], 0, True
-        self.inf_q, self.single_q = {}, {}      # id -> wartosc (INF / jeden model)
-        self.disp_node = {}                      # id -> wezel o najwiekszym przesunieciu
-        self.unmatched_set = set()
-        self.when = ""
-        self.band_rgb = []
-        self.clamped = 0
-        self.counts = {"band": 0, "gray": 0, "unm": 0, "imp": 0}
-        pm = PaletteMap()
-        self.rgb_gray = pm.rgb(DELTA_GRAY_IDX)
-        self.rgb_unm = pm.rgb(DELTA_UNMATCHED_IDX)
-        self.rgb_imp = pm.rgb(DELTA_UNMATCHED_IDX)
-        self.rgb_ok, self.rgb_bad = pm.rgb(PAL_OK), pm.rgb(3)
-        self.min_info = self.max_info = None
-        self.fail_info = None
+        self.res = {}                 # metryka -> DeltaResult
+        self.analyzed = []            # metryki z wynikiem (kolejnosc DELTA_ORDER)
+        self.view = ""                # metryka na siatce
         self.single = False
         self.fail_active = False
-        self.last_metric = self.last_dim = ""
-        self.ref_q, self.ref_xyz = {}, {}
-        self.delta = {}
-        self.buckets = {}
-        self.comps = []
-        self.gray_name, self.gray_shown, self.gray_faded = "", True, ""
-        self.ref_comp, self.ref_shown, self.inf_shown = "", False, True
-        self.inf_rest = ""
+        self.when = ""
         self.done = False
         self.model_path = ""
         self.skipped = (0, 0)
+        self.elems = []               # ID elementow zakresu (INF / model)
+        self.all_ids = []             # wszystkie elementy modelu INF
+        self.n2d = self.n3d = 0
+        self.last_dims = ""
+        self.gray_shown, self.gray_faded = True, ""
+        self.ref_comp, self.ref_shown, self.inf_shown = "", False, True
+        self.inf_rest = ""
+        self.hidden_others = False
+        self.paint_fail = 0
+        self.sig = ""
+        self._ref = None              # dane REF miedzy fazami
+        self._I = None                # dane INF / modelu miedzy fazami
+        pm = PaletteMap()
+        self.rgb_unm = pm.snap(DELTA_UNMATCHED_RGB)
+        self.rgb_imp = DELTA_IMPROVED_RGB
+        self.rgb_ok, self.rgb_bad = DELTA_OK_RGB, DELTA_BAD_RGB
 
     # ---------------------------------------------------------- nazwy
-    def metric_label(self, m=None):
-        m = m or self.cur_metric()
+    @staticmethod
+    def metric_label(m=None):
         return {"ar": "Aspect Ratio", "jac": "Jacobian", "skew": "Skewness"}.get(
             m, T("Przesuni\u0119cie [mm]", "Displacement [mm]"))
 
-    def delta_label(self):
-        m = self.cur_metric()
+    def label(self, m=None):
+        return self.metric_label(m or self.cur_metric())
+
+    def delta_label(self, m=None):
+        m = m or self.cur_metric()
         if self.single:
             return self.metric_label(m)
         return {"ar": "\u0394AR", "jac": T("spadek Jacobianu", "Jacobian drop"), "skew": "\u0394Skew"}.get(
             m, T("przesuni\u0119cie [mm]", "displacement [mm]"))
 
-    def delta_tag(self):
-        base = {"ar": "AR", "jac": "Jac", "skew": "Skew", "disp": "XYZ"}[self.cur_metric()]
+    def delta_tag(self, m=None):
+        base = DELTA_TAG.get(m or self.cur_metric(), "AR")
         return base if self.single else "d" + base
 
-    def legend_title(self):
-        m = self.cur_metric()
+    def legend_title(self, m=None):
+        m = m or self.cur_metric()
         if self.single:
             return "%s %s" % (self.metric_label(m), T("(warto\u015b\u0107)", "(value)"))
         return {"ar": T("Pogorszenie Aspect Ratio (INF \u2212 REF)", "Aspect Ratio worsening (INF \u2212 REF)"),
@@ -3041,72 +3425,74 @@ class DeltaEngine(object):
                 "skew": T("Pogorszenie Skewness (INF \u2212 REF)", "Skewness worsening (INF \u2212 REF)")}.get(
             m, T("Przesuni\u0119cie w\u0119z\u0142\u00f3w REF \u2192 INF [mm]", "Node displacement REF \u2192 INF [mm]"))
 
-    def sign(self):
-        return -1.0 if self.cur_metric() == "jac" else 1.0
+    @staticmethod
+    def sign(m):
+        return -1.0 if m == "jac" else 1.0
 
-    def fail_below(self):
-        return self.cur_metric() == "jac"
+    @staticmethod
+    def fail_below(m):
+        return m == "jac"
 
-    def fail_op(self):
-        return "<" if self.fail_below() else ">"
+    def fail_op(self, m=None):
+        return "<" if self.fail_below(m or self.cur_metric()) else ">"
 
-    def dim_label(self):
-        return "3D" if self.cur_dim() == "3d" else "2D"
-
-    def on_metric_change(self):
-        """Domyslny prefiks podaza za metryka (jesli nie zmieniony recznie)."""
-        if (self.prefix or "").strip() in self.AUTO_PREFIXES or not (self.prefix or "").strip():
-            self.prefix = {"ar": "dAR", "jac": "dJac", "skew": "dSkew", "disp": "dXYZ"}[self.metric]
-
-    def clean_prefix(self, default):
+    def clean_prefix(self, default="D"):
         p = re.sub(r"[^A-Za-z0-9_]", "_", (self.prefix or "").strip())
         return p or default
 
+    def comp_base(self, m):
+        """Poczatek nazw komponentow metryki: <prefiks>_<TAG>, np. D_dAR."""
+        return "%s_%s" % (self.clean_prefix(), self.delta_tag(m))
+
+    def own_prefixes(self):
+        """Prefiksy nazw komponentow tego modulu (wykrywanie pozostalosci)."""
+        P = self.clean_prefix()
+        return [P] + ["%s_%s" % (P, t) for t in ("dAR", "dJac", "dSkew", "dXYZ", "AR", "Jac", "Skew")]
+
+    def gray_rgb(self):
+        return DELTA_WHITE_RGB if (self.fade_gray and self.fade_style == "white") else DELTA_GRAY_RGB
+
     # ---------------------------------------------------------- odczyt z HM
-    def q_attr(self):
-        return {"ar": "aspect", "jac": "jacobian", "skew": "skew"}.get(self.cur_metric())
-
-    def _elements(self, which):
-        """Hurtowy odczyt elementow wybranego wymiaru (ElemData): wartosc
-        metryki albo - dla przesuniecia - listy wezlow."""
-        want = "3d" if self.cur_dim() == "3d" else "2d"
+    def _read(self, which, sel):
+        """Hurtowy odczyt elementow wybranych wymiarow (ElemData): wartosci
+        WSZYSTKICH metryk naraz oraz - dla przesuniecia - listy wezlow."""
+        dims = self.dims()
         BUS.progress(T("%s: odczyt element\u00f3w %s\u2026", "%s: reading %s elements\u2026", which, self.dim_label()))
-        a = self.q_attr()
-        return HM.read_elements(keep=lambda c: elem_dim(c) == want, names=[a] if a else [],
-                                nodes=self.cur_metric() == "disp")
+        names = [DELTA_ATTR[m] for m in sel if m != "disp"]
+        return HM.read_elements(keep=lambda c: elem_dim(c) in dims, names=names, nodes=("disp" in sel))
 
-    def _values(self, D):
+    @staticmethod
+    def _values(D, m):
         """Slownik id -> wartosc metryki (bez brakow)."""
-        vs = D.vals.get(self.q_attr()) or []
+        vs = D.vals.get(DELTA_ATTR.get(m, "")) or []
         return dict((eid, v) for eid, v in zip(D.ids, vs) if v is not None)
 
-    def _q(self, e):
-        a = self.q_attr()
-        return num_attr(e, a) if a else None
-
     # ---------------------------------------------------------- skala
-    def compute_bounds(self, maxpos):
-        if not self.auto_scale and len(self.manual_bounds) >= 3:
-            self.bounds = [float(x) for x in self.manual_bounds]
-            self.k = len(self.bounds) - 1
-            self.uniform = False
-            return "manual"
+    def _bounds(self, r, maxpos):
+        mb = self.manual_bounds.get(r.m) or []
+        if not self.auto_scale and len(mb) >= 3:
+            r.bounds = [float(x) for x in mb]
+            r.k = len(r.bounds) - 1
+            r.uniform = False
+            r.scale_mode = "manual"
+            return
         K = max(2, min(96, int(self.band_count or 10)))
-        lo = max(0.0, to_float(self.deadband, 0.01))
+        lo = max(0.0, to_float(self.deadband.get(r.m), 0.01))
         hi = maxpos
         if self.nice_round:
             hi = nice_ceil(hi)
         if hi <= lo + 1e-12:
             hi = lo + 0.1
         step = (hi - lo) / float(K)
-        self.bounds = [lo + i * step for i in range(K + 1)]
-        self.k = K
-        self.uniform = True
-        return "auto"
+        r.bounds = [lo + i * step for i in range(K + 1)]
+        r.k = K
+        r.uniform = True
+        r.scale_mode = "auto"
 
-    def band_of(self, d):
+    @staticmethod
+    def band_of(r, d):
         """Pasmo wartosci D (-1 = ponizej skali); D >= gornej granicy -> ostatnie."""
-        bb, K = self.bounds, self.k
+        bb, K = r.bounds, r.k
         if K < 1 or len(bb) != K + 1 or d < bb[0]:
             return -1
         if d >= bb[-1]:
@@ -3114,14 +3500,18 @@ class DeltaEngine(object):
         return max(0, min(K - 1, bisect.bisect_right(bb, d) - 1))
 
     def band_colors(self, k):
-        pm = PaletteMap()
-        return [pm.rgb(i) for i in ramp_indices(k, RAMP_FULL)]
+        return rainbow_colors(k)
 
-    # ---------------------------------------------------------- start
+    # ---------------------------------------------------------- start (calosc)
     def run(self):
-        """Wybiera tryb (delta / jeden model / podzial wg progu) i uruchamia analize."""
+        """Wybiera tryb (delta / jeden model / podzial wg progu), wczytuje
+        pliki, liczy wszystkie zaznaczone metryki i naklada pierwszy widok."""
         if not HM.ok():
             raise RuntimeError(T("Brak API HyperMesha.", "No HyperMesh API."))
+        if not self.selected():
+            raise ValueError(T("Zaznacz przynajmniej jedn\u0105 metryk\u0119 delty.", "Tick at least one delta metric."))
+        if not self.dims():
+            raise ValueError(T("Zaznacz elementy 2D i/lub 3D.", "Tick 2D and/or 3D elements."))
         HM.refresh_palette()
         mode = self.mode()
         have_ref = bool(self.ref_file) and os.path.isfile(self.ref_file)
@@ -3144,55 +3534,193 @@ class DeltaEngine(object):
                                "Dla jednego modelu wybierz tryb \u201ejeden model\u201d.",
                                "The delta needs TWO models: REF (.hm) and INF (.hm) or \u201cINF = open model\u201d. "
                                "For one model choose the \u201cone model\u201d mode."))
-        return self.run_delta()
+        self.begin(False)
+        self.load_ref()
+        self.read_ref()
+        self.load_inf()
+        self.read_inf()
+        self.compute()
+        self.apply_view(self.first_view())
+        return True
 
-    def _begin(self, single):
+    def run_single(self, path, reload):
+        self.begin(True)
+        if reload:
+            self.load_model(path, T("modelu", "model"))
+        self.model_path = path
+        self.read_single()
+        self.compute()
+        self.apply_view(self.first_view())
+        return True
+
+    def first_view(self):
+        return self.metric if self.metric in self.analyzed else (self.analyzed[0] if self.analyzed else "")
+
+    # ---------------------------------------------------------- fazy
+    def begin(self, single):
+        """Start analizy: zdejmuje kolory z siatki i czysci poprzedni wynik."""
         if MESH.active():
             MESH.restore()          # zdejmuje tez kolory "Wiele metryk"
         MQ.view, MQ.view_comps = "", []
         self.clear_results()
         self.single = single
-        self.last_metric, self.last_dim = self.metric, self.dim
+        self.fail_active = single and self.fail_mode
+        self.last_dims = "+".join(d.upper() for d in sorted(self.dims()))
 
-    def _load(self, path, which):
+    def load_model(self, path, which):
         BUS.progress(T("Wczytywanie %s: %s\u2026", "Loading %s: %s\u2026", which, os.path.basename(path)))
         ok, msg = HM.read_file(path)
         if not ok:
             raise RuntimeError(T("Nie uda\u0142o si\u0119 wczyta\u0107 %s: %s", "Could not load %s: %s", which, msg))
         HM.redraw()
 
-    # ---------------------------------------------------------- jeden model
-    def run_single(self, path, reload):
-        if self.metric == "disp":
-            self.metric = "ar"
-            self.on_metric_change()
-            BUS.status(T("Przesuni\u0119cie wymaga dw\u00f3ch modeli \u2013 dla jednego modelu u\u017cyto Aspect Ratio.",
-                         "Displacement needs two models \u2013 Aspect Ratio used for one model."), "warn")
-        if self.metric == "disp":
-            raise ValueError(T("Przesuni\u0119cie wymaga dw\u00f3ch modeli (REF i INF).", "Displacement needs two models (REF and INF)."))
-        self._begin(True)
-        if reload:
-            self._load(path, T("modelu", "model"))
-        self.model_path = path
-        D = self._elements(T("model", "model"))
-        skip = D.skip
-        if not D.ids:
-            raise ValueError(T("Brak element\u00f3w %s w modelu (pomini\u0119to %d).", "No %s elements in the model (%d skipped).", self.dim_label(), skip))
-        vals = self._values(D)
+    def load_ref(self):
+        self.load_model(self.ref_file, "REF")
+
+    def load_inf(self):
+        self.load_model(self.inf_file, "INF")
+
+    def read_ref(self):
+        """FAZA 1 (model REF w sesji): metryki (i wspolrzedne wezlow) wg ID."""
+        sel = self.selected()
+        R = self._read("REF", sel)
+        if not R.ids:
+            raise ValueError(T("REF: brak element\u00f3w %s (pomini\u0119to %d).", "REF: no %s elements (%d skipped).", self.dim_label(), R.skip))
+        ref = {"q": {}, "xyz": {}, "skip": R.skip, "n": len(R.ids)}
+        for m in sel:
+            if m == "disp":
+                BUS.progress(T("REF: wsp\u00f3\u0142rz\u0119dne w\u0119z\u0142\u00f3w\u2026", "REF: node coordinates\u2026"))
+                ref["xyz"] = HM.read_nodes(n for ns in R.nodes for n in ns)
+                if not ref["xyz"]:
+                    raise ValueError(T("Nie uda\u0142o si\u0119 odczyta\u0107 wsp\u00f3\u0142rz\u0119dnych w\u0119z\u0142\u00f3w.", "Could not read node coordinates."))
+            else:
+                ref["q"][m] = self._values(R, m)
+        self._ref = ref
+        return len(R.ids)
+
+    def read_inf(self):
+        """FAZA 2 (model INF w sesji): metryki INF wg ID (delta liczona w compute)."""
+        if self._ref is None:
+            raise RuntimeError("read_ref() first")
+        sel = self.selected()
+        I = self._read("INF", sel)
+        if not I.ids:
+            raise ValueError(T("INF: brak element\u00f3w %s (pomini\u0119to %d).", "INF: no %s elements (%d skipped).", self.dim_label(), I.skip))
+        if "disp" in sel:
+            BUS.progress(T("INF: wsp\u00f3\u0142rz\u0119dne w\u0119z\u0142\u00f3w\u2026", "INF: node coordinates\u2026"))
+            I.xyz = HM.read_nodes(n for ns in I.nodes for n in ns)
+        self._I = I
+        self.skipped = (self._ref["skip"], I.skip)
+        self.model_path = self.inf_file
+        return len(I.ids)
+
+    def read_single(self):
+        """Jeden model w sesji: wartosci metryk wg ID."""
+        sel = self.selected()
+        I = self._read(T("model", "model"), sel)
+        if not I.ids:
+            raise ValueError(T("Brak element\u00f3w %s w modelu (pomini\u0119to %d).", "No %s elements in the model (%d skipped).", self.dim_label(), I.skip))
+        self._I = I
+        self.skipped = (I.skip, 0)
+        return len(I.ids)
+
+    def compute(self):
+        """Wyniki wszystkich metryk z danych faz odczytu (bez HyperMesha)."""
+        I = self._I
+        if I is None:
+            raise RuntimeError("read_inf() / read_single() first")
+        self.elems, self.all_ids = list(I.ids), list(I.all_ids)
+        self.n2d = sum(1 for c in I.cfg if elem_dim(c) == "2d")
+        self.n3d = len(I.cfg) - self.n2d
+        self.res, self.analyzed = {}, []
+        for m in self.selected():
+            BUS.progress(T("Delta: %s\u2026", "Delta: %s\u2026", self.metric_label(m)))
+            r = self._compute_single(m, I) if self.single else self._compute_delta(m, I, self._ref)
+            if r is None:
+                continue
+            self.res[m] = r
+            self.analyzed.append(m)
+        if not self.analyzed:
+            raise ValueError(T("\u017badna metryka nie zwr\u00f3ci\u0142a warto\u015bci do por\u00f3wnania.", "No metric returned values to compare."))
+        self.done = True
+        self.when = now_text()
+        self.sig = HM.signature()
+        self._ref, self._I = None, None
+        return list(self.analyzed)
+
+    def _compute_delta(self, m, I, ref):
+        r = DeltaResult(m)
+        sgn = self.sign(m)
+        if m == "disp":
+            xyz = getattr(I, "xyz", None) or {}
+            for eid, ns in zip(I.ids, I.nodes):
+                d, nid = self.max_disp_node(ns, xyz, ref["xyz"])
+                if d is None:
+                    r.unmatched.append(eid)
+                else:
+                    r.delta[eid] = d
+                    r.disp_node[eid] = nid
+        else:
+            refq = ref["q"].get(m) or {}
+            vs = I.vals.get(DELTA_ATTR[m]) or []
+            for eid, q in zip(I.ids, vs):
+                if q is None:
+                    continue
+                r.inf_q[eid] = q
+                rq = refq.get(eid)
+                if rq is None:
+                    r.unmatched.append(eid)
+                    continue
+                r.ref_q[eid] = rq
+                r.delta[eid] = sgn * (q - rq)
+        if not r.delta and not r.unmatched:
+            BUS.log(T("Delta %s: brak warto\u015bci do por\u00f3wnania \u2013 pomini\u0119to.", "Delta %s: no values to compare \u2013 skipped.", self.metric_label(m)))
+            return None
+        maxd_e = max(r.delta, key=lambda k: r.delta[k]) if r.delta else None
+        mind_e = min(r.delta, key=lambda k: r.delta[k]) if r.delta else None
+        maxpos = max(0.0, r.delta[maxd_e]) if maxd_e is not None else 0.0
+        self._bounds(r, maxpos)
+        K = r.k
+        tol = max(0.0, to_float(self.deadband.get(m), 0.0))
+        bk = dict((i, []) for i in range(K))
+        hi = r.bounds[-1]
+        for eid, d in r.delta.items():
+            b = self.band_of(r, d)
+            if b < 0:
+                if self.show_improved and d < 0 and d <= -tol:
+                    r.imp.append(eid)
+                else:
+                    r.gray.append(eid)
+                continue
+            if d - hi > 1e-12:
+                r.clamped += 1
+            bk[b].append(eid)
+        r.buckets = bk
+        r.counts = {"band": sum(len(v) for v in bk.values()), "gray": len(r.gray), "unm": len(r.unmatched), "imp": len(r.imp)}
+        r.dec = dec_for((r.bounds[-1] - r.bounds[0]) / float(K))
+        r.band_rgb = self.band_colors(K)
+        if maxd_e is not None:
+            r.max_info = (r.delta[maxd_e], maxd_e)
+            if mind_e is not None and mind_e != maxd_e:
+                r.min_info = (r.delta[mind_e], mind_e)
+        return r
+
+    def _compute_single(self, m, I):
+        r = DeltaResult(m)
+        vals = self._values(I, m)
         if not vals:
-            raise ValueError(T("Metryka %s niedost\u0119pna dla element\u00f3w %s.", "Metric %s unavailable for %s elements.", self.metric_label(), self.dim_label()))
-        self.single_q = vals
-        self.skipped = (skip, 0)
+            BUS.log(T("Metryka %s niedost\u0119pna dla element\u00f3w %s \u2013 pomini\u0119to.", "Metric %s unavailable for %s elements \u2013 skipped.",
+                      self.metric_label(m), self.dim_label()))
+            return None
+        r.delta = vals
         vmin_e = min(vals, key=lambda k: vals[k])
         vmax_e = max(vals, key=lambda k: vals[k])
         vmin, vmax = vals[vmin_e], vals[vmax_e]
-        P = self.clean_prefix("Q")
-        groups = []
         if self.fail_mode:
-            lim = to_float(self.fail_limit)
+            lim = to_float(self.fail_limit.get(m))
             if lim is None:
-                raise ValueError(T("Pr\u00f3g musi by\u0107 liczb\u0105.", "The threshold must be a number."))
-            below = self.fail_below()
+                raise ValueError(T("Pr\u00f3g metryki %s musi by\u0107 liczb\u0105.", "The %s threshold must be a number.", self.metric_label(m)))
+            below = self.fail_below(m)
             lo, hi = vmin, vmax
             if hi <= lo:
                 hi = lo + 1.0
@@ -3200,164 +3728,299 @@ class DeltaEngine(object):
                 lo = lim - (hi - lim) * 0.1 - 1e-6
             if lim >= hi:
                 hi = lim + (lim - lo) * 0.1 + 1e-6
-            self.bounds, self.k = [lo, lim, hi], 2
+            r.bounds, r.k = [lo, lim, hi], 2
             bad = [k for k, v in vals.items() if (v < lim if below else v > lim)]
             badset = set(bad)
             ok = [k for k in vals if k not in badset]
-            dec = dec_for((hi - lo) / 2.0)
-            self.fail_info = (len(bad), len(ok), fmt_num(lim, dec), self.fail_op())
-            groups.append(("%s_w_normie" % P, self.rgb_ok, ok))
-            groups.append(("%s_poza_norma" % P, self.rgb_bad, bad))
-            self.buckets = {"ok": ok, "bad": bad}
-            self.band_rgb = [self.rgb_bad, self.rgb_ok] if below else [self.rgb_ok, self.rgb_bad]
-            self.fail_active = True
-            self.counts["band"] = len(vals)
+            r.dec = dec_for((hi - lo) / 2.0)
+            r.fail_info = (len(bad), len(ok), fmt_num(lim, r.dec), self.fail_op(m))
+            r.buckets = {"ok": ok, "bad": bad}
+            r.band_rgb = [self.rgb_bad, self.rgb_ok] if below else [self.rgb_ok, self.rgb_bad]
+            r.fail_active = True
+            r.counts["band"] = len(vals)
         else:
             K = max(2, min(96, int(self.band_count or 10)))
             lo, hi = vmin, vmax
             if hi <= lo:
                 hi = lo + 1.0
-            if self.nice_round:
-                hi = nice_ceil(hi) if hi > 0 else hi
+            if self.nice_round and hi > 0:
+                hi = nice_ceil(hi)
             width = (hi - lo) / float(K) or 1.0
-            self.bounds, self.k = [lo + i * width for i in range(K + 1)], K
-            dec = dec_for(width)
-            cols = self.band_colors(K)
+            r.bounds, r.k = [lo + i * width for i in range(K + 1)], K
+            r.dec = dec_for(width)
             bk = dict((i, []) for i in range(K))
             for eid, v in vals.items():
                 bk[max(0, min(K - 1, int(math.floor((v - lo) / width))))].append(eid)
-            for i in range(K):
-                nm = "%s_b%02d_%s_%s" % (P, i, sanit_num(self.bounds[i], dec), sanit_num(self.bounds[i + 1], dec))
-                groups.append((nm, cols[i], bk[i]))
-            self.buckets = bk
-            self.band_rgb = cols
-            self.counts["band"] = len(vals)
-        self.max_info = (vmax, vmax_e)
-        self.min_info = (vmin, vmin_e) if vmin_e != vmax_e else None
-        self._paint(groups, D.ids)
-        self._finish(P)
-        return True
+            r.buckets = bk
+            r.band_rgb = self.band_colors(K)
+            r.counts["band"] = len(vals)
+        r.max_info = (vmax, vmax_e)
+        r.min_info = (vmin, vmin_e) if vmin_e != vmax_e else None
+        return r
 
-    # ---------------------------------------------------------- delta REF/INF
-    def run_delta(self):
-        self._begin(False)
-        # FAZA 1: REF -> metryka (albo wspolrzedne wezlow) wg ID
-        self._load(self.ref_file, "REF")
-        R = self._elements("REF")
-        rskip = R.skip
-        if not R.ids:
-            raise ValueError(T("REF: brak element\u00f3w %s (pomini\u0119to %d).", "REF: no %s elements (%d skipped).", self.dim_label(), rskip))
-        if self.metric == "disp":
-            BUS.progress(T("REF: wsp\u00f3\u0142rz\u0119dne w\u0119z\u0142\u00f3w\u2026", "REF: node coordinates\u2026"))
-            self.ref_xyz = HM.read_nodes(n for ns in R.nodes for n in ns)
-            if not self.ref_xyz:
-                raise ValueError(T("Nie uda\u0142o si\u0119 odczyta\u0107 wsp\u00f3\u0142rz\u0119dnych w\u0119z\u0142\u00f3w.", "Could not read node coordinates."))
-        else:
-            self.ref_q = self._values(R)
-            if not self.ref_q:
-                raise ValueError(T("Metryka %s niedost\u0119pna w REF.", "Metric %s unavailable in REF.", self.metric_label()))
-        # FAZA 2: INF -> dopasowanie po ID, delta
-        self._load(self.inf_file, "INF")
-        I = self._elements("INF")
-        iskip, all_ids = I.skip, I.all_ids
-        if not I.ids:
-            raise ValueError(T("INF: brak element\u00f3w %s (pomini\u0119to %d).", "INF: no %s elements (%d skipped).", self.dim_label(), iskip))
-        self.skipped = (rskip, iskip)
-        sgn = self.sign()
-        unmatched = []
-        if self.cur_metric() == "disp":
-            BUS.progress(T("INF: wsp\u00f3\u0142rz\u0119dne w\u0119z\u0142\u00f3w\u2026", "INF: node coordinates\u2026"))
-            xyz = HM.read_nodes(n for ns in I.nodes for n in ns)
-            for eid, ns in zip(I.ids, I.nodes):
-                d, nid = self.max_disp_node(ns, xyz)
-                if d is None:
-                    unmatched.append(eid)
-                else:
-                    self.delta[eid] = d
-                    self.disp_node[eid] = nid
-        else:
-            vs = I.vals.get(self.q_attr()) or []
-            for eid, q in zip(I.ids, vs):
-                if q is None:
-                    continue
-                self.inf_q[eid] = q
-                r = self.ref_q.get(eid)
-                if r is None:
-                    unmatched.append(eid)
-                    continue
-                self.delta[eid] = sgn * (q - r)
-        self.unmatched_set = set(unmatched)
-        if not self.delta and not unmatched:
-            raise ValueError(T("Brak warto\u015bci do por\u00f3wnania.", "No values to compare."))
-        maxd_e = max(self.delta, key=lambda k: self.delta[k]) if self.delta else None
-        mind_e = min(self.delta, key=lambda k: self.delta[k]) if self.delta else None
-        maxpos = max(0.0, self.delta[maxd_e]) if maxd_e is not None else 0.0
-        self.compute_bounds(maxpos)
-        K = self.k
-        tol = max(0.0, to_float(self.deadband, 0.0))
-        bk = dict((i, []) for i in range(K))
-        gray, imp = [], []
-        hi = self.bounds[-1]
-        for eid, d in self.delta.items():
-            b = self.band_of(d)
-            if b < 0:
-                if self.show_improved and d < 0 and d <= -tol:
-                    imp.append(eid)
-                else:
-                    gray.append(eid)
+    @staticmethod
+    def max_disp_node(nids, xyz, ref_xyz):
+        """(najwieksze przesuniecie wezlow elementu, ID wezla) albo (None, None)."""
+        best, bn = None, None
+        for nid in nids:
+            r = ref_xyz.get(nid)
+            p = xyz.get(nid)
+            if r is None or p is None:
                 continue
-            if d - hi > 1e-12:
-                self.clamped += 1
-            bk[b].append(eid)
-        self.buckets = bk
-        self.counts = {"band": sum(len(v) for v in bk.values()), "gray": len(gray), "unm": len(unmatched), "imp": len(imp)}
-        P = self.clean_prefix("dAR")
-        dec = dec_for((self.bounds[-1] - self.bounds[0]) / float(K))
-        cols = self.band_colors(K)
-        self.band_rgb = cols
-        groups = [("%s_bez_zmian" % P, self.rgb_gray, gray)]
-        self.gray_name = groups[0][0]
-        for i in range(K):
-            nm = "%s_b%02d_%s_%s" % (P, i, sanit_num(self.bounds[i], dec), sanit_num(self.bounds[i + 1], dec))
-            groups.append((nm, cols[i], bk[i]))
-        if unmatched:
-            groups.append(("%s_bez_odpowiednika" % P, self.rgb_unm, unmatched))
-        if imp:
-            groups.append(("%s_poprawione" % P, self.rgb_imp, imp))
-        inf_ids = I.ids
-        self._paint(groups, inf_ids)
-        # pozostale elementy INF (inne wymiary) we wlasnym komponencie
-        if self.mk_inf_comp and iskip > 0:
-            keep = set(inf_ids)
-            rest = [i for i in all_ids if i not in keep]
-            if rest:
-                nm = "%s_INF_pozostale" % P
-                MESH.remember(rest)
-                HM.ensure_comp(nm, 14)
-                MESH.add_own(nm)
-                HM.move_elements(rest, nm)
-                self.inf_rest = nm
-                self.comps.append(nm)
-        if maxd_e is not None:
-            self.max_info = (self.delta[maxd_e], maxd_e)
-            if mind_e is not None and mind_e != maxd_e:
-                self.min_info = (self.delta[mind_e], mind_e)
-        # wyciszenie "bez zmian"
-        if self.fade_gray and gray:
+            d = math.sqrt((p[0] - r[0]) ** 2 + (p[1] - r[1]) ** 2 + (p[2] - r[2]) ** 2)
+            if best is None or d > best:
+                best, bn = d, nid
+        return best, bn
+
+    def recompute(self, m=None):
+        """Przelicza pasma metryki (nowa skala reczna / automatyczna) z danych
+        w pamieci - bez czytania z HyperMesha. Tylko tryb delty."""
+        if not self.done or self.single:
+            return False
+        for mm in ([m] if m else list(self.analyzed)):
+            r = self.res.get(mm)
+            if r is None:
+                continue
+            maxpos = max([0.0] + [d for d in r.delta.values()])
+            self._bounds(r, maxpos)
+            K = r.k
+            tol = max(0.0, to_float(self.deadband.get(mm), 0.0))
+            bk = dict((i, []) for i in range(K))
+            r.gray, r.imp, r.clamped = [], [], 0
+            hi = r.bounds[-1]
+            for eid, d in r.delta.items():
+                b = self.band_of(r, d)
+                if b < 0:
+                    if self.show_improved and d < 0 and d <= -tol:
+                        r.imp.append(eid)
+                    else:
+                        r.gray.append(eid)
+                    continue
+                if d - hi > 1e-12:
+                    r.clamped += 1
+                bk[b].append(eid)
+            r.buckets = bk
+            r.counts = {"band": sum(len(v) for v in bk.values()), "gray": len(r.gray), "unm": len(r.unmatched), "imp": len(r.imp)}
+            r.dec = dec_for((r.bounds[-1] - r.bounds[0]) / float(K))
+            r.band_rgb = self.band_colors(K)
+            r.act = {}
+        return True
+    # ---------------------------------------------------------- grupy widoku
+    def group_defs(self, m):
+        """Grupy (komponenty) widoku metryki m w kolejnosci legendy (najgorsze
+        u gory): pasma, potem bez zmian / poprawione / bez odpowiednika."""
+        r = self.res[m]
+        base = self.comp_base(m)
+        out = []
+        if r.fail_active:
+            nf, nok, lim, op = r.fail_info
+            out.append(Group("bad", "%s_poza_norma" % base, self.rgb_bad, T("poza norm\u0105 (%s %s)", "out of limits (%s %s)", op, lim)))
+            out.append(Group("ok", "%s_w_normie" % base, self.rgb_ok, T("w normie", "within limits")))
+            return out
+        bb, dec = r.bounds, r.dec
+        for i in range(r.k - 1, -1, -1):
+            nm = "%s_b%02d_%s_%s" % (base, i, sanit_num(bb[i], dec), sanit_num(bb[i + 1], dec))
+            out.append(Group(i, nm, r.band_rgb[i], "%s \u2013 %s" % (fmt_num(bb[i], dec), fmt_num(bb[i + 1], dec))))
+        if not self.single:
+            out.append(Group("gray", "%s_bez_zmian" % base, self.gray_rgb(), T("bez zmian", "no change")))
+            if r.imp:
+                out.append(Group("imp", "%s_poprawione" % base, self.rgb_imp, T("poprawione", "improved")))
+            if r.unmatched:
+                out.append(Group("unm", "%s_bez_odpowiednika" % base, self.rgb_unm, T("bez odpowiednika w REF", "unmatched in REF")))
+        return out
+
+    @staticmethod
+    def bucket_ids(r):
+        out = dict(r.buckets)
+        out["gray"], out["imp"], out["unm"] = r.gray, r.imp, r.unmatched
+        return out
+
+    def all_comps(self):
+        """Nazwy komponentow wszystkich metryk + nakladki (do zachowania)."""
+        names = []
+        for m in self.analyzed:
+            names += self.res[m].comps
+        for nm in (self.ref_comp, self.inf_rest):
+            if nm:
+                names.append(nm)
+        return names
+
+    # ---------------------------------------------------------- widok na siatce
+    def apply_view(self, m=None):
+        """Naklada metryke m na siatke: jej elementy do komponentow pasm, komponenty
+        innych metryk puste i wygaszone, "bez zmian" bezbarwne / przezroczyste,
+        komponenty spoza narzedzia wygaszone (opcja). Bez czytania z HM."""
+        if not self.done or not self.analyzed:
+            raise ValueError(T("Najpierw wykonaj analiz\u0119 delty.", "Run the delta analysis first."))
+        m = m or self.first_view()
+        if m not in self.res:
+            m = self.analyzed[0]
+        if HM.signature() != self.sig:
+            self.clear_results()
+            raise ValueError(T("Model w sesji si\u0119 zmieni\u0142 (inny plik / liczba element\u00f3w) \u2013 wykonaj analiz\u0119 ponownie.",
+                               "The model in the session has changed (another file / element count) \u2013 run the analysis again."))
+        r = self.res[m]
+        if MESH.owner == "mq":
+            MQ.view, MQ.view_comps = "", []      # kolory "Wiele metryk" zostana zastapione
+        BUS.progress(T("Zapami\u0119tywanie pierwotnych komponent\u00f3w\u2026", "Remembering the original components\u2026"))
+        MESH.remember(self.elems)
+        MESH.owner = "delta"
+        BUS.progress(T("Kolorowanie: %s\u2026", "Coloring: %s\u2026", self.delta_label(m)))
+        ids_of = self.bucket_ids(r)
+        groups = self.group_defs(m)
+        with HM.quiet():
             idx = HM.comp_index()
-            gid = idx.get(self.gray_name, 0)
-            if gid and HM.set_transparency([gid], max(0, min(100, int(to_float(self.fade_level, 85))))):
-                self.gray_faded = "transp"
-            elif gid:
-                HM.show_comps([gid], False)
-                self.gray_shown, self.gray_faded = False, "hidden"
-        # nakladka REF
-        if self.mk_ref_comp:
-            self._ref_overlay(P)
-        self._finish(P)
+            new, fail = [], 0
+            for n, g in enumerate(groups):
+                ids = ids_of.get(g.key, [])
+                try:
+                    cid = HM.ensure_comp(g.name, index=idx)
+                    r.act[g.name] = HM.set_comp_rgb(cid, g.rgb)
+                except Exception:
+                    fail += 1
+                    continue
+                MESH.add_own(g.name)
+                new.append(g.name)
+                if ids and not HM.move_elements(ids, g.name):
+                    fail += 1
+                HM.show_comps([cid], True)
+                if n % 8 == 0:
+                    BUS.progress(T("Kolorowanie: grupa %d / %d", "Coloring: group %d / %d", n + 1, len(groups)))
+            r.comps = new
+            r.gray_name = "%s_bez_zmian" % self.comp_base(m) if not self.single else ""
+            # komponenty pozostalych metryk sa teraz puste - wygaszone (zostaja do szybkiego przelaczania)
+            idx = HM.comp_index()
+            others = [idx[nm] for mm in self.analyzed if mm != m for nm in self.res[mm].comps if nm in idx]
+            if others:
+                HM.show_comps(others, False)
+            if self.mk_inf_comp and not self.single and not self.inf_rest:
+                self._inf_rest_comp()
+            placed = max(0, HM.comp_elem_count([idx[nm] for nm in new if nm in idx]))
+            lost = len(self.elems) - placed
+            MESH.drop_empty_own(keep=self.all_comps())
+        self.paint_fail = fail
+        self.view = m
+        if self.mk_ref_comp and not self.single and not self.ref_comp:
+            self._ref_overlay()
+        self._apply_fade(r)
+        self._apply_hide_others()
+        self._apply_tags(m)
+        HM.redraw()
+        msg = T("Widok delty: %s \u2013 %d grup, %d element\u00f3w.", "Delta view: %s \u2013 %d groups, %d elements.", self.delta_label(m), len(new), len(self.elems))
+        level = "ok"
+        if fail:
+            msg += T(" UWAGA: %d grup nie uda\u0142o si\u0119 utworzy\u0107 / wype\u0142ni\u0107.", " WARNING: %d groups could not be created / filled.", fail)
+            level = "warn"
+        if lost > 0:
+            msg += T(" UWAGA: %d element\u00f3w nie trafi\u0142o do grup widoku.", " WARNING: %d elements did not reach the view groups.", lost)
+            level = "warn"
+        BUS.status(msg, level)
         return True
 
-    def _ref_overlay(self, P):
+    def _apply_fade(self, r):
+        """Elementy "bez zmian": bezbarwne (biale) + przezroczystosc; gdy HM
+        nie obsluguje przezroczystosci - sam kolor bialy; ostatecznie ukrycie."""
+        self.gray_faded = ""
+        if self.single or not r.gray_name:
+            return
+        idx = HM.comp_index()
+        gid = idx.get(r.gray_name, 0)
+        if not gid:
+            return
+        r.act[r.gray_name] = HM.set_comp_rgb(gid, self.gray_rgb())
+        if self.fade_gray:
+            meth = HM.set_transparency([gid], self.fade_level)
+            if meth:
+                self.gray_faded = "transp"
+            elif self.fade_style == "white":
+                self.gray_faded = "white"
+                BUS.log(T("Przezroczysto\u015b\u0107 niedost\u0119pna w tej wersji HM \u2013 elementy \u201ebez zmian\u201d s\u0105 bezbarwne (bia\u0142e).",
+                          "Transparency unavailable in this HM version \u2013 \u201cno change\u201d elements are colorless (white)."))
+            else:
+                self.gray_shown = False
+                self.gray_faded = "hidden"
+        else:
+            HM.set_transparency([gid], 0)
+        HM.show_comps([gid], self.gray_shown)
+
+    def set_fade(self, on=None, level=None, style=None):
+        """Zmiana wyciszenia "bez zmian" NA ZYWO (bez ponownej analizy)."""
+        if on is not None:
+            self.fade_gray = bool(on)
+        if level is not None:
+            self.fade_level = max(0, min(100, int(level)))
+        if style in ("white", "gray"):
+            self.fade_style = style
+        if not (self.done and self.view and self.view in self.res):
+            return ""
+        r = self.res[self.view]
+        if self.gray_faded == "hidden" and self.fade_gray:
+            self.gray_shown = True
+        self._apply_fade(r)
+        HM.redraw()
+        return self.gray_faded
+
+    def _apply_hide_others(self):
+        """Wygasza komponenty spoza narzedzia (opcja) - na ekranie zostaja
+        pasma aktualnej metryki i elementy "bez zmian"."""
+        idx = HM.comp_index()
+        own = set(MESH.own)
+        others = [cid for nm, cid in idx.items() if nm not in own]
+        if self.hide_others:
+            if others:
+                HM.show_comps(others, False)
+            self.hidden_others = True
+        elif self.hidden_others:
+            if others:
+                HM.show_comps(others, True)
+            self.hidden_others = False
+        if self.ref_comp in idx:
+            HM.show_comps([idx[self.ref_comp]], self.ref_shown)
+        if self.inf_rest in idx:
+            HM.show_comps([idx[self.inf_rest]], not self.hide_others)
+
+    def set_hide_others(self, on):
+        self.hide_others = bool(on)
+        if self.done and self.view:
+            self._apply_hide_others()
+            HM.redraw()
+
+    def _apply_tags(self, m):
+        if MESH.tags:
+            HM.delete_tags(MESH.tags)
+            MESH.tags = []
+        r = self.res[m]
+        if not (self.mark_extremes and r.max_info):
+            return
+        items = [("MAX", r.max_info, 8)] + ([("MIN", r.min_info, 2)] if r.min_info else [])
+        base = self.comp_base(m)
+        for tag, info, col in items:
+            d, eid = info[0], info[1]
+            xyz = info[2] if len(info) > 2 else HM.elem_centroid(eid)
+            info_full = (d, eid, xyz)
+            if tag == "MAX":
+                r.max_info = info_full
+            else:
+                r.min_info = info_full
+            lab = "%s_%s" % (base, tag)
+            body = "%s %s=%s (el. %s)" % (tag, self.delta_tag(m), fmt_num(d, 4), eid)
+            if HM.create_tag(eid, lab, body, 3):
+                MESH.tags.append(lab)
+
+    def _inf_rest_comp(self):
+        """Pozostale elementy INF (inne wymiary) we wlasnym komponencie."""
+        keep = set(self.elems)
+        rest = [i for i in self.all_ids if i not in keep]
+        if not rest:
+            return
+        nm = "%s_INF_pozostale" % self.clean_prefix()
+        MESH.remember(rest)
+        HM.ensure_comp(nm, 14)
+        MESH.add_own(nm)
+        HM.move_elements(rest, nm)
+        self.inf_rest = nm
+
+    def _ref_overlay(self):
         """REF dolaczony do sesji jako ukryty komponent (pokaz / ukryj).
         Wszystkie encje scalone z pliku sa zapamietane i usuwane przy
         przywracaniu - model wraca dokladnie do stanu sprzed nakladki."""
@@ -3369,11 +4032,10 @@ class DeltaEngine(object):
                 BUS.status(T("Nie uda\u0142o si\u0119 do\u0142\u0105czy\u0107 REF do sesji \u2013 analiza delty jest kompletna, bez nak\u0142adki.",
                              "Could not add REF to the session \u2013 the delta analysis is complete, without the overlay."), "warn")
                 return
-            nm = "%s_REF_model" % P
+            nm = "%s_REF_model" % self.clean_prefix()
             cid = HM.ensure_comp(nm, 31)
             MESH.add_own(nm)
             HM.move_elements(new, nm)
-            # scalone komponenty REF sa teraz puste - od razu precz z Model Browsera
             empty = [c for c in ents.get("Component", []) if HM.comp_elem_count(c) == 0]
             if empty:
                 HM.delete_comps(empty)
@@ -3381,93 +4043,13 @@ class DeltaEngine(object):
             MESH.overlay = ents
             HM.show_comps([cid], False)
         self.ref_comp, self.ref_shown = nm, False
-
-    def max_disp(self, nids, xyz):
-        """Najwieksze przesuniecie wezlow elementu wzgledem REF (None = brak
-        wspolnych wezlow)."""
-        return self.max_disp_node(nids, xyz)[0]
-
-    def max_disp_node(self, nids, xyz):
-        """(najwieksze przesuniecie, ID wezla) albo (None, None)."""
-        best, bn = None, None
-        for nid in nids:
-            r = self.ref_xyz.get(nid)
-            p = xyz.get(nid)
-            if r is None or p is None:
-                continue
-            d = math.sqrt((p[0] - r[0]) ** 2 + (p[1] - r[1]) ** 2 + (p[2] - r[2]) ** 2)
-            if best is None or d > best:
-                best, bn = d, nid
-        return best, bn
-
-    def _elem_disp(self, e, cache=None):
-        """Przesuniecie jednego elementu (sprawdzanie delty)."""
-        nids = HM.elem_node_ids(e)
-        return self.max_disp(nids, HM.read_nodes(nids))
-
-    # ---------------------------------------------------------- kolorowanie
-    def _paint(self, groups, all_ids):
-        """Wspolne kolorowanie: zapamietanie stanu, komponenty, przeniesienie."""
-        BUS.progress(T("Zapami\u0119tywanie pierwotnych komponent\u00f3w\u2026", "Remembering the original components\u2026"))
-        MESH.remember(all_ids)
-        MESH.owner = "delta"
-        with HM.quiet():
-            pm = palette_map()
-            idx = HM.comp_index()
-            fail = 0
-            for n, (name, rgb, ids) in enumerate(groups):
-                ci = pm.index_of(rgb)
-                try:
-                    HM.ensure_comp(name, ci, index=idx)
-                except Exception:
-                    fail += 1
-                    continue
-                MESH.add_own(name)
-                self.comps.append(name)
-                if ids and not HM.move_elements(ids, name):
-                    fail += 1
-                if n % 8 == 0:
-                    BUS.progress(T("Kolorowanie: grupa %d / %d", "Coloring: group %d / %d", n + 1, len(groups)))
-        # faktyczne kolory (paleta) do legendy
-        self.band_rgb = [pm.snap(c) for c in self.band_rgb]
-        self.rgb_gray, self.rgb_unm, self.rgb_imp = pm.snap(self.rgb_gray), pm.snap(self.rgb_unm), pm.snap(self.rgb_imp)
-        self.rgb_ok, self.rgb_bad = pm.snap(self.rgb_ok), pm.snap(self.rgb_bad)
-        MESH.drop_empty_own(keep=self.comps)
-        self.paint_fail = fail
-
-    def _finish(self, P):
-        if self.mark_extremes and self.max_info:
-            self._label_extremes(P)
-        self.done = True
-        self.when = now_text()
-        HM.redraw()
-
-    def _label_extremes(self, P):
-        pm = palette_map()
-        items = [("MAX", self.max_info, 8)] + ([("MIN", self.min_info, 2)] if self.min_info else [])
-        for tag, info, col in items:
-            d, eid = info[0], info[1]
-            xyz = HM.elem_centroid(eid)
-            info_full = (d, eid, xyz)
-            if tag == "MAX":
-                self.max_info = info_full
-            else:
-                self.min_info = info_full
-            lab = "%s_%s" % (P, tag)
-            body = "%s %s=%s (el. %s)" % (tag, self.delta_tag(), fmt_num(d, 4), eid)
-            if HM.create_tag(eid, lab, body, 3):
-                MESH.tags.append(lab)
-            else:
-                nm = "%s_%s_%s" % (P, tag, ("%+.4f" % d).replace("+", "plus_").replace("-", "minus_").replace(".", "p"))
-                HM.ensure_comp(nm, col)
-                MESH.add_own(nm)
-                self.comps.append(nm)
-                HM.move_elements([eid], nm)
+        self.sig = HM.signature()          # nakladka zmienila liczbe elementow
 
     # ---------------------------------------------------------- widocznosc
     def toggle_gray(self):
+        r = self.res.get(self.view)
         idx = HM.comp_index()
-        gid = idx.get(self.gray_name, 0)
+        gid = idx.get(r.gray_name, 0) if r else 0
         if not gid:
             raise ValueError(T("Brak komponentu \u201ebez zmian\u201d z ostatniej analizy.", "No \u201cno change\u201d component from the last analysis."))
         self.gray_shown = not self.gray_shown
@@ -3490,148 +4072,236 @@ class DeltaEngine(object):
             raise ValueError(T("Najpierw wykonaj analiz\u0119.", "Run the analysis first."))
         self.inf_shown = not self.inf_shown
         idx = HM.comp_index()
-        HM.show_all_comps(self.inf_shown)
-        if self.inf_shown:
-            if not self.gray_shown and self.gray_name in idx:
-                HM.show_comps([idx[self.gray_name]], False)
-            if not self.ref_shown and self.ref_comp in idx:
-                HM.show_comps([idx[self.ref_comp]], False)
-        elif self.ref_shown and self.ref_comp in idx:
-            HM.show_comps([idx[self.ref_comp]], True)
+        r = self.res.get(self.view)
+        mine = [idx[nm] for nm in (r.comps if r else []) if nm in idx]
+        if mine:
+            HM.show_comps(mine, self.inf_shown)
+        if self.inf_shown and r and not self.gray_shown and r.gray_name in idx:
+            HM.show_comps([idx[r.gray_name]], False)
         HM.redraw()
         return self.inf_shown
 
     # ---------------------------------------------------------- diagnostyka
-    def inspect(self, eid):
+    def inspect(self, eid, m=None):
         """Tekst z Q(REF), Q(INF), delta i pasmem elementu - z danych OSTATNIEJ
-        analizy (bez odczytu z HyperMesha), wiec dziala takze po zmianie
-        metryki / typu w oknie i nie zalezy od API atrybutow elementu."""
+        analizy (bez odczytu z HyperMesha)."""
         eid = int(eid)
         if not self.done:
             raise ValueError(T("Najpierw wykonaj analiz\u0119.", "Run the analysis first."))
-        m, dl = self.cur_metric(), self.dim_label()
+        m = m or self.cur_metric()
+        r = self.res.get(m)
+        if r is None:
+            raise ValueError(T("Brak wyniku dla metryki %s.", "No result for metric %s.", self.metric_label(m)))
+        dl = self.dim_label()
         scope = T("Element %d nie nale\u017cy do analizowanego zakresu (%s, %s) albo nie ma go w modelu.",
                   "Element %d is not in the analysed scope (%s, %s) or does not exist in the model.", eid, dl, self.metric_label(m))
         if self.single:
-            v = self.single_q.get(eid)
+            v = r.delta.get(eid)
             if v is None:
                 raise ValueError(scope)
             d = v
             head = "%s = %s" % (self.metric_label(m), fmt_num(v, 5))
         elif m == "disp":
-            d = self.delta.get(eid)
+            d = r.delta.get(eid)
             if d is None:
-                if eid in self.unmatched_set:
+                if eid in r.unmatched:
                     raise ValueError(T("Element %d nie ma wsp\u00f3lnych w\u0119z\u0142\u00f3w z REF (bez odpowiednika).",
                                        "Element %d has no nodes in common with REF (unmatched).", eid))
                 raise ValueError(scope)
             head = T("przesuni\u0119cie = %s mm", "displacement = %s mm", fmt_num(d, 5))
-            nid = self.disp_node.get(eid)
+            nid = r.disp_node.get(eid)
             if nid is not None:
                 head += T("   (w\u0119ze\u0142 %d)", "   (node %d)", nid)
         else:
-            r, q = self.ref_q.get(eid), self.inf_q.get(eid)
+            rq, q = r.ref_q.get(eid), r.inf_q.get(eid)
             if q is None:
                 raise ValueError(scope)
-            if r is None:
+            if rq is None:
                 raise ValueError(T("Element %d nie ma odpowiednika w REF (Q(INF) = %s).",
                                    "Element %d has no counterpart in REF (Q(INF) = %s).", eid, fmt_num(q, 5)))
-            d = self.sign() * (q - r)
-            head = "Q(REF) = %s   Q(INF) = %s   \u0394 = %+.5f   D = %+.5f" % (fmt_num(r, 5), fmt_num(q, 5), q - r, d)
-        if self.fail_active and self.fail_info:
-            lim = to_float(self.bounds[1])
-            bad = d < lim if self.fail_below() else d > lim
+            d = self.sign(m) * (q - rq)
+            head = "Q(REF) = %s   Q(INF) = %s   \u0394 = %+.5f   D = %+.5f" % (fmt_num(rq, 5), fmt_num(q, 5), q - rq, d)
+        if r.fail_active and r.fail_info:
+            lim = to_float(r.bounds[1])
+            bad = d < lim if self.fail_below(m) else d > lim
             band = T("poza norm\u0105", "out of limits") if bad else T("w normie", "within limits")
         else:
-            b = self.band_of(d)
+            b = self.band_of(r, d)
             if b < 0:
-                band = T("szary \u2013 bez zmian", "gray \u2013 no change")
-                if self.show_improved and d < 0 and d <= -abs(to_float(self.deadband, 0.0)):
-                    band = T("poprawiony (magenta)", "improved (magenta)")
+                band = T("bez zmian (bezbarwne)", "no change (colorless)")
+                if eid in r.imp:
+                    band = T("poprawiony", "improved")
             else:
-                dec = dec_for((self.bounds[-1] - self.bounds[0]) / float(self.k))
-                band = T("pasmo %d / %d: %s \u2013 %s", "band %d / %d: %s \u2013 %s", b + 1, self.k,
-                         fmt_num(self.bounds[b], dec), fmt_num(self.bounds[b + 1], dec))
+                band = T("pasmo %d / %d: %s \u2013 %s", "band %d / %d: %s \u2013 %s", b + 1, r.k,
+                         fmt_num(r.bounds[b], r.dec), fmt_num(r.bounds[b + 1], r.dec))
         return T("Element %d (%s, %s)\n%s\nGrupa: %s", "Element %d (%s, %s)\n%s\nGroup: %s",
                  eid, dl, self.metric_label(m), head, band)
 
     # ---------------------------------------------------------- legenda
-    def legend_model(self):
+    def legend_model(self, m=None):
         """Dane legendy (okno, podglad, PPTX): pasma + wiersze dodatkowe."""
-        if not self.done or self.k < 1:
+        m = m or self.cur_metric()
+        r = self.res.get(m)
+        if not self.done or r is None or r.k < 1:
             return None
-        bb, K = self.bounds, self.k
-        dec = dec_for((bb[-1] - bb[0]) / float(K))
+        bb, K = r.bounds, r.k
         bands = []
         for i in range(K):
-            if self.fail_active:
-                key = ("bad" if i == 0 else "ok") if self.fail_below() else ("ok" if i == 0 else "bad")
+            if r.fail_active:
+                key = ("bad" if i == 0 else "ok") if self.fail_below(m) else ("ok" if i == 0 else "bad")
             else:
                 key = i
-            n = len(self.buckets.get(key, []))
-            rgb = self.band_rgb[i] if i < len(self.band_rgb) else (128, 128, 128)
-            bands.append({"rgb": rgb, "lo": bb[i], "hi": bb[i + 1], "count": n,
-                          "label": "%s \u2013 %s" % (fmt_num(bb[i], dec), fmt_num(bb[i + 1], dec))})
+            n = len(r.buckets.get(key, []))
+            rgb = r.band_rgb[i] if i < len(r.band_rgb) else (128, 128, 128)
+            nm = self._comp_name_of(m, key)
+            bands.append({"rgb": r.act.get(nm, rgb), "lo": bb[i], "hi": bb[i + 1], "count": n,
+                          "label": "%s \u2013 %s" % (fmt_num(bb[i], r.dec), fmt_num(bb[i + 1], r.dec))})
         extra = []
-        if self.fail_active and self.fail_info:
-            nf, nok, lim, op = self.fail_info
+        base = self.comp_base(m)
+        if r.fail_active and r.fail_info:
+            nf, nok, lim, op = r.fail_info
             extra.append({"rgb": self.rgb_bad, "label": T("poza norm\u0105 (%s %s)", "out of limits (%s %s)", op, lim), "count": nf})
             extra.append({"rgb": self.rgb_ok, "label": T("w normie", "within limits"), "count": nok})
         elif not self.single:
             g = T("bez zmian", "no change")
             if self.gray_faded == "transp":
-                g += T(" (przezroczyste)", " (transparent)")
+                g += T(" (bezbarwne, przezr. %d%%)", " (colorless, %d%% transp.)", self.fade_level) if self.fade_style == "white" else T(" (przezr. %d%%)", " (%d%% transp.)", self.fade_level)
+            elif self.gray_faded == "white":
+                g += T(" (bezbarwne)", " (colorless)")
             elif self.gray_faded == "hidden":
                 g += T(" (ukryte)", " (hidden)")
-            extra.append({"rgb": self.rgb_gray, "label": g, "count": self.counts["gray"]})
-        if self.counts.get("imp"):
-            extra.append({"rgb": self.rgb_imp, "label": T("poprawione", "improved"), "count": self.counts["imp"]})
-        if self.counts.get("unm"):
-            extra.append({"rgb": self.rgb_unm, "label": T("bez odpowiednika w REF", "unmatched in REF"), "count": self.counts["unm"]})
-        mode = T("skala automatyczna", "automatic scale") if (self.auto_scale or self.single) else T("skala r\u0119czna", "manual scale")
-        return {"title": self.legend_title(), "sub": "%s \u2022 %d %s" % (mode, K, T("pasm", "bands")),
-                "bands": bands, "extra": extra, "dec": dec, "clamped": self.clamped,
-                "max": self.max_info, "min": self.min_info, "fail": self.fail_active}
+            extra.append({"rgb": r.act.get("%s_bez_zmian" % base, self.gray_rgb()), "label": g, "count": r.counts["gray"]})
+        if r.counts.get("imp"):
+            extra.append({"rgb": r.act.get("%s_poprawione" % base, self.rgb_imp), "label": T("poprawione", "improved"), "count": r.counts["imp"]})
+        if r.counts.get("unm"):
+            extra.append({"rgb": r.act.get("%s_bez_odpowiednika" % base, self.rgb_unm), "label": T("bez odpowiednika w REF", "unmatched in REF"), "count": r.counts["unm"]})
+        mode = T("skala r\u0119czna", "manual scale") if r.scale_mode == "manual" else T("skala automatyczna", "automatic scale")
+        sub = "%s \u2022 %d %s \u2022 %s" % (mode, K, T("pasm", "bands"), self.dim_label())
+        if len(self.analyzed) > 1:
+            sub += " \u2022 " + T("metryki: %s", "metrics: %s", ", ".join(self.delta_tag(x) for x in self.analyzed))
+        return {"title": self.legend_title(m), "sub": sub, "bands": bands, "extra": extra, "dec": r.dec,
+                "clamped": r.clamped, "max": r.max_info, "min": r.min_info, "fail": r.fail_active, "metric": m}
 
-    def stat_pairs(self):
+    def _comp_name_of(self, m, key):
+        base = self.comp_base(m)
+        r = self.res[m]
+        if key == "bad":
+            return "%s_poza_norma" % base
+        if key == "ok":
+            return "%s_w_normie" % base
+        if isinstance(key, int) and 0 <= key < r.k:
+            return "%s_b%02d_%s_%s" % (base, key, sanit_num(r.bounds[key], r.dec), sanit_num(r.bounds[key + 1], r.dec))
+        return ""
+
+    def stat_pairs(self, m=None):
+        m = m or self.cur_metric()
+        r = self.res.get(m)
+        if r is None:
+            return []
         out = []
-        for tag, info in (("MAX", self.max_info), ("MIN", self.min_info)):
+        for tag, info in (("MAX", r.max_info), ("MIN", r.min_info)):
             if info:
-                out.append(("%s %s" % (tag, self.delta_label()), "%s  (el. %s)" % (fmt_num(info[0], 4), info[1])))
-        c = self.counts
+                out.append(("%s %s" % (tag, self.delta_label(m)), "%s  (el. %s)" % (fmt_num(info[0], 4), info[1])))
+        c = r.counts
         if not self.single:
             out.append((T("W skali / bez zmian", "In scale / no change"), "%d / %d" % (c["band"], c["gray"])))
             if c.get("unm"):
                 out.append((T("Bez odpowiednika w REF", "Unmatched in REF"), "%d" % c["unm"]))
+        elif r.fail_active and r.fail_info:
+            out.append((T("Poza norm\u0105 / w normie", "Out of / within limits"), "%d / %d" % (r.fail_info[0], r.fail_info[1])))
+        else:
+            out.append((T("Elementy w pasmach", "Elements in bands"), "%d" % c["band"]))
         return out
+
+    def summary_rows(self):
+        """Tabela wszystkich metryk delty (slajd zbiorczy, okno, raport)."""
+        if self.single:
+            if self.fail_active:
+                hdr = [T("Metryka", "Metric"), T("Pr\u00f3g", "Threshold"), T("Poza norm\u0105", "Out"), T("W normie", "Within"), T("% poza", "% out"), "Min", "Max"]
+            else:
+                hdr = [T("Metryka", "Metric"), T("Elementy", "Elements"), "Min (el.)", "Max (el.)", T("Pasm", "Bands")]
+        else:
+            hdr = [T("Metryka", "Metric"), T("W skali", "In scale"), T("Bez zmian", "No change"), T("Bez odpow.", "Unmatched"),
+                   T("Poprawione", "Improved"), "MAX (el.)", "MIN (el.)", T("Powy\u017cej zakresu", "Above range")]
+        rows = [hdr]
+        for m in self.analyzed:
+            r = self.res[m]
+            c = r.counts
+            mx = ("%s (%s)" % (fmt_num(r.max_info[0], 4), r.max_info[1])) if r.max_info else "\u2013"
+            mn = ("%s (%s)" % (fmt_num(r.min_info[0], 4), r.min_info[1])) if r.min_info else "\u2013"
+            if self.single and r.fail_active and r.fail_info:
+                nf, nok, lim, op = r.fail_info
+                tot = nf + nok
+                rows.append([self.metric_label(m), "%s %s" % (op, lim), {"t": "%d" % nf, "color": "C00000" if nf else "2E7D32", "bold": True},
+                             "%d" % nok, "%.2f%%" % pct(nf, tot), mn, mx])
+            elif self.single:
+                rows.append([self.metric_label(m), "%d" % c["band"], mn, mx, "%d" % r.k])
+            else:
+                rows.append([self.delta_label(m), "%d" % c["band"], "%d" % c["gray"], "%d" % c["unm"], "%d" % c["imp"],
+                             {"t": mx, "color": "C00000" if c["band"] else "262626", "bold": bool(c["band"])}, mn, "%d" % r.clamped])
+        return rows
 
     # ---------------------------------------------------------- przywracanie
     def restore(self):
         moved, deleted, fb = MESH.restore(target=(self.restore_target or "").strip())
         self.done = False
+        self.view = ""
+        self.hidden_others = False
         msg = T("Przywr\u00f3cono siatk\u0119 (%d element\u00f3w, usuni\u0119to %d komponent\u00f3w).", "Mesh restored (%d elements, %d components removed).", moved, deleted)
         if fb:
             msg += T(" UWAGA: %d element\u00f3w w %s.", " WARNING: %d elements in %s.", fb, MESH.FALLBACK)
         BUS.status(msg, "warn" if fb else "ok")
 
-    KEYS = ("ref_file", "inf_file", "use_open_inf", "single_only", "fail_mode", "fail_limit", "metric", "dim",
-            "prefix", "restore_target", "auto_scale", "deadband", "band_count", "nice_round", "manual_bounds",
-            "mark_extremes", "fade_gray", "fade_level", "show_improved", "mk_ref_comp", "mk_inf_comp")
+    # ---------------------------------------------------------- ustawienia
+    KEYS = ("ref_file", "inf_file", "use_open_inf", "single_only", "fail_mode", "metric", "dim2", "dim3",
+            "prefix", "restore_target", "auto_scale", "band_count", "nice_round", "mark_extremes", "fade_gray",
+            "fade_level", "fade_style", "hide_others", "show_improved", "mk_ref_comp", "mk_inf_comp")
 
     def to_dict(self):
-        return dict((k, getattr(self, k)) for k in self.KEYS)
+        d = dict((k, getattr(self, k)) for k in self.KEYS)
+        d["metrics"] = dict(self.metrics)
+        d["deadband"] = dict(self.deadband)
+        d["fail_limit"] = dict(self.fail_limit)
+        d["manual_bounds"] = dict((m, list(v)) for m, v in self.manual_bounds.items())
+        return d
 
     def from_dict(self, d):
-        assign_attrs(self, d, self.KEYS, {"metric": ("ar", "jac", "skew", "disp"), "dim": ("2d", "3d")})
-        mb = [to_float(x) for x in self.manual_bounds] if isinstance(self.manual_bounds, list) else []
-        self.manual_bounds = mb if all(x is not None for x in mb) else []
+        assign_attrs(self, d, self.KEYS, {"metric": tuple(DELTA_ORDER), "fade_style": ("white", "gray")})
+        # ustawienia z wersji 3.x: jeden wymiar, jedna metryka, skalarny prog
+        if d.get("dim") in ("2d", "3d"):
+            self.dim2, self.dim3 = d["dim"] == "2d", d["dim"] == "3d"
+        if isinstance(d.get("metrics"), dict):
+            for m, v in d["metrics"].items():
+                if m in self.metrics and isinstance(v, bool):
+                    self.metrics[m] = v
+        elif d.get("metric") in DELTA_ORDER:
+            self.metrics[d["metric"]] = True
+        for key, cur in (("deadband", self.deadband), ("fail_limit", self.fail_limit)):
+            v = d.get(key)
+            if isinstance(v, dict):
+                for m, x in v.items():
+                    if m in cur and to_float(x) is not None:
+                        cur[m] = to_float(x)
+            elif to_float(v) is not None and d.get("metric") in DELTA_ORDER:
+                cur[d["metric"]] = to_float(v)
+        mb = d.get("manual_bounds")
+        if isinstance(mb, dict):
+            self.manual_bounds = {}
+            for m, lst in mb.items():
+                vals = [to_float(x) for x in lst] if isinstance(lst, list) else []
+                if m in DELTA_ORDER and vals and all(x is not None for x in vals):
+                    self.manual_bounds[m] = vals
+        elif isinstance(mb, list) and d.get("metric") in DELTA_ORDER:
+            vals = [to_float(x) for x in mb]
+            if vals and all(x is not None for x in vals):
+                self.manual_bounds = {d["metric"]: vals}
+        if (self.prefix or "").strip() in ("dAR", "dJac", "dSkew", "dXYZ"):
+            self.prefix = "D"                # prefiks 3.x podazal za metryka - teraz wspolny
         self.band_count = max(2, min(96, int(self.band_count)))
         self.fade_level = max(0, min(100, int(self.fade_level)))
 
 
 DELTA = DeltaEngine()
-
-
 # ======================== RAPORT JAKOSCI SIATKI ========================
 # Pelny raport jakosci siatki: dla wszystkich / wyswietlonych elementow
 # wybranych wymiarow (1D / 2D / 3D) i wybranych metryk:
@@ -3860,6 +4530,8 @@ class ReportEngine(object):
         self.last_cmp = None          # ostatnie porownanie elementow A vs B
         self.last_ncmp = None         # ostatnie zestawienie wezlow A vs B
         self.last_files = []          # zapisane pliki ostatniego raportu
+        self.last_runs = {}           # ostatnie analizy REF / INF (porownanie)
+        self.last_verdict = ""        # werdykt zgodnosci ostatniego porownania
         self.trend_prev = None
         self.trend_hist = []
 
@@ -4120,9 +4792,18 @@ class ReportEngine(object):
             ok, msg = HM.read_file(f)
             if not ok:
                 raise RuntimeError(T("Nie uda\u0142o si\u0119 wczyta\u0107 %s: %s", "Could not load %s: %s", lab, msg))
-            run = self.analyze(f, sig=self.chk_ids)
-            self.write_all(run, "%s_%s" % (base, lab))
-            runs[lab] = run
+            runs[lab] = self.analyze_model(lab, f, base)
+        return self.compare_runs(runs, base)
+
+    def analyze_model(self, lab, source, base):
+        """Analiza modelu w sesji (REF albo INF) + zapis raportu _<lab>."""
+        run = self.analyze(source, sig=self.chk_ids)
+        self.write_all(run, "%s_%s" % (base, lab))
+        return run
+
+    def compare_runs(self, runs, base):
+        """Raport porownawczy z dwoch gotowych analiz {"REF": run, "INF": run}
+        (workflow wo\u0142a to bez ponownego wczytywania plikow). Zwraca opis."""
         self.last = runs["INF"]
         BUS.progress(T("Por\u00f3wnanie zbior\u00f3w element\u00f3w A vs B\u2026", "Comparing element sets A vs B\u2026"))
         cmp = compare_sets(runs["REF"], runs["INF"], self.tol(), self.chk_ids)
@@ -4147,6 +4828,7 @@ class ReportEngine(object):
             except Exception as e:
                 failed.append("%s (%s)" % (path, e))
         self.last_files = list(written)
+        self.last_runs = dict(runs)
         sr, si = runs["REF"]["score"], runs["INF"]["score"]
         msg = T("Por\u00f3wnanie zako\u0144czone.\nREF: %s / 100    INF: %s / 100    (%s)\n\nRaport por\u00f3wnawczy:\n  %s\n\nOsobne raporty zapisane z przyrostkami _REF i _INF.",
                 "Comparison finished.\nREF: %s / 100    INF: %s / 100    (%s)\n\nComparison report:\n  %s\n\nSeparate reports saved with _REF and _INF suffixes.",
@@ -4156,11 +4838,11 @@ class ReportEngine(object):
                              "Nodes: A %d, B %d, common %d, only A %d, only B %d, moved %d (> %g mm), max %s mm",
                              ncmp["nA"], ncmp["nB"], ncmp["common"], ncmp["onlyA"], ncmp["onlyB"], ncmp["moved"], ncmp["tol"], fmt_num(ncmp["dmax"], 4))
         vd = vol_differs(runs["REF"], runs["INF"], self.tol())
-        msg += "\n\n" + _identity_verdict(cmp, vd, ncmp)[0]
+        self.last_verdict = _identity_verdict(cmp, vd, ncmp)[0]
+        msg += "\n\n" + self.last_verdict
         if failed:
             msg += "\n\n" + T("NIEUDANE:", "FAILED:") + "\n  " + "\n  ".join(failed)
         return msg
-
     KEYS = ("src", "hm_file", "ref_file", "inf_file", "scope", "out_file", "fmt", "per_elem", "per_comp",
             "num_style", "level", "use_metric", "use_dim", "chk_ids", "chk_topo", "chk_vol", "cmp_tol",
             "chk_nodes", "node_tol")
@@ -5541,6 +6223,591 @@ def compare_xlsx(ra, ri, cmp, eng, path, ncmp=None):
     wb.close()
 
 
+# ============ ANALIZA KRYTYCZNYCH ELEMENTOW Z POWIERZCHNI ==============
+# Uzytkownik wskazuje powierzchnie (ID, interaktywnie w HM albo z biezacego
+# zaznaczenia), makro wyodrebnia elementy 3D (i/lub 2D) przylegajace do nich
+# (element "lezy na powierzchni", gdy ma >= N wezlow skojarzonych z nia;
+# domyslnie 3 = cala sciana), czyta ich metryki i sprawdza, czy mieszcza
+# sie w PRZEDZIALACH TOLERANCJI [od, do] zdefiniowanych OSOBNO dla tej
+# funkcji. Wynik: udzial elementow spelniajacych kryteria w REF i INF oraz
+# delta (punkty procentowe), najgorsze elementy, opcjonalnie zestawy (sets)
+# elementow poza tolerancja. Gdy zaznaczenie po geometrii nie dziala w
+# danej wersji HM, zrodlem elementow moze byc komponent (np. siatka 2D
+# "skorki" powierzchni), zestaw albo lista ID elementow.
+SURF_METRICS = list(REP_ORDER)
+SURF_DEFAULT_CRIT = {
+    "aspectratio": (True, None, 5.0), "jacobian": (True, 0.6, None), "skew": (True, None, 60.0),
+    "warpage": (False, None, 10.0), "taper": (False, None, 0.5), "minangle": (False, 30.0, None),
+    "maxangle": (False, None, 135.0), "tetcollapse": (False, 0.1, None), "length": (False, None, None),
+}
+SURF_SOURCES = ("surfs", "comps", "sets", "elems")
+
+
+def parse_id_list(text):
+    """ID z tekstu: "12 13, 20-25" -> [12, 13, 20, 21, ..., 25] (bez powtorzen)."""
+    out = []
+    seen = set()
+    for tok in re.split(r"[\s,;]+", (text or "").strip()):
+        if not tok:
+            continue
+        m = re.match(r"^(\d+)\s*[-:]\s*(\d+)$", tok)
+        if m:
+            a, b = int(m.group(1)), int(m.group(2))
+            rng = range(min(a, b), max(a, b) + 1)
+        elif tok.isdigit():
+            rng = [int(tok)]
+        else:
+            continue
+        for i in rng:
+            if i not in seen:
+                seen.add(i)
+                out.append(i)
+    return out
+
+
+class SurfaceEngine(object):
+    def __init__(self):
+        self.source = "surfs"          # surfs | comps | sets | elems
+        self.surf_text = ""            # ID powierzchni: "12 13 20-25"
+        self.src_text = ""             # nazwy komponentow / zestawow (po przecinku) albo ID elementow
+        self.min_shared = 3            # element na powierzchni, gdy >= N jego wezlow lezy na niej
+        self.dim2 = False
+        self.dim3 = True
+        self.crit = dict((k, {"use": u, "lo": lo, "hi": hi}) for k, (u, lo, hi) in SURF_DEFAULT_CRIT.items())
+        self.make_sets = True
+        self.models = "pair"           # pair (REF vs INF) | current (model w sesji)
+        self.ref_file = ""
+        self.inf_file = ""
+        self.out_file = ""
+        self.fmt = {"txt": True, "csv": False, "xlsx": True, "html": True}
+        self.topn = TOPN
+        self.clear_results()
+
+    def clear_results(self):
+        self.results = {}              # "REF" / "INF" / "MODEL" -> wynik collect()
+        self.order = []
+        self.last = None               # podsumowanie (finish)
+        self.last_files = []
+        self.when = ""
+
+    # ---------------------------------------------------------- kryteria
+    def keys(self):
+        return [k for k in SURF_METRICS if self.crit.get(k, {}).get("use")]
+
+    def crit_text(self, k):
+        c = self.crit.get(k, {})
+        lo, hi = to_float(c.get("lo")), to_float(c.get("hi"))
+        if lo is None and hi is None:
+            return T("bez ograniczenia", "no limit")
+        if lo is None:
+            return "\u2264 %s" % fmt_num(hi, 4)
+        if hi is None:
+            return "\u2265 %s" % fmt_num(lo, 4)
+        return "%s \u2013 %s" % (fmt_num(lo, 4), fmt_num(hi, 4))
+
+    def within(self, k, v):
+        c = self.crit.get(k, {})
+        lo, hi = to_float(c.get("lo")), to_float(c.get("hi"))
+        if lo is not None and v < lo:
+            return False
+        if hi is not None and v > hi:
+            return False
+        return True
+
+    def reset_crit(self):
+        self.crit = dict((k, {"use": u, "lo": lo, "hi": hi}) for k, (u, lo, hi) in SURF_DEFAULT_CRIT.items())
+
+    def dims(self):
+        return set(d for d, on in (("2d", self.dim2), ("3d", self.dim3)) if on)
+
+    def source_label(self):
+        return {"surfs": T("powierzchnie %s", "surfaces %s", self.surf_text.strip() or "-"),
+                "comps": T("komponenty: %s", "components: %s", self.src_text.strip() or "-"),
+                "sets": T("zestawy: %s", "sets: %s", self.src_text.strip() or "-"),
+                "elems": T("ID element\u00f3w (%d)", "element IDs (%d)", len(parse_id_list(self.src_text)))}.get(self.source, self.source)
+
+    # ---------------------------------------------------------- elementy
+    def element_ids(self):
+        """ID elementow (wybranych wymiarow) zwiazanych ze wskazanym zrodlem
+        w modelu, ktory jest w sesji. Rzuca ValueError z podpowiedzia."""
+        dims = self.dims()
+        if not dims:
+            raise ValueError(T("Zaznacz elementy 2D i/lub 3D.", "Tick 2D and/or 3D elements."))
+        keep = lambda c: elem_dim(c) in dims
+        need = max(1, int(self.min_shared))
+        if self.source == "surfs":
+            sids = parse_id_list(self.surf_text)
+            if not sids:
+                raise ValueError(T("Podaj ID powierzchni (np. 12 13 20-25) albo wska\u017c je w HyperMeshu.",
+                                   "Enter surface IDs (e.g. 12 13 20-25) or pick them in HyperMesh."))
+            BUS.progress(T("W\u0119z\u0142y na powierzchniach %s\u2026", "Nodes on surfaces %s\u2026", " ".join("%d" % s for s in sids[:8])))
+            nids = HM.surface_node_ids(sids)
+            if not nids:
+                # zapasowo: elementy 2D skojarzone z powierzchnia -> ich wezly
+                els = HM.surface_elem_ids(sids)
+                if els:
+                    E = HM.read_elements(ids=els, names=(), nodes=True)
+                    nids = sorted(set(n for ns in (E.nodes or []) for n in ns))
+            if not nids:
+                raise ValueError(T("Nie znaleziono w\u0119z\u0142\u00f3w na powierzchniach %s (siatka nie jest skojarzona z geometri\u0105 albo ta wersja HM "
+                                   "nie obs\u0142uguje zaznaczenia \u201eby geoms\u201d). Wska\u017c zamiast tego komponent z siatk\u0105 powierzchni albo ID element\u00f3w.",
+                                   "No nodes found on surfaces %s (mesh not associated with geometry or this HM version does not support "
+                                   "\u201cby geoms\u201d selection). Choose a component with the surface mesh or element IDs instead.",
+                                   " ".join("%d" % s for s in sids[:8])))
+            return HM.elems_touching(nids, keep, need)
+        if self.source in ("comps", "sets"):
+            names = [s.strip() for s in re.split(r"[,;\n]+", self.src_text or "") if s.strip()]
+            if not names:
+                raise ValueError(T("Podaj nazwy komponent\u00f3w / zestaw\u00f3w (po przecinku).", "Enter component / set names (comma separated)."))
+            seed = []
+            if self.source == "comps":
+                idx = HM.comp_index()
+                miss = [n for n in names if n not in idx]
+                if miss:
+                    raise ValueError(T("Brak komponent\u00f3w: %s", "Missing components: %s", ", ".join(miss)))
+                for n in names:
+                    seed += HM.comp_elem_ids(idx[n])
+            else:
+                for n in names:
+                    ids = HM.set_elem_ids(n)
+                    if not ids:
+                        raise ValueError(T("Zestaw %s nie istnieje albo jest pusty.", "Set %s does not exist or is empty.", n))
+                    seed += ids
+            if not seed:
+                raise ValueError(T("Wskazane zr\u00f3d\u0142o nie ma element\u00f3w.", "The chosen source has no elements."))
+            E = HM.read_elements(ids=seed, names=(), nodes=True)
+            direct = [eid for eid, cfg in zip(E.ids, E.cfg) if keep(cfg)]
+            nids = set(n for ns in (E.nodes or []) for n in ns)
+            touching = HM.elems_touching(nids, keep, need)
+            return sorted(set(direct) | set(touching))
+        ids = parse_id_list(self.src_text)
+        if not ids:
+            raise ValueError(T("Podaj ID element\u00f3w.", "Enter element IDs."))
+        E = HM.read_elements(ids=ids, names=())
+        return [eid for eid, cfg in zip(E.ids, E.cfg) if keep(cfg)]
+
+    # ---------------------------------------------------------- analiza
+    def collect(self, label):
+        """Analiza elementow zrodla w modelu, ktory JEST w sesji (REF / INF /
+        MODEL). Wynik zostaje w self.results[label]."""
+        if not HM.ok():
+            raise RuntimeError(T("Brak API HyperMesha.", "No HyperMesh API."))
+        keys = self.keys()
+        if not keys:
+            raise ValueError(T("Zaznacz przynajmniej jedn\u0105 metryk\u0119 z kryterium.", "Tick at least one metric with a criterion."))
+        ids = self.element_ids()
+        if not ids:
+            raise ValueError(T("%s: brak element\u00f3w %s zwi\u0105zanych ze wskazanym \u017ar\u00f3d\u0142em.", "%s: no %s elements related to the chosen source.",
+                               label, "+".join(d.upper() for d in sorted(self.dims()))))
+        cache = {}
+
+        def names_for(cfg):
+            if cfg in cache:
+                return cache[cfg]
+            d, shape = elem_dim(cfg), elem_shape(cfg)
+            out = []
+            for k in keys:
+                if k == "tetcollapse" or not applies_metric(k, d, shape):
+                    continue
+                out.append(("length" if d == "1d" else "shortestside") if k == "length" else REP_ATTR[k])
+            cache[cfg] = out
+            return out
+
+        BUS.progress(T("%s: metryki %d element\u00f3w\u2026", "%s: metrics of %d elements\u2026", label, len(ids)))
+        D = HM.read_elements(ids=ids, names=names_for, nodes=("tetcollapse" in keys))
+        xyz = {}
+        if "tetcollapse" in keys:
+            xyz = HM.read_nodes(n for c, ns in zip(D.cfg, D.nodes) if elem_shape(c) == "tet" for n in ns[:4])
+        per = dict((k, {"vals": [], "ids": []}) for k in keys)
+        n2 = n3 = 0
+        for i, eid in enumerate(D.ids):
+            cfg = D.cfg[i]
+            d, shape = elem_dim(cfg), elem_shape(cfg)
+            if d == "2d":
+                n2 += 1
+            elif d == "3d":
+                n3 += 1
+            for k in keys:
+                if not applies_metric(k, d, shape):
+                    continue
+                if k == "tetcollapse":
+                    ns = D.nodes[i]
+                    pts = [xyz.get(n) for n in ns[:4]] if len(ns) >= 4 else None
+                    v = tet_collapse(pts) if pts and None not in pts else None
+                elif k == "length":
+                    v = D.vals.get("length" if d == "1d" else "shortestside", [None] * len(D.ids))[i]
+                else:
+                    v = D.vals.get(REP_ATTR[k], [None] * len(D.ids))[i]
+                if v is None:
+                    continue
+                per[k]["vals"].append(v)
+                per[k]["ids"].append(eid)
+        out = {"label": label, "source": self.source_label(), "n": len(D.ids), "n2d": n2, "n3d": n3, "ids": list(D.ids),
+               "when": now_text(), "file": HM.model_file(), "per": {}}
+        for k in keys:
+            vals, vids = per[k]["vals"], per[k]["ids"]
+            if not vals:
+                out["per"][k] = {"n": 0, "ok": 0, "pct": None, "min": None, "max": None, "mean": None, "worst": [], "bad_ids": []}
+                continue
+            okn = 0
+            bad = []
+            for v, eid in zip(vals, vids):
+                if self.within(k, v):
+                    okn += 1
+                else:
+                    bad.append(eid)
+            wdir = REP[k].wdir
+            worst = worst_list(vals, vids, wdir if wdir != "none" else "above", self.topn)
+            out["per"][k] = {"n": len(vals), "ok": okn, "pct": pct(okn, len(vals)), "min": min(vals), "max": max(vals),
+                             "mean": sum(vals) / len(vals), "worst": worst, "bad_ids": bad}
+        self.results[label] = out
+        if label not in self.order:
+            self.order.append(label)
+        if self.make_sets:
+            self._sets(label, out)
+        return out
+
+    def _sets(self, label, out):
+        """Zestawy elementow poza tolerancja: SURF_<label>_<skrot>_poza_tol."""
+        names = []
+        for k, r in out["per"].items():
+            if r["bad_ids"]:
+                names.append(("SURF_%s_%s_poza_tol" % (label, REP[k].abbr), r["bad_ids"]))
+        if not names:
+            return
+        HM.delete_sets([n for n, _ in names])
+        for nm, ids in names:
+            if HM.create_set(nm, ids) and nm not in MESH.sets:
+                MESH.sets.append(nm)
+
+    def finish(self):
+        """Podsumowanie z zebranych wynikow (REF vs INF albo jeden model)."""
+        if not self.results:
+            raise ValueError(T("Brak wynik\u00f3w analizy powierzchni.", "No surface analysis results."))
+        labels = [l for l in ("REF", "INF", "MODEL") if l in self.results]
+        self.when = now_text()
+        self.last = {"labels": labels, "when": self.when, "keys": self.keys(), "source": self.source_label(),
+                     "dims": "+".join(d.upper() for d in sorted(self.dims())), "min_shared": self.min_shared}
+        return self.last
+
+    def run(self):
+        """Samodzielny przebieg: jeden model (w sesji) albo REF vs INF (wczytuje
+        oba pliki - ZASTEPUJE model w sesji). Zwraca opis."""
+        self.clear_results()
+        if self.models == "pair":
+            for f, lab in ((self.ref_file, "REF"), (self.inf_file, "INF")):
+                if not os.path.isfile(f):
+                    raise ValueError(T("Wska\u017c istniej\u0105cy plik %s (.hm).", "Choose an existing %s file (.hm).", lab))
+            if MESH.active():
+                MESH.restore()
+            for lab, f in (("REF", self.ref_file), ("INF", self.inf_file)):
+                BUS.progress(T("Wczytywanie %s: %s\u2026", "Loading %s: %s\u2026", lab, os.path.basename(f)))
+                ok, msg = HM.read_file(f)
+                if not ok:
+                    raise RuntimeError(T("Nie uda\u0142o si\u0119 wczyta\u0107 %s: %s", "Could not load %s: %s", lab, msg))
+                self.collect(lab)
+        else:
+            self.collect("MODEL")
+        self.finish()
+        written, failed = self.write(self.base_path()) if self.base_path() else ([], [])
+        return self.describe(written, failed)
+
+    def base_path(self):
+        base = os.path.splitext(self.out_file)[0] if self.out_file else ""
+        return base
+
+    def describe(self, written=(), failed=()):
+        L = [T("Analiza element\u00f3w z powierzchni zako\u0144czona (%s).", "Surface element analysis finished (%s).", self.when)]
+        for row in self.summary_rows()[1:]:
+            L.append("  " + "  |  ".join(("%s" % (c["t"] if isinstance(c, dict) else c)) for c in row))
+        if written:
+            L.append(T("Pliki:", "Files:"))
+            L += ["  " + p for p in written]
+        if failed:
+            L.append(T("NIEUDANE:", "FAILED:"))
+            L += ["  " + p for p in failed]
+        return "\n".join(L)
+
+    # ---------------------------------------------------------- tabele
+    def summary_rows(self):
+        """Tabela: metryka, kryterium, N i % w tolerancji per model, delta."""
+        if not self.last:
+            return []
+        labels = self.last["labels"]
+        pair = "REF" in labels and "INF" in labels
+        if pair:
+            hdr = [T("Metryka", "Metric"), T("Kryterium", "Criterion"), "REF: N", T("REF: w tol. %", "REF: within %"),
+                   "INF: N", T("INF: w tol. %", "INF: within %"), T("\u0394 pkt %", "\u0394 pct pts"), T("Poza tol. INF", "Out of tol. INF")]
+        else:
+            lab = labels[0]
+            hdr = [T("Metryka", "Metric"), T("Kryterium", "Criterion"), "N", T("W tolerancji", "Within"), T("% w tol.", "% within"),
+                   T("Poza tol.", "Out of tol."), "Min", "Max"]
+        rows = [hdr]
+        for k in self.last["keys"]:
+            crit = self.crit_text(k)
+            if pair:
+                a, b = self.results["REF"]["per"].get(k), self.results["INF"]["per"].get(k)
+                pa = a["pct"] if a and a["pct"] is not None else None
+                pb = b["pct"] if b and b["pct"] is not None else None
+                d = (pb - pa) if (pa is not None and pb is not None) else None
+                nb = (b["n"] - b["ok"]) if b else 0
+                rows.append([REP[k].label, crit, "%d" % (a["n"] if a else 0), "\u2013" if pa is None else "%.2f" % pa,
+                             "%d" % (b["n"] if b else 0), "\u2013" if pb is None else "%.2f" % pb,
+                             {"t": "\u2013" if d is None else "%+.2f" % d, "color": ("2E7D32" if d >= 0 else "C00000") if d is not None else "262626", "bold": True},
+                             {"t": "%d" % nb, "color": "C00000" if nb else "2E7D32", "bold": True}])
+            else:
+                r = self.results[lab]["per"].get(k)
+                if not r or r["n"] == 0:
+                    rows.append([REP[k].label, crit, "0", "\u2013", "\u2013", "\u2013", "\u2013", "\u2013"])
+                    continue
+                nb = r["n"] - r["ok"]
+                rows.append([REP[k].label, crit, "%d" % r["n"], "%d" % r["ok"], "%.2f" % r["pct"],
+                             {"t": "%d" % nb, "color": "C00000" if nb else "2E7D32", "bold": True}, fmt_num(r["min"], 4), fmt_num(r["max"], 4)])
+        return rows
+
+    def overall(self, label):
+        """Udzial elementow spelniajacych WSZYSTKIE kryteria naraz."""
+        r = self.results.get(label)
+        if not r:
+            return None
+        ids = set(r["ids"])
+        bad = set()
+        for k, x in r["per"].items():
+            bad.update(x["bad_ids"])
+        n = len(ids)
+        return (n - len(bad & ids), n, pct(n - len(bad & ids), n))
+
+    def stat_pairs(self):
+        out = []
+        if not self.last:
+            return out
+        for lab in self.last["labels"]:
+            o = self.overall(lab)
+            if o:
+                out.append((T("%s: wszystkie kryteria", "%s: all criteria", lab), "%d / %d  (%.2f%%)" % o))
+        if len(self.last["labels"]) == 2:
+            a, b = self.overall("REF"), self.overall("INF")
+            if a and b:
+                out.append((T("\u0394 (INF \u2212 REF)", "\u0394 (INF \u2212 REF)"), "%+.2f %s" % (b[2] - a[2], T("pkt %", "pct pts"))))
+        return out
+
+    # ---------------------------------------------------------- zapis
+    def write(self, base):
+        if not self.last:
+            raise ValueError(T("Brak wynik\u00f3w do zapisania.", "No results to write."))
+        if not base:
+            raise ValueError(T("Wska\u017c plik wynikowy.", "Choose the output file."))
+        d = os.path.dirname(base)
+        if d:
+            os.makedirs(d, exist_ok=True)
+        jobs = []
+        if self.fmt.get("txt"):
+            jobs.append((base + ".txt", lambda p: write_text(p, surface_txt(self))))
+        if self.fmt.get("csv"):
+            jobs.append((base + ".csv", lambda p: write_csv(p, surface_csv_rows(self), REPORT.num_style)))
+        if self.fmt.get("html"):
+            jobs.append((base + ".html", lambda p: write_text(p, surface_html(self))))
+        if self.fmt.get("xlsx"):
+            jobs.append((base + ".xlsx", lambda p: surface_xlsx(self, p)))
+        written, failed = [], []
+        for path, fn in jobs:
+            BUS.progress(T("Zapis: %s", "Writing: %s", os.path.basename(path)))
+            try:
+                fn(path)
+                written.append(path)
+            except Exception as e:
+                failed.append("%s (%s)" % (path, e))
+        self.last_files = list(written)
+        return written, failed
+
+    KEYS = ("source", "surf_text", "src_text", "min_shared", "dim2", "dim3", "make_sets", "models", "ref_file",
+            "inf_file", "out_file", "fmt")
+
+    def to_dict(self):
+        d = dict((k, getattr(self, k)) for k in self.KEYS)
+        d["crit"] = dict((k, {"use": bool(c["use"]), "lo": c["lo"], "hi": c["hi"]}) for k, c in self.crit.items())
+        return d
+
+    def from_dict(self, d):
+        assign_attrs(self, d, self.KEYS, {"source": SURF_SOURCES, "models": ("pair", "current")})
+        self.min_shared = max(1, min(8, int(self.min_shared)))
+        c = d.get("crit")
+        if isinstance(c, dict):
+            for k, v in c.items():
+                if k in self.crit and isinstance(v, dict):
+                    if isinstance(v.get("use"), bool):
+                        self.crit[k]["use"] = v["use"]
+                    for b in ("lo", "hi"):
+                        if b in v:
+                            self.crit[k][b] = to_float(v[b])
+
+
+def _surf_cell(c):
+    return "%s" % (c["t"] if isinstance(c, dict) else c)
+
+
+def surface_txt(eng):
+    last = eng.last
+    L = [LINE, "  " + T("ELEMENTY KRYTYCZNE Z POWIERZCHNI \u2013 TOLERANCJE", "CRITICAL ELEMENTS FROM SURFACES \u2013 TOLERANCES") + "   %s v%s" % (APP_TITLE, VERSION), LINE,
+         "  " + T("Data:      %s", "Date:      %s", last["when"]),
+         "  " + T("\u0179r\u00f3d\u0142o:    %s", "Source:    %s", last["source"]),
+         "  " + T("Elementy:  %s, element na powierzchni gdy \u2265 %d w\u0119z\u0142\u00f3w na niej", "Elements:  %s, on surface when \u2265 %d of its nodes are on it",
+                  last["dims"], last["min_shared"])]
+    for lab in last["labels"]:
+        r = eng.results[lab]
+        L.append("  %-9s %s   (%s: %d, 2D %d, 3D %d)" % (lab + ":", r["file"] or "-", T("element\u00f3w", "elements"), r["n"], r["n2d"], r["n3d"]))
+    L += ["", DASH]
+    rows = eng.summary_rows()
+    if rows:
+        widths = [max(len(_surf_cell(r[i])) for r in rows) for i in range(len(rows[0]))]
+        for i, row in enumerate(rows):
+            L.append("  " + "  ".join(_surf_cell(c).ljust(widths[j]) if j < 2 else _surf_cell(c).rjust(widths[j]) for j, c in enumerate(row)))
+            if i == 0:
+                L.append("  " + "-" * (sum(widths) + 2 * (len(widths) - 1)))
+    for lab, val in eng.stat_pairs():
+        L.append("  %s: %s" % (lab, val))
+    for lab in last["labels"]:
+        r = eng.results[lab]
+        L += ["", LINE, "  %s \u2013 %s" % (lab, T("najgorsze elementy (id: warto\u015b\u0107)", "worst elements (id: value)")), DASH]
+        for k in last["keys"]:
+            x = r["per"].get(k)
+            if not x or not x["worst"]:
+                continue
+            L.append("  %s  [%s]" % (REP[k].label, eng.crit_text(k)))
+            for n, (v, eid) in enumerate(x["worst"], 1):
+                flag = "" if eng.within(k, v) else "  <-- " + T("poza tolerancj\u0105", "out of tolerance")
+                L.append("    %2d. id=%-10s %s%s" % (n, eid, pnum(v), flag))
+    L += ["", LINE]
+    return "\n".join(L) + "\n"
+
+
+def surface_csv_rows(eng):
+    rows = [[_surf_cell(c) for c in r] for r in eng.summary_rows()]
+    return rows
+
+
+def surface_html(eng):
+    last = eng.last
+    H = ['<div class="cards">']
+    for lab in last["labels"]:
+        o = eng.overall(lab)
+        r = eng.results[lab]
+        if o:
+            H.append('<div class="card"><div class="k">%s \u2022 %s</div><div class="v %s">%.1f%%</div><div class="hint">%d / %d %s</div></div>'
+                     % (lab, h_esc(T("wszystkie kryteria", "all criteria")), "okv" if o[2] >= 99.999 else "badv" if o[2] < 90 else "", o[2], o[0], o[1],
+                        h_esc(T("element\u00f3w", "elements"))))
+    if len(last["labels"]) == 2:
+        a, b = eng.overall("REF"), eng.overall("INF")
+        if a and b:
+            d = b[2] - a[2]
+            H.append('<div class="card"><div class="k">\u0394 INF \u2212 REF</div><div class="v %s">%+.2f</div><div class="hint">%s</div></div>'
+                     % ("okv" if d >= 0 else "badv", d, h_esc(T("punkty procentowe", "percentage points"))))
+    H.append("</div>\n")
+    rows = eng.summary_rows()
+    H.append('<section><h2>%s<span class="dir">%s</span></h2><table class="srt"><thead><tr>%s</tr></thead><tbody>'
+             % (h_esc(T("Udzia\u0142 element\u00f3w w tolerancji", "Share of elements within tolerance")), h_esc(last["source"]),
+                "".join("<th>%s</th>" % h_esc(_surf_cell(c)) for c in rows[0])))
+    for row in rows[1:]:
+        cells = []
+        for c in row:
+            cls = ""
+            if isinstance(c, dict) and c.get("color") == "C00000":
+                cls = ' class="badv"'
+            elif isinstance(c, dict) and c.get("color") == "2E7D32":
+                cls = ' class="okv"'
+            cells.append("<td%s>%s</td>" % (cls, h_esc(_surf_cell(c))))
+        H.append("<tr>%s</tr>" % "".join(cells))
+    H.append("</tbody></table></section>\n")
+    for lab in last["labels"]:
+        r = eng.results[lab]
+        H.append('<section><h2>%s<span class="dir">%s \u2022 %s: %d (2D %d, 3D %d)</span></h2><div class="grid">'
+                 % (lab, h_esc(r["file"] or "-"), h_esc(T("element\u00f3w", "elements")), r["n"], r["n2d"], r["n3d"]))
+        for k in last["keys"]:
+            x = r["per"].get(k)
+            if not x or not x["worst"]:
+                continue
+            H.append('<div><div class="k">%s [%s]</div><table class="srt"><thead><tr><th>#</th><th>ID</th><th>%s</th></tr></thead><tbody>'
+                     % (h_esc(REP[k].label), h_esc(eng.crit_text(k)), h_esc(T("Warto\u015b\u0107", "Value"))))
+            for n, (v, eid) in enumerate(x["worst"], 1):
+                H.append('<tr><td>%d</td><td>%s</td><td%s>%s</td></tr>' % (n, eid, "" if eng.within(k, v) else ' class="badv"', pnum(v)))
+            cmd = "*createmark elems 1 " + " ".join("%s" % eid for _, eid in x["worst"])
+            H.append('</tbody></table><button class="cpy" data-d="%s" data-c="%s" onclick="cpy(this)">%s</button></div>'
+                     % (h_esc(T("Skopiowano!", "Copied!")), h_esc(cmd), h_esc(T("Kopiuj *createmark", "Copy *createmark"))))
+        H.append("</div></section>\n")
+    meta = "%s \u2022 %s" % (h_esc(last["source"]), last["when"])
+    return html_page(T("Elementy krytyczne z powierzchni", "Critical elements from surfaces"), meta, "".join(H))
+
+
+def surface_xlsx(eng, path):
+    need_xlsx()
+    wb = xlsxwriter.Workbook(path)
+    st = XlsxStyles(wb)
+    last = eng.last
+    ws = wb.add_worksheet(T("Podsumowanie", "Summary"))
+    rows = eng.summary_rows()
+    nc = len(rows[0]) if rows else 8
+    ws.merge_range(0, 0, 0, nc - 1, T("ELEMENTY KRYTYCZNE Z POWIERZCHNI \u2013 UDZIA\u0141 W TOLERANCJI", "CRITICAL ELEMENTS FROM SURFACES \u2013 SHARE WITHIN TOLERANCE"), st.title)
+    ws.set_row(0, 30)
+    ws.merge_range(1, 0, 1, nc - 1, "%s \u2022 %s \u2022 %s" % (last["source"], last["dims"], last["when"]), st.note)
+    for c, h in enumerate(rows[0]):
+        ws.write(3, c, _surf_cell(h), st.hdr)
+    r = 4
+    for row in rows[1:]:
+        for c, cell in enumerate(row):
+            txt = _surf_cell(cell)
+            f = to_float(txt.replace("%", "").replace("+", ""))
+            if isinstance(cell, dict) and cell.get("color") == "C00000":
+                fmt = st.red_num if (f is not None and "." in txt) else st.red_int
+            elif isinstance(cell, dict) and cell.get("color") == "2E7D32":
+                fmt = st.green_int
+            else:
+                fmt = st.num if (f is not None and "." in txt) else st.int
+            if f is not None and c >= 2 and txt not in ("\u2013", "-"):
+                ws.write_number(r, c, f, fmt)
+            else:
+                ws.write(r, c, txt, st.lab if c == 0 else st.txt)
+        r += 1
+    r += 1
+    for lab, val in eng.stat_pairs():
+        ws.write(r, 0, lab, st.lab)
+        ws.write(r, 1, val)
+        r += 1
+    for c, w in enumerate([26, 16] + [14] * (nc - 2)):
+        ws.set_column(c, c, w)
+    ws.freeze_panes(4, 0)
+    for lab in last["labels"]:
+        res = eng.results[lab]
+        ws = wb.add_worksheet(T("Najgorsze %s", "Worst %s", lab))
+        hdr = [T("Metryka", "Metric"), T("Kryterium", "Criterion"), T("Lp.", "Rank"), "ID", T("Warto\u015b\u0107", "Value"), T("W tolerancji", "Within")]
+        for c, h in enumerate(hdr):
+            ws.write(0, c, h, st.hdr)
+        r = 1
+        for k in last["keys"]:
+            x = res["per"].get(k)
+            if not x:
+                continue
+            for n, (v, eid) in enumerate(x["worst"], 1):
+                ok = eng.within(k, v)
+                ws.write(r, 0, REP[k].label, st.lab)
+                ws.write(r, 1, eng.crit_text(k))
+                ws.write_number(r, 2, n, st.int)
+                ws.write_number(r, 3, eid, st.int)
+                ws.write_number(r, 4, v, st.num if ok else st.red_num)
+                ws.write(r, 5, T("tak", "yes") if ok else T("NIE", "NO"), st.green_int if ok else st.red_int)
+                r += 1
+        for c, w in enumerate([26, 16, 6, 12, 14, 12]):
+            ws.set_column(c, c, w)
+        if r > 1:
+            ws.autofilter(0, 0, r - 1, 5)
+        ws.freeze_panes(1, 0)
+        ws = wb.add_worksheet(T("Elementy %s", "Elements %s", lab))
+        ws.write(0, 0, "ID", st.hdr)
+        for i, eid in enumerate(res["ids"], 1):
+            ws.write_number(i, 0, eid, st.int)
+    wb.close()
+
+
+SURF = SurfaceEngine()
 # ==================== OBRAZY: MINIATURY, TLO, KONWERSJE ===============
 # HyperMesh 2024 zapisuje zrzut okna graficznego ZAWSZE na bialym tle
 # (niezaleznie od tla sceny na ekranie - sprawdzone dla *jpegfilenamed
@@ -6331,7 +7598,9 @@ def side_ops(leg, stats, x, y, w, h):
 
 
 def bar_ops(leg, x, y, w, h):
-    """Pionowy pasek gradientu (duzo pasm) + podzialki + wiersze dodatkowe."""
+    """Pionowy pasek pasm w stylu paletyzatora ANSYS (ciemne przegrody
+    miedzy pasmami, podzialki z wartosciami z prawej, liczba elementow
+    w pasmie, znaczniki MIN / MAX) + wiersze dodatkowe pod paskiem."""
     ops = []
     extra = leg.get("rows") or []
     bh = h - len(extra) * 7.0 * MM - 3 * MM
@@ -6339,28 +7608,49 @@ def bar_ops(leg, x, y, w, h):
         bh = max(10 * MM, h * 0.6)
     bands = leg["bands"]
     K = len(bands)
-    bw = 10 * MM
+    bw = 9 * MM
+    bx = x + 9 * MM                       # miejsce na znaczniki MIN / MAX z lewej
     lo, hi = bands[0]["lo"], bands[-1]["hi"]
     span = (hi - lo) or 1.0
     for b in bands:
         ya = y + bh - (b["lo"] - lo) / span * bh
         yz = y + bh - (b["hi"] - lo) / span * bh
-        ops.append(("rect", x, yz, bw, max(1, ya - yz), hex6(b["rgb"]), ""))
-    ops.append(("rect", x, y, bw, bh, "", "404040"))
-    every = max(1, int(math.ceil(K / 9.0)))
+        ops.append(("rect", bx, yz, bw, max(1, ya - yz), hex6(b["rgb"]), "3A3A3A"))
+    ops.append(("rect", bx, y, bw, bh, "", "202020"))
+    every = max(1, int(math.ceil(K / 12.0)))
     dec = leg.get("dec", 3)
+    fs = 8 if K > 12 else 9
     for i in list(range(0, K, every)) + [K]:
         v = bands[i]["lo"] if i < K else hi
         yy = y + bh - (v - lo) / span * bh
-        ops.append(("text", x + bw + 2 * MM, yy - 3 * MM, w - bw - 2 * MM, 6 * MM, fmt_num(v, dec), 9, False, "262626", "l", "ctr"))
+        ops.append(("rect", bx + bw, yy - 0.15 * MM, 2.5 * MM, 0.3 * MM, "202020", ""))
+        ops.append(("text", bx + bw + 3 * MM, yy - 3 * MM, 22 * MM, 6 * MM, fmt_num(v, dec), fs, False, "262626", "l", "ctr"))
+    if K <= 30:
+        cx = bx + bw + 24 * MM
+        for b in bands:
+            n = b.get("count")
+            if n in (None, "", 0):
+                continue
+            ya = y + bh - (b["lo"] - lo) / span * bh
+            yz = y + bh - (b["hi"] - lo) / span * bh
+            ops.append(("text", cx, yz, max(6 * MM, w - (cx - x)), max(1, ya - yz), "%d" % n, fs, False, "555555", "l", "ctr"))
+    prev = None
+    for tag, info in (("MAX", leg.get("max")), ("MIN", leg.get("min"))):
+        if not info:
+            continue
+        f = max(0.0, min(1.0, (info[0] - lo) / span))
+        yy = y + bh - f * bh
+        if prev is not None and abs(yy - prev) < 6 * MM:
+            continue
+        ops.append(("rect", x, yy - 0.2 * MM, 8 * MM, 0.4 * MM, "202020", ""))
+        ops.append(("text", x - 1 * MM, yy - 6.5 * MM, 9.5 * MM, 6 * MM, tag, 7, True, "202020", "r", "b"))
+        prev = yy
     cy = y + bh + 3 * MM
     for r in extra:
-        ops.append(("rect", x, cy + 1 * MM, bw, 5 * MM, hex6(r["rgb"]), "7F7F7F"))
-        ops.append(("text", x + bw + 2 * MM, cy, w - bw - 2 * MM, 7 * MM, "%s: %s" % (r["label"], r.get("count", "")), 10, False, "262626", "l", "ctr"))
+        ops.append(("rect", bx, cy + 1 * MM, bw, 5 * MM, hex6(r["rgb"]), "7F7F7F"))
+        ops.append(("text", bx + bw + 2 * MM, cy, w - bw - 2 * MM - 9 * MM, 7 * MM, "%s: %s" % (r["label"], r.get("count", "")), 9, False, "262626", "l", "ctr"))
         cy += 7 * MM
     return ops
-
-
 # ===================== PREZENTACJA POWERPOINT (.pptx) ==================
 # Zapis przez python-pptx (jest w Pythonie HyperMesha) - bez PowerPointa
 # i bez COM. Nowa prezentacja 16:9 albo DOPISANIE slajdow na koncu
@@ -6578,11 +7868,12 @@ class Presenter(object):
         self.sample_path = ""         # klatka do podgladu (cache)
         self.sample_key = None
         self.last_export = None       # {"path", "n", "when", "msg", "titles", "thumbs"}
+        self.last_delta_files = []    # pliki zrzutow ostatniej serii delty (workflow)
 
     # ---------------------------------------------------------- podglad
     def state_key(self):
         """Podpis stanu siatki i widoku - zmiana = nowa klatka do podgladu."""
-        return (MQ.view, MQ.when, DELTA.done, DELTA.when, MESH.owner, VIEWS.bg, self.img_fmt,
+        return (MQ.view, MQ.when, DELTA.done, DELTA.when, DELTA.view, MESH.owner, VIEWS.bg, self.img_fmt,
                 HM.signature() if HM.ok() else "")
 
     def sample_frame(self, capture=True):
@@ -6658,8 +7949,14 @@ class Presenter(object):
         else:
             L.append(T("SERIA (F7): brak analizy metryk \u2013 seria nie powstanie (karta \u201e1 Metryki\u201d, F5)",
                        "SERIES (F7): no metrics analysis \u2013 no series (\u201c1 Metrics\u201d tab, F5)"))
-        L.append(T("DELTA REF/INF: %s", "REF/INF DELTA: %s", T("wynik na siatce (%s) \u2013 slajd dost\u0119pny", "result on the mesh (%s) \u2013 slide available", DELTA.delta_label())
-                   if (DELTA.done and MESH.owner == "delta") else T("brak wyniku na siatce", "no result on the mesh")))
+        if DELTA.done and MESH.owner == "delta":
+            L.append(T("DELTA REF/INF: na siatce %s; metryki: %s \u2013 slajd / seria (metryki \u00d7 widoki) dost\u0119pne",
+                       "REF/INF DELTA: on the mesh %s; metrics: %s \u2013 slide / series (metrics \u00d7 views) available",
+                       DELTA.delta_label(), ", ".join(DELTA.delta_tag(m) for m in DELTA.analyzed)))
+        else:
+            L.append(T("DELTA REF/INF: brak wyniku na siatce", "REF/INF DELTA: no result on the mesh"))
+        if SURF.last:
+            L.append(T("POWIERZCHNIE: wynik z %s \u2013 slajd z tabel\u0105 dost\u0119pny", "SURFACES: result from %s \u2013 table slide available", SURF.last["when"]))
         L.append(T("RAPORT: %s", "REPORT: %s", T("wynik z %s \u2013 slajd z tabel\u0105 dost\u0119pny", "result from %s \u2013 table slide available", REPORT.last["when"])
                    if REPORT.last else T("brak wygenerowanego raportu", "no report generated")))
         L.append(T("WIDOKI: %d zapami\u0119tanych, %d zaznaczonych, %d z klatk\u0105 WYSIWYG", "VIEWS: %d remembered, %d ticked, %d with a WYSIWYG frame",
@@ -6735,18 +8032,123 @@ class Presenter(object):
         return {"kind": "view", "title": title, "img": img, "own_img": own, "legend": leg, "stats": stats,
                 "table": None, "note": ""}
 
-    def delta_item(self, img):
-        lm = DELTA.legend_model()
-        if lm["fail"] or len(lm["bands"]) <= 16:
+    def delta_item(self, img, m=None, cam=""):
+        m = m or DELTA.cur_metric()
+        lm = DELTA.legend_model(m)
+        if lm is None:
+            leg = None
+        elif lm["fail"] or len(lm["bands"]) <= 2:
             rows = [{"rgb": b["rgb"], "label": b["label"], "count": b["count"], "pct": None} for b in reversed(lm["bands"])]
             if lm["fail"]:
                 rows = []
             leg = {"type": "rows", "head": (lm["title"], lm["sub"]), "rows": rows + lm["extra"]}
         else:
-            leg = {"type": "bar", "head": (lm["title"], lm["sub"]), "bands": lm["bands"], "rows": lm["extra"], "dec": lm["dec"]}
-        return {"kind": "delta", "title": self.fill_tpl(DELTA.legend_title(), "", HM.model_name() if HM.ok() else ""),
-                "img": img, "own_img": True, "legend": leg, "stats": DELTA.stat_pairs(), "table": None, "note": ""}
+            leg = {"type": "bar", "head": (lm["title"], lm["sub"]), "bands": lm["bands"], "rows": lm["extra"], "dec": lm["dec"],
+                   "max": lm["max"], "min": lm["min"]}
+        return {"kind": "delta", "title": self.fill_tpl(DELTA.legend_title(m), "", cam or (HM.model_name() if HM.ok() else "")),
+                "img": img, "own_img": True, "legend": leg, "stats": DELTA.stat_pairs(m), "table": None, "note": "", "metric": m}
 
+    def delta_summary_item(self):
+        """Slajd zbiorczy delty: tabela wszystkich metryk."""
+        note = T("REF: %s \u2022 INF: %s \u2022 element\u00f3w: %d (%s) \u2022 %s", "REF: %s \u2022 INF: %s \u2022 elements: %d (%s) \u2022 %s",
+                 os.path.basename(DELTA.ref_file), os.path.basename(DELTA.inf_file), len(DELTA.elems), DELTA.dim_label(), DELTA.when)
+        rows = DELTA.summary_rows()
+        return {"kind": "summary", "img": "", "own_img": False, "legend": None, "stats": [],
+                "title": T("Delta REF \u2192 INF \u2013 podsumowanie metryk", "Delta REF \u2192 INF \u2013 metrics summary"),
+                "table": {"rows": rows, "fr": [2.0] + [1.0] * (len(rows[0]) - 1)}, "note": note}
+
+    def surface_item(self):
+        """Slajd z tabela elementow krytycznych z powierzchni (tolerancje)."""
+        if not SURF.last:
+            return None
+        rows = SURF.summary_rows()
+        note = T("\u0179r\u00f3d\u0142o: %s \u2022 elementy %s \u2022 %s", "Source: %s \u2022 elements %s \u2022 %s", SURF.last["source"], SURF.last["dims"], SURF.last["when"])
+        pairs = SURF.stat_pairs()
+        if pairs:
+            note += " \u2022 " + " \u2022 ".join("%s: %s" % p for p in pairs)
+        return {"kind": "surface", "img": "", "own_img": False, "legend": None, "stats": [],
+                "title": T("Elementy krytyczne z powierzchni \u2013 udzia\u0142 w tolerancji", "Critical elements from surfaces \u2013 share within tolerance"),
+                "table": {"rows": rows, "fr": [2.0, 1.3] + [1.0] * (len(rows[0]) - 2)}, "note": note}
+
+    def delta_series_items(self, save_dir=None, cams=None, metrics=None, legend_theme="white"):
+        """Seria delty: kazda metryka (na siatce tylko jej pasma + bezbarwne
+        "bez zmian"; inne metryki i komponenty spoza narzedzia wygaszone) x
+        kamera -> slajd. save_dir: zapis PNG i legendy SVG do <save_dir>/<TAG>/."""
+        if not DELTA.done or not DELTA.analyzed:
+            raise ValueError(T("Najpierw wykonaj analiz\u0119 delty.", "Run the delta analysis first."))
+        metrics = [m for m in (metrics or DELTA.views()) if m in DELTA.res]
+        cams = cams or [(r["name"], r["view"]) for r in VIEWS.selected()] or [("", None)]
+        v0 = DELTA.view
+        cur = HM.get_view()
+        items, files = [], []
+        k, tot = 0, len(metrics) * len(cams)
+        try:
+            for m in metrics:
+                DELTA.apply_view(m)
+                sub = None
+                if save_dir:
+                    sub = os.path.join(save_dir, clean_file_name(DELTA.delta_tag(m)))
+                    os.makedirs(sub, exist_ok=True)
+                    self._save_legend_svg(m, os.path.join(sub, "legenda_%s.svg" % clean_file_name(DELTA.delta_tag(m))), legend_theme)
+                for name, nums in cams:
+                    k += 1
+                    BUS.progress(T("Zrzut delty %d / %d: %s %s", "Delta shot %d / %d: %s %s", k, tot, DELTA.delta_tag(m), name))
+                    if nums:
+                        VIEWS.apply_view(nums)
+                    img = self.capture()
+                    if sub and img:
+                        dst = os.path.join(sub, "%s_%s.%s" % (clean_file_name(DELTA.delta_tag(m)), clean_file_name(name or T("widok", "view")),
+                                                              os.path.splitext(img)[1].lstrip(".") or "png"))
+                        try:
+                            shutil.copy2(img, dst)
+                            files.append(dst)
+                        except Exception as e:
+                            BUS.log("copy shot: %s" % e)
+                    items.append(self.delta_item(img, m, name))
+        except Exception:
+            self.drop_items(items)
+            raise
+        finally:
+            if len(cur) >= 16:
+                VIEWS.apply_view(cur)
+            back = v0 if v0 in DELTA.res else (metrics[0] if metrics else "")
+            if back and back != DELTA.view:
+                try:
+                    DELTA.apply_view(back)      # na koncu: widok sprzed serii (albo pierwsza metryka)
+                except Exception:
+                    pass
+        self.last_delta_files = files
+        return items
+
+    @staticmethod
+    def _save_legend_svg(m, path, theme="white"):
+        """Legenda delty jako SVG (tylko z Qt - pomiar tekstu)."""
+        if qt() is None or app_instance() is None:
+            return False
+        try:
+            th = LEGEND_THEMES.get(theme, LEGEND_THEMES["white"])
+            write_text(path, delta_legend_prims(theme, m).svg(th[0] if th[5] else None))
+            return True
+        except Exception as e:
+            BUS.log("legend svg: %s" % e)
+            return False
+
+    def delta_items(self):
+        if MESH.owner != "delta" or not DELTA.done:
+            raise ValueError(T("Na siatce nie ma wyniku delty \u2013 wykonaj analiz\u0119 na karcie \u201eDelta REF / INF\u201d.",
+                               "No delta result on the mesh \u2013 run the analysis on the \u201cDelta REF / INF\u201d page."))
+        return [self.delta_item(self.capture())]
+
+    def delta_all_items(self):
+        """Wszystkie metryki delty x zaznaczone widoki (albo biezaca kamera)."""
+        return self.delta_series_items()
+
+    def surface_items(self):
+        it = self.surface_item()
+        if it is None:
+            raise ValueError(T("Brak wyniku analizy powierzchni \u2013 wykonaj j\u0105 na karcie \u201ePowierzchnie\u201d.",
+                               "No surface analysis result \u2013 run it on the \u201cSurfaces\u201d page."))
+        return [it]
     def report_item(self):
         run = REPORT.last
         if not run:
@@ -6840,12 +8242,6 @@ class Presenter(object):
         if live and cur and len(cur) >= 16:
             VIEWS.apply_view(cur)
         return items
-
-    def delta_items(self):
-        if MESH.owner != "delta" or not DELTA.done:
-            raise ValueError(T("Na siatce nie ma wyniku delty \u2013 wykonaj analiz\u0119 na karcie \u201eDelta REF / INF\u201d.",
-                               "No delta result on the mesh \u2013 run the analysis on the \u201cDelta REF / INF\u201d tab."))
-        return [self.delta_item(self.capture())]
 
     def report_items(self):
         it = self.report_item()
@@ -6991,6 +8387,333 @@ QUICK_FRAMES = [("half_l", "1/2 lewa", "1/2 left", [0.02, 0.16, 0.47, 0.78]),
 PRESENT = Presenter()
 
 
+# ================= WORKFLOW: AUTOMAT PORONWANIA REF vs INF =============
+# Jeden przycisk: uzytkownik wskazuje pliki REF i INF, folder wynikowy
+# i (opcjonalnie) widoki na karcie "Widoki"; automat:
+#   1. tworzy folder przebiegu z podfolderami (01_delta, 02_raport_jakosci,
+#      03_powierzchnie, 04_prezentacja) i segreguje w nich wyniki,
+#   2. wczytuje REF: czyta metryki delty, liczy raport jakosci i (opcja)
+#      analize powierzchni na TYM SAMYM wczytanym modelu,
+#   3. wczytuje INF: to samo + delta wszystkich metryk,
+#   4. dla kazdej metryki naklada widok na siatke (inne metryki i komponenty
+#      spoza narzedzia wygaszone, "bez zmian" bezbarwne), robi zrzut kazdego
+#      widoku (01_delta/<TAG>/), zapisuje legende SVG,
+#   5. zapisuje raport porownawczy, raport powierzchni, podsumowanie
+#      (podsumowanie.txt + index.html z galeria zrzutow),
+#   6. buduje slajdy (tytul, delta metryka x widok, tabela delty, raport,
+#      powierzchnie) - zapis PPTX z podgladem przed zapisem (opcja).
+# Pliki REF / INF wczytywane sa tylko RAZ kazdy (delta, raport i powierzchnie
+# korzystaja z tego samego modelu w sesji).
+class Workflow(object):
+    SUBDIRS = (("delta", "01_delta"), ("report", "02_raport_jakosci"), ("surf", "03_powierzchnie"), ("pptx", "04_prezentacja"))
+
+    def __init__(self):
+        self.ref_file = ""
+        self.inf_file = ""
+        self.out_dir = ""
+        self.name = ""                 # nazwa przebiegu (puste = nazwa modelu INF)
+        self.stamp = True              # dopisz date i godzine do folderu przebiegu
+        self.do_delta = True
+        self.do_report = True
+        self.do_surf = False
+        self.do_pptx = True
+        self.open_after = True
+        self.last = None               # wynik ostatniego przebiegu
+        self.items = []                # slajdy ostatniego przebiegu (do zapisu PPTX)
+
+    # ---------------------------------------------------------- pomocnicze
+    def run_name(self):
+        n = (self.name or "").strip()
+        if not n:
+            n = os.path.splitext(os.path.basename(self.inf_file or ""))[0] or "porownanie"
+        return clean_file_name(n, 60)
+
+    def root_dir(self):
+        base = (self.out_dir or "").strip()
+        if not base:
+            return ""
+        sub = self.run_name()
+        if self.stamp:
+            sub += "_" + now_text("%Y%m%d_%H%M")
+        return os.path.join(base, sub)
+
+    def plan_lines(self):
+        """Opis tego, co powstanie (karta Automat)."""
+        root = self.root_dir() or T("(wska\u017c folder wynik\u00f3w)", "(choose the output folder)")
+        L = [T("FOLDER PRZEBIEGU: %s", "RUN FOLDER: %s", root)]
+        for key, sub in self.SUBDIRS:
+            on = {"delta": self.do_delta, "report": self.do_report, "surf": self.do_surf, "pptx": self.do_pptx}[key]
+            what = {"delta": T("zrzuty delty: <metryka>/<widok>.png + legenda SVG", "delta shots: <metric>/<view>.png + legend SVG"),
+                    "report": T("raport jako\u015bci REF, INF i por\u00f3wnawczy (TXT / HTML / XLSX / CSV)", "quality report REF, INF and comparison (TXT / HTML / XLSX / CSV)"),
+                    "surf": T("elementy krytyczne z powierzchni (tolerancje) REF vs INF", "critical elements from surfaces (tolerances) REF vs INF"),
+                    "pptx": T("prezentacja PPTX (+ obrazy slajd\u00f3w)", "PPTX presentation (+ slide images)")}[key]
+            L.append("  %s %s/  \u2013  %s" % ("\u2611" if on else "\u2610", sub, what))
+        L.append("  \u2611 podsumowanie.txt, index.html " + T("(galeria zrzut\u00f3w i tabele)", "(shot gallery and tables)"))
+        cams = self.cameras()
+        mets = ", ".join(DELTA.delta_tag(m) if not DELTA.single else DELTA_TAG[m] for m in DELTA.selected()) or "-"
+        L.append(T("METRYKI DELTY: %s \u2022 elementy: %s \u2022 widoki: %s", "DELTA METRICS: %s \u2022 elements: %s \u2022 views: %s",
+                   mets, DELTA.dim_label(), ", ".join(n for n, _ in cams)))
+        L.append(T("SLAJDY: tytu\u0142 + %d (delta) + tabela delty%s%s", "SLIDES: title + %d (delta) + delta table%s%s",
+                   len(DELTA.selected()) * len(cams), T(" + raport", " + report") if self.do_report else "",
+                   T(" + powierzchnie", " + surfaces") if self.do_surf else ""))
+        return L
+
+    def cameras(self):
+        out = [(r["name"], r["view"]) for r in VIEWS.selected()]
+        return out or [(T("bie\u017c\u0105ca kamera", "current camera"), None)]
+
+    def make_dirs(self):
+        root = self.root_dir()
+        if not root:
+            raise ValueError(T("Wska\u017c folder wynik\u00f3w.", "Choose the output folder."))
+        dirs = {"root": root}
+        os.makedirs(root, exist_ok=True)
+        for key, sub in self.SUBDIRS:
+            on = {"delta": self.do_delta, "report": self.do_report, "surf": self.do_surf, "pptx": self.do_pptx}[key]
+            if on:
+                d = os.path.join(root, sub)
+                os.makedirs(d, exist_ok=True)
+                dirs[key] = d
+        if not writable_dir(root):
+            raise ValueError(T("Folder wynik\u00f3w nie jest zapisywalny: %s", "The output folder is not writable: %s", root))
+        return dirs
+
+    # ---------------------------------------------------------- przebieg
+    def run(self, deliver=False):
+        """Caly automat. deliver=True: zapis PPTX od razu (tryb wsadowy);
+        False: slajdy zostaja w self.items - okno pokaze podglad i zapisze."""
+        if not HM.ok():
+            raise RuntimeError(T("Brak API HyperMesha.", "No HyperMesh API."))
+        for f, lab in ((self.ref_file, "REF"), (self.inf_file, "INF")):
+            if not os.path.isfile(f):
+                raise ValueError(T("Wska\u017c istniej\u0105cy plik %s (.hm).", "Choose an existing %s file (.hm).", lab))
+        if not (self.do_delta or self.do_report or self.do_surf):
+            raise ValueError(T("Zaznacz przynajmniej jeden krok automatu (delta, raport, powierzchnie).",
+                               "Tick at least one workflow step (delta, report, surfaces)."))
+        if self.do_delta and not DELTA.selected():
+            raise ValueError(T("Zaznacz metryki delty (karta Delta / Automat).", "Tick delta metrics (Delta / Workflow page)."))
+        t0 = time.time()
+        name = self.run_name()
+        dirs = self.make_dirs()
+        files = []
+        log = [T("Przebieg: %s", "Run: %s", name), "REF: %s" % self.ref_file, "INF: %s" % self.inf_file,
+               T("Folder: %s", "Folder: %s", dirs["root"]), T("Start: %s", "Start: %s", now_text("%Y-%m-%d %H:%M:%S"))]
+        # silniki dostaja te same pliki
+        DELTA.ref_file, DELTA.inf_file, DELTA.use_open_inf = self.ref_file, self.inf_file, False
+        DELTA.set_mode("delta")
+        REPORT.ref_file, REPORT.inf_file, REPORT.src = self.ref_file, self.inf_file, "compare"
+        SURF.ref_file, SURF.inf_file, SURF.models = self.ref_file, self.inf_file, "pair"
+        rep_base = os.path.join(dirs["report"], name) if self.do_report else ""
+        surf_base = os.path.join(dirs["surf"], name + "_" + T("powierzchnie", "surfaces")) if self.do_surf else ""
+        if rep_base:
+            REPORT.out_file = rep_base + ".txt"
+        runs = {}
+        rep_msg = surf_msg = ""
+        HM.refresh_palette()
+        # --- REF ---
+        DELTA.begin(False)
+        SURF.clear_results()
+        DELTA.load_ref()
+        if self.do_delta:
+            n = DELTA.read_ref()
+            log.append(T("REF: delta \u2013 odczytano %d element\u00f3w %s", "REF: delta \u2013 %d %s elements read", n, DELTA.dim_label()))
+        if self.do_report:
+            runs["REF"] = REPORT.analyze_model("REF", self.ref_file, rep_base)
+            log.append(T("REF: raport jako\u015bci \u2013 %d element\u00f3w, wska\u017anik %s", "REF: quality report \u2013 %d elements, score %s", runs["REF"]["nsel"], score_str(runs["REF"]["score"])))
+        if self.do_surf:
+            r = SURF.collect("REF")
+            log.append(T("REF: powierzchnie \u2013 %d element\u00f3w", "REF: surfaces \u2013 %d elements", r["n"]))
+        # --- INF ---
+        DELTA.load_inf()
+        if self.do_delta:
+            DELTA.read_inf()
+            DELTA.compute()
+            log.append(T("INF: delta policzona dla: %s", "INF: delta computed for: %s", ", ".join(DELTA.delta_tag(m) for m in DELTA.analyzed)))
+        if self.do_report:
+            runs["INF"] = REPORT.analyze_model("INF", self.inf_file, rep_base)
+            rep_msg = REPORT.compare_runs(runs, rep_base)
+            files += REPORT.last_files
+            log.append(T("Raport por\u00f3wnawczy: %s", "Comparison report: %s", REPORT.last_verdict))
+        if self.do_surf:
+            r = SURF.collect("INF")
+            SURF.finish()
+            w, f = SURF.write(surf_base)
+            files += w
+            surf_msg = SURF.describe(w, f)
+            log.append(T("INF: powierzchnie \u2013 %d element\u00f3w", "INF: surfaces \u2013 %d elements", r["n"]))
+        # --- widoki, zrzuty, slajdy ---
+        items = [self.title_item(name, runs)]
+        n_shots = 0
+        if self.do_delta:
+            cams = self.cameras()
+            items += PRESENT.delta_series_items(save_dir=dirs["delta"], cams=cams)
+            n_shots = len(PRESENT.last_delta_files)
+            files += PRESENT.last_delta_files
+            items.append(PRESENT.delta_summary_item())
+            log.append(T("Zrzuty delty: %d (%d metryk \u00d7 %d widok\u00f3w)", "Delta shots: %d (%d metrics \u00d7 %d views)", n_shots, len(DELTA.analyzed), len(cams)))
+        if self.do_report:
+            it = PRESENT.report_item()
+            if it:
+                items.append(it)
+        if self.do_surf and SURF.last:
+            items.append(PRESENT.surface_item())
+        self.items = items
+        # --- podsumowanie ---
+        info = {"name": name, "root": dirs["root"], "dirs": dirs, "files": files, "when": now_text(), "log": log,
+                "n_shots": n_shots, "rep_msg": rep_msg, "surf_msg": surf_msg, "seconds": time.time() - t0,
+                "pptx": "", "n_slides": len(items)}
+        self.last = info
+        try:
+            write_text(os.path.join(dirs["root"], "podsumowanie.txt"), self.summary_txt(info))
+            write_text(os.path.join(dirs["root"], "index.html"), workflow_html(info))
+            info["files"] += [os.path.join(dirs["root"], "podsumowanie.txt"), os.path.join(dirs["root"], "index.html")]
+        except Exception as e:
+            BUS.log("summary: %s" % e)
+        if self.do_pptx:
+            PRESENT.ppt_file = os.path.join(dirs["pptx"], name + ".pptx")
+            PRESENT.mode = "new"
+            info["pptx"] = PRESENT.ppt_file
+            if deliver:
+                msg = PRESENT.deliver(items)
+                self.items = []
+                if msg:
+                    info["files"].append(PRESENT.ppt_file)
+        BUS.status(T("Automat zako\u0144czony: %s (%.0f s). Wyniki: %s", "Workflow finished: %s (%.0f s). Results: %s", name, info["seconds"], dirs["root"]))
+        return info
+
+    def deliver_pptx(self):
+        """Zapis prezentacji z gotowych slajdow (po podgladzie w oknie)."""
+        if not self.items:
+            return ""
+        msg = PRESENT.deliver(self.items)
+        self.items = []
+        if msg and self.last is not None:
+            self.last["files"].append(PRESENT.last_export["path"] if PRESENT.last_export else PRESENT.ppt_file)
+            self.last["pptx_msg"] = msg
+            try:
+                write_text(os.path.join(self.last["root"], "podsumowanie.txt"), self.summary_txt(self.last))
+            except Exception:
+                pass
+        return msg
+
+    # ---------------------------------------------------------- slajdy i teksty
+    def title_item(self, name, runs):
+        rows = [[T("Pozycja", "Item"), T("Warto\u015b\u0107", "Value")],
+                ["REF", os.path.basename(self.ref_file)], ["INF", os.path.basename(self.inf_file)],
+                [T("Elementy delty", "Delta elements"), T("%s: %d (2D %d, 3D %d)", "%s: %d (2D %d, 3D %d)", DELTA.dim_label(), len(DELTA.elems), DELTA.n2d, DELTA.n3d) if DELTA.done else "\u2013"],
+                [T("Metryki delty", "Delta metrics"), ", ".join(DELTA.delta_label(m) for m in DELTA.analyzed) or "\u2013"],
+                [T("Widoki", "Views"), ", ".join(n for n, _ in self.cameras())]]
+        if runs.get("REF") and runs.get("INF"):
+            rows.append([T("Wska\u017anik jako\u015bci REF / INF", "Quality score REF / INF"),
+                         "%s / %s  (%s)" % (score_str(runs["REF"]["score"]), score_str(runs["INF"]["score"]), score_delta(runs["REF"]["score"], runs["INF"]["score"]))])
+            rows.append([T("Werdykt", "Verdict"), REPORT.last_verdict or "\u2013"])
+        if SURF.last:
+            for lab, val in SURF.stat_pairs():
+                rows.append([T("Powierzchnie \u2013 %s", "Surfaces \u2013 %s", lab), val])
+        return {"kind": "title", "title": T("Por\u00f3wnanie siatek REF vs INF \u2013 %s", "Mesh comparison REF vs INF \u2013 %s", name),
+                "img": "", "own_img": False, "legend": None, "stats": [], "table": {"rows": rows, "fr": [1.4, 3.0]},
+                "note": T("%s v%s \u2022 %s", "%s v%s \u2022 %s", APP_TITLE, VERSION, now_text())}
+
+    def summary_txt(self, info):
+        L = [LINE, "  " + T("AUTOMAT REF vs INF \u2013 PODSUMOWANIE PRZEBIEGU", "REF vs INF WORKFLOW \u2013 RUN SUMMARY") + "   %s v%s" % (APP_TITLE, VERSION), LINE]
+        L += ["  " + ln for ln in info["log"]]
+        L.append("  " + T("Czas: %.0f s", "Time: %.0f s", info["seconds"]))
+        if DELTA.done:
+            L += ["", DASH, "  " + T("DELTA REF \u2192 INF", "DELTA REF \u2192 INF"), DASH]
+            for row in DELTA.summary_rows():
+                L.append("  " + " | ".join(_surf_cell(c) for c in row))
+        if info.get("rep_msg"):
+            L += ["", DASH, "  " + T("RAPORT JAKO\u015aCI", "QUALITY REPORT"), DASH] + ["  " + ln for ln in info["rep_msg"].splitlines()]
+        if info.get("surf_msg"):
+            L += ["", DASH, "  " + T("POWIERZCHNIE", "SURFACES"), DASH] + ["  " + ln for ln in info["surf_msg"].splitlines()]
+        if info.get("pptx_msg"):
+            L += ["", "  " + info["pptx_msg"]]
+        L += ["", DASH, "  " + T("PLIKI:", "FILES:")]
+        for f in info["files"]:
+            try:
+                L.append("  " + os.path.relpath(f, info["root"]))
+            except ValueError:
+                L.append("  " + f)
+        L.append(LINE)
+        return "\n".join(L) + "\n"
+
+    KEYS = ("ref_file", "inf_file", "out_dir", "name", "stamp", "do_delta", "do_report", "do_surf", "do_pptx", "open_after")
+
+    def to_dict(self):
+        return dict((k, getattr(self, k)) for k in self.KEYS)
+
+    def from_dict(self, d):
+        assign_attrs(self, d, self.KEYS)
+
+
+def workflow_html(info):
+    """index.html przebiegu: tabele delty / raportu / powierzchni + galeria zrzutow."""
+    root = info["root"]
+    H = ['<div class="cards">']
+    H.append('<div class="card"><div class="k">%s</div><div class="v" style="font-size:18px">%s</div><div class="hint">%s</div></div>'
+             % (h_esc(T("Przebieg", "Run")), h_esc(info["name"]), h_esc(info["when"])))
+    if DELTA.done:
+        H.append('<div class="card"><div class="k">%s</div><div class="v">%d</div><div class="hint">%s</div></div>'
+                 % (h_esc(T("Elementy delty", "Delta elements")), len(DELTA.elems), h_esc(", ".join(DELTA.delta_tag(m) for m in DELTA.analyzed))))
+    if REPORT.last_runs.get("REF") and REPORT.last_runs.get("INF"):
+        sr, si = REPORT.last_runs["REF"]["score"], REPORT.last_runs["INF"]["score"]
+        H.append('<div class="card"><div class="k">%s</div><div class="v">%s \u2192 %s</div><div class="hint">%s</div></div>'
+                 % (h_esc(T("Wska\u017anik jako\u015bci REF \u2192 INF", "Quality score REF \u2192 INF")), score_str(sr), score_str(si), h_esc(score_delta(sr, si))))
+    H.append("</div>\n")
+
+    def table(rows):
+        out = ['<table class="srt"><thead><tr>%s</tr></thead><tbody>' % "".join("<th>%s</th>" % h_esc(_surf_cell(c)) for c in rows[0])]
+        for row in rows[1:]:
+            cells = []
+            for c in row:
+                cls = ""
+                if isinstance(c, dict) and c.get("color") == "C00000":
+                    cls = ' class="badv"'
+                elif isinstance(c, dict) and c.get("color") == "2E7D32":
+                    cls = ' class="okv"'
+                cells.append("<td%s>%s</td>" % (cls, h_esc(_surf_cell(c))))
+            out.append("<tr>%s</tr>" % "".join(cells))
+        out.append("</tbody></table>")
+        return "".join(out)
+
+    if DELTA.done:
+        H.append("<section><h2>%s</h2>%s</section>\n" % (h_esc(T("Delta REF \u2192 INF", "Delta REF \u2192 INF")), table(DELTA.summary_rows())))
+        shots = PRESENT.last_delta_files
+        if shots:
+            H.append("<section><h2>%s</h2>" % h_esc(T("Zrzuty delty", "Delta shots")))
+            for m in DELTA.analyzed:
+                tag = DELTA.delta_tag(m)
+                mine = [p for p in shots if os.path.basename(os.path.dirname(p)) == clean_file_name(tag)]
+                if not mine:
+                    continue
+                H.append('<div class="k">%s</div><div class="grid">' % h_esc(DELTA.legend_title(m)))
+                for p in mine:
+                    rel = os.path.relpath(p, root).replace("\\", "/")
+                    H.append('<figure style="margin:0"><a href="%s"><img src="%s" style="max-width:420px;max-height:300px;border:1px solid var(--line)"></a>'
+                             '<figcaption class="hint">%s</figcaption></figure>' % (h_esc(rel), h_esc(rel), h_esc(os.path.basename(p))))
+                leg = os.path.join(os.path.dirname(mine[0]), "legenda_%s.svg" % clean_file_name(tag))
+                if os.path.isfile(leg):
+                    rel = os.path.relpath(leg, root).replace("\\", "/")
+                    H.append('<figure style="margin:0"><img src="%s" style="max-height:300px"><figcaption class="hint">%s</figcaption></figure>' % (h_esc(rel), h_esc(T("legenda", "legend"))))
+                H.append("</div>")
+            H.append("</section>\n")
+    if SURF.last:
+        H.append("<section><h2>%s<span class=\"dir\">%s</span></h2>%s</section>\n" % (
+            h_esc(T("Elementy krytyczne z powierzchni", "Critical elements from surfaces")), h_esc(SURF.last["source"]), table(SURF.summary_rows())))
+    H.append("<section><h2>%s</h2><ul>" % h_esc(T("Pliki przebiegu", "Run files")))
+    for f in info["files"]:
+        try:
+            rel = os.path.relpath(f, root).replace("\\", "/")
+        except ValueError:
+            rel = f
+        H.append('<li><a href="%s">%s</a></li>' % (h_esc(rel), h_esc(rel)))
+    H.append("</ul></section>\n")
+    H.append("<section><h2>%s</h2><pre style=\"white-space:pre-wrap;font-size:12px\">%s</pre></section>\n" % (h_esc(T("Dziennik", "Log")), h_esc("\n".join(info["log"]))))
+    meta = "REF: %s \u2022 INF: %s" % (h_esc(os.path.basename(FLOW.ref_file)), h_esc(os.path.basename(FLOW.inf_file)))
+    return html_page(T("Automat REF vs INF \u2013 %s", "REF vs INF workflow \u2013 %s", info["name"]), meta, "".join(H))
+
+
+FLOW = Workflow()
 # ========================= USTAWIENIA UZYTKOWNIKA ======================
 # Jeden plik JSON w katalogu uzytkownika (.hm_quality_studio.json): jezyk,
 # progi i legendy metryk, opcje delty, raportu, widokow i prezentacji.
@@ -7005,7 +8728,8 @@ GUI_PREFS = {"tab": 0, "live_open": False, "live_geo": [], "win_geo": [], "log_o
 
 def save_settings():
     d = {"version": VERSION, "lang": lang(), "mq": MQ.to_dict(), "delta": DELTA.to_dict(),
-         "report": REPORT.to_dict(), "views": VIEWS.to_dict(), "ppt": PRESENT.to_dict(), "gui": dict(GUI_PREFS)}
+         "report": REPORT.to_dict(), "views": VIEWS.to_dict(), "ppt": PRESENT.to_dict(), "gui": dict(GUI_PREFS),
+         "surf": SURF.to_dict(), "flow": FLOW.to_dict()}
     p = settings_path()
     tmp = p + ".tmp"
     try:
@@ -7034,7 +8758,7 @@ def load_settings():
     if not isinstance(d, dict):
         return False
     set_lang(d.get("lang", lang()))
-    for key, obj in (("mq", MQ), ("delta", DELTA), ("report", REPORT), ("views", VIEWS), ("ppt", PRESENT)):
+    for key, obj in (("mq", MQ), ("delta", DELTA), ("report", REPORT), ("views", VIEWS), ("ppt", PRESENT), ("surf", SURF), ("flow", FLOW)):
         try:
             part = d.get(key)
             obj.from_dict(part if isinstance(part, dict) else {})
@@ -7199,6 +8923,121 @@ def group(title, layout=None):
     return g
 
 
+def page_title(title, sub=""):
+    """Naglowek karty: tytul + jedno zdanie, co tu sie robi (orientacja)."""
+    w = QtWidgets.QWidget()
+    v = QtWidgets.QVBoxLayout(w)
+    v.setContentsMargins(0, 0, 0, 2)
+    v.setSpacing(1)
+    t = QtWidgets.QLabel(title)
+    f = t.font()
+    f.setPointSizeF(f.pointSizeF() + 3)
+    f.setBold(True)
+    t.setFont(f)
+    t.setStyleSheet("color:%s" % HDR_COLOR)
+    v.addWidget(t)
+    if sub:
+        s = QtWidgets.QLabel(sub)
+        s.setWordWrap(True)
+        s.setStyleSheet("color:#556")
+        v.addWidget(s)
+    return w
+
+
+def card(layout, accent=""):
+    """Biala karta z obramowaniem (Start, Automat); accent = kolor lewej krawedzi."""
+    f = QtWidgets.QFrame()
+    f.setObjectName("card")
+    f.setStyleSheet("#card{background:white;border:1px solid #c8d0da;border-radius:5px;%s}"
+                    % ("border-left:5px solid %s;" % accent if accent else ""))
+    m = layout.contentsMargins()
+    layout.setContentsMargins(max(m.left(), 12), max(m.top(), 9), max(m.right(), 12), max(m.bottom(), 9))
+    f.setLayout(layout)
+    return f
+
+
+class Collapsible(_QWidget):
+    """Sekcja zwijana (np. "Opcje zaawansowane"): naglowek ze strzalka +
+    tresc ukryta domyslnie - rzadko uzywane opcje nie zaslaniaja glownej sciezki."""
+
+    def __init__(self, title, layout, opened=False, parent=None):
+        super(Collapsible, self).__init__(parent)
+        v = QtWidgets.QVBoxLayout(self)
+        v.setContentsMargins(0, 2, 0, 0)
+        v.setSpacing(2)
+        self.btn = QtWidgets.QToolButton()
+        self.btn.setText(amp(title))
+        self.btn.setCheckable(True)
+        self.btn.setChecked(bool(opened))
+        self.btn.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+        self.btn.setStyleSheet("QToolButton{border:none;font-weight:bold;color:%s;padding:2px}" % HDR_COLOR)
+        self.body = QtWidgets.QFrame()
+        self.body.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.body.setStyleSheet("QFrame{background:#f7f9fc;border:1px solid #d5dde6;border-radius:3px}")
+        m = layout.contentsMargins()
+        layout.setContentsMargins(max(m.left(), 9), max(m.top(), 7), max(m.right(), 9), max(m.bottom(), 7))
+        self.body.setLayout(layout)
+        self.btn.toggled.connect(self._toggle)
+        v.addWidget(self.btn)
+        v.addWidget(self.body)
+        self._toggle(bool(opened))
+
+    def _toggle(self, on):
+        self.body.setVisible(on)
+        self.btn.setArrowType(QtCore.Qt.DownArrow if on else QtCore.Qt.RightArrow)
+
+    def set_open(self, on):
+        self.btn.setChecked(bool(on))
+
+
+def file_row(parent, edit, title, filt, save=False, start_fn=None):
+    """Przycisk "Wybierz..." dla pola sciezki (plik do otwarcia albo zapisu)."""
+    b = QtWidgets.QPushButton(T("Wybierz\u2026", "Browse\u2026"))
+    edit.setMinimumWidth(120)
+    edit.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Fixed)
+
+    def pick():
+        start = edit.text().strip() or (start_fn() if start_fn else "")
+        if save:
+            p = ask_save_file(parent, title, filt, start, confirm=False)
+        else:
+            p = ask_open_file(parent, title, filt, os.path.dirname(start) if start else "")
+        if p:
+            edit.setText(os.path.normpath(p))
+    b.clicked.connect(pick)
+    return b
+
+
+def dir_row(parent, edit, title):
+    b = QtWidgets.QPushButton(T("Wybierz\u2026", "Browse\u2026"))
+    edit.setMinimumWidth(120)
+    edit.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Fixed)
+
+    def pick():
+        d = ask_dir(parent, title, edit.text().strip())
+        if d:
+            edit.setText(os.path.normpath(d))
+    b.clicked.connect(pick)
+    return b
+
+
+def html_table(rows, first_bold=True):
+    """Tabela HTML (QTextBrowser) z wierszy jak w slajdach (komorki tekst / dict)."""
+    H = ["<table cellspacing=0 cellpadding=3 border=1 style='border-collapse:collapse;border-color:#cfd8e3'>"]
+    for i, row in enumerate(rows):
+        cells = []
+        for j, c in enumerate(row):
+            d = cell_of(c)
+            style = "color:#%s;" % d["color"] if d["color"] and d["color"] != "262626" else ""
+            if d["bold"] or (first_bold and j == 0 and i > 0):
+                style += "font-weight:bold;"
+            if i == 0:
+                cells.append("<th style='background:#e8eef5'>%s</th>" % h_esc(d["t"]))
+            else:
+                cells.append("<td align='%s' style='%s'>%s</td>" % ("left" if j == 0 else "right", style, h_esc(d["t"])))
+        H.append("<tr>%s</tr>" % "".join(cells))
+    H.append("</table>")
+    return "".join(H)
 def radio_group(parent, *buttons):
     """QButtonGroup dla zestawu przyciskow radiowych - zestawy w jednym
     rodzicu nie wykluczaja sie wtedy nawzajem."""
@@ -7287,7 +9126,8 @@ class PaletteDialog(_QDialog):
             b.clicked.connect(lambda _=False, c=c: self._pick(c))
             grid.addWidget(b, (i - 1) // 8, (i - 1) % 8)
         lay.addLayout(grid)
-        other = QtWidgets.QPushButton(T("Inny kolor\u2026 (najbli\u017cszy z palety)", "Other color\u2026 (nearest from the palette)"))
+        other = QtWidgets.QPushButton(T("Inny kolor\u2026 (dok\u0142adny RGB)", "Other color\u2026 (exact RGB)") if (HM.ok() and HM.rgb_exact()) else
+                                      T("Inny kolor\u2026 (najbli\u017cszy z palety)", "Other color\u2026 (nearest from the palette)"))
         other.clicked.connect(lambda: self._other(rgb))
         cancel = QtWidgets.QPushButton(T("Anuluj", "Cancel"))
         cancel.clicked.connect(self.reject)
@@ -7300,7 +9140,8 @@ class PaletteDialog(_QDialog):
     def _other(self, rgb):
         c = QtWidgets.QColorDialog.getColor(qcolor(rgb or (128, 128, 128)), self)
         if c.isValid():
-            self._pick(palette_map().snap((c.red(), c.green(), c.blue())))
+            exact = (c.red(), c.green(), c.blue())
+            self._pick(exact if (HM.ok() and HM.rgb_exact()) else palette_map().snap(exact))
 
     @staticmethod
     def ask(parent, rgb):
@@ -7459,10 +9300,13 @@ def mq_legend_prims(v, theme):
     return P
 
 
-def delta_legend_prims(theme):
-    """Legenda delty: pionowy pasek gradientu, podzialki, MIN / MAX, wiersze."""
+def delta_legend_prims(theme, m=None):
+    """Legenda delty w stylu paletyzatora ANSYS: pionowy pasek pasm
+    (niebieski u dolu -> czerwony u gory) z ciemnymi przegrodami, podzialki
+    z wartosciami i liczba elementow z prawej, znaczniki MIN / MAX z lewej,
+    wiersze dodatkowe (bez zmian, poprawione, bez odpowiednika) pod paskiem."""
     bg, fg, fgd, ln, acc, _ = LEGEND_THEMES.get(theme, LEGEND_THEMES["dark"])
-    lm = DELTA.legend_model()
+    lm = DELTA.legend_model(m)
     P = Prims()
     if not lm:
         return P
@@ -7471,22 +9315,33 @@ def delta_legend_prims(theme):
     y += 20
     P.text(12, y, lm["sub"], 12, fgd)
     bands = lm["bands"]
-    x1, x2 = 104, 142
-    top, bot = y + 22, y + 22 + 400
+    K = len(bands)
+    x1, x2 = 78, 118
+    top = y + 24
+    bot = top + max(220, min(500, 18 * K))
     lo, hi = bands[0]["lo"], bands[-1]["hi"]
     span = (hi - lo) or 1.0
+    sep = "#2a2a2a" if theme != "dark" else "#111111"
     for b in bands:
         ya = bot - (b["lo"] - lo) / span * (bot - top)
         yb = bot - (b["hi"] - lo) / span * (bot - top)
-        P.rect(x1, yb, x2 - x1, ya - yb, rgb_hex(b["rgb"]))
-    P.rect(x1, top, x2 - x1, bot - top, "", ln)
-    K = len(bands)
-    every = max(1, int(math.ceil(K / 9.0)))
+        P.rect(x1, yb, x2 - x1, ya - yb, rgb_hex(b["rgb"]), sep)
+    P.rect(x1, top, x2 - x1, bot - top, "", sep)
+    every = max(1, int(math.ceil(K / 14.0)))
     for i in list(range(0, K, every)) + [K]:
         v = bands[i]["lo"] if i < K else hi
         yy = bot - (v - lo) / span * (bot - top)
-        P.rect(x2, yy, 6, 0.8, fg)
-        P.text(x2 + 10, yy, fmt_num(v, lm["dec"] + 1), 12, fg)
+        P.rect(x2, yy - 0.5, 9, 1.0, fg)
+        P.text(x2 + 13, yy, fmt_num(v, lm["dec"]), 12, fg)
+    if K <= 30:
+        xc = x2 + 13 + max([P.text_w(fmt_num(b["lo"], lm["dec"]), 12) for b in bands] + [P.text_w(fmt_num(hi, lm["dec"]), 12)]) + 18
+        for b in bands:
+            if not b.get("count"):
+                continue
+            ya = bot - (b["lo"] - lo) / span * (bot - top)
+            yb = bot - (b["hi"] - lo) / span * (bot - top)
+            if ya - yb >= 10:
+                P.text(xc, (ya + yb) / 2.0, "%d" % b["count"], 10, fgd)
     prev = None
     for tag, info in (("MAX", lm["max"]), ("MIN", lm["min"])):
         if not info:
@@ -7495,10 +9350,12 @@ def delta_legend_prims(theme):
         yy = bot - f * (bot - top)
         if prev is not None and abs(yy - prev) < 28:
             continue
-        P.poly([(x1 - 13, yy - 6), (x1 - 13, yy + 6), (x1 - 3, yy)], fg)
+        P.poly([(x1 - 13, yy - 6), (x1 - 13, yy + 6), (x1 - 3, yy)], acc)
         P.text(x1 - 17, yy - 6, tag, 11, fg, True, "e")
         P.text(x1 - 17, yy + 7, fmt_num(info[0], lm["dec"] + 1), 11, fg, True, "e")
         prev = yy
+    if lm["clamped"]:
+        P.text(x1, top - 8, "\u25b2 %d" % lm["clamped"], 10, acc)
     yy = bot + 22
     for r in lm["extra"]:
         P.rect(x1, yy - 8, x2 - x1, 16, rgb_hex(r["rgb"]), ln)
@@ -7508,20 +9365,24 @@ def delta_legend_prims(theme):
         P.text(x1, yy, T("\u25b2 powy\u017cej zakresu: %d el. (kolor g\u00f3rnego pasma)", "\u25b2 above range: %d el. (top band color)", lm["clamped"]), 12, acc)
         yy += 22
     yy += 6
+    mkey = lm.get("metric")
     for tag, info in (("MAX", lm["max"]), ("MIN", lm["min"])):
         if not info:
             continue
-        P.text(12, yy, "%s %s = %s   el. %s" % (tag, DELTA.delta_label(), fmt_num(info[0], 4), info[1]), 12, fg, True)
+        P.text(12, yy, "%s %s = %s   el. %s" % (tag, DELTA.delta_label(mkey), fmt_num(info[0], 4), info[1]), 12, fg, True)
         yy += 17
         xyz = info[2] if len(info) > 2 else None
         if xyz:
             P.text(24, yy, T("\u015brodek: (%g, %g, %g)", "center: (%g, %g, %g)", xyz[0], xyz[1], xyz[2]), 11, fgd)
             yy += 16
-    c = DELTA.counts
-    P.text(12, yy, T("Elementy w skali: %d", "Elements in scale: %d", c["band"]), 11, fgd)
+    r = DELTA.res.get(mkey)
+    if r is not None:
+        c = r.counts
+        P.text(12, yy, T("Elementy w skali: %d \u2022 razem: %d (%s)", "Elements in scale: %d \u2022 total: %d (%s)", c["band"], len(DELTA.elems), DELTA.dim_label()), 11, fgd)
+        yy += 16
+    if HM.ok():
+        P.text(12, yy, T("kolory: %s", "colors: %s", T("dok\u0142adne RGB", "exact RGB") if HM.rgb_exact() else T("paleta HM (najbli\u017csze)", "HM palette (nearest)")), 10, fgd)
     return P
-
-
 class LegendCanvas(_QWidget):
     def __init__(self, parent=None):
         super(LegendCanvas, self).__init__(parent)
@@ -7665,6 +9526,16 @@ class LegendWindow(_QWidget):
             if not DELTA.done:
                 self.hide()
                 return
+            if len(DELTA.views()) > 1:
+                self.top.addWidget(QtWidgets.QLabel(T("Poka\u017c:", "Show:")))
+                for v in DELTA.views():
+                    b = QtWidgets.QPushButton(DELTA.delta_tag(v))
+                    b.setCheckable(True)
+                    b.setChecked(v == DELTA.view)
+                    b.clicked.connect(lambda _=False, v=v: self.studio.tab_delta.show_view(v))
+                    self.top.addWidget(b)
+                    self.view_btns[v] = b
+                self.top.addStretch(1)
             prims = delta_legend_prims(self.theme)
             self.setWindowTitle("%s \u2013 %s" % (T("Legenda", "Legend"), DELTA.delta_label()))
         self.canvas.set_prims(prims, LEGEND_THEMES[self.theme][0])
@@ -8010,58 +9881,101 @@ class LegendEditor(_QDialog):
 
 
 class DeltaScaleEditor(_QDialog):
-    """Reczna skala delty: dolny prog kazdego pasma + gorna granica."""
+    """Reczna skala delty JEDNEJ metryki: dolny prog kazdego pasma + gorna
+    granica. Kolory pasm z palety ANSYS (jak na siatce i w legendzie)."""
 
-    def __init__(self, parent):
+    def __init__(self, parent, m=None):
         super(DeltaScaleEditor, self).__init__(parent)
-        self.setWindowTitle(T("R\u0119czna skala \u2013 progi pasm", "Manual scale \u2013 band limits"))
+        self.m = m if m in DELTA_ORDER else DELTA.cur_metric()
+        self.setWindowTitle(T("R\u0119czna skala \u2013 %s", "Manual scale \u2013 %s", DELTA.metric_label(self.m)))
         K = max(2, min(96, int(DELTA.band_count or 10)))
-        bb = list(DELTA.bounds) if len(DELTA.bounds) == K + 1 else (
-            list(DELTA.manual_bounds) if len(DELTA.manual_bounds) == K + 1 else None)
-        if bb is None:
-            lo = max(0.0, to_float(DELTA.deadband, 0.01))
+        r = DELTA.res.get(self.m)
+        mb = DELTA.manual_bounds.get(self.m) or []
+        if len(mb) >= 3:
+            bb = list(mb)
+        elif r is not None and len(r.bounds) >= 3:
+            bb = list(r.bounds)
+        else:
+            lo = max(0.0, to_float(DELTA.deadband.get(self.m), 0.01))
             hi = lo + 0.35
             bb = [lo + i * (hi - lo) / K for i in range(K + 1)]
+        K = len(bb) - 1
         v = QtWidgets.QVBoxLayout(self)
-        hdr = QtWidgets.QLabel(T("Dolny pr\u00f3g ka\u017cdego pasma + g\u00f3rna granica", "Lower limit of each band + upper limit"))
-        hdr.setStyleSheet("background:#2b579a;color:white;font-weight:bold;padding:6px 10px")
+        hdr = QtWidgets.QLabel(T("%s: dolny pr\u00f3g ka\u017cdego pasma + g\u00f3rna granica", "%s: lower limit of each band + upper limit", DELTA.metric_label(self.m)))
+        hdr.setStyleSheet("background:%s;color:white;font-weight:bold;padding:6px 10px" % HDR_COLOR)
         v.addWidget(hdr)
-        inner = QtWidgets.QWidget()
-        g = QtWidgets.QGridLayout(inner)
+        self.sp_k = QtWidgets.QSpinBox()
+        self.sp_k.setRange(2, 96)
+        self.sp_k.setValue(K)
+        b_k = QtWidgets.QPushButton(T("Ustaw liczb\u0119 pasm (r\u00f3wne)", "Set band count (even)"))
+        b_k.clicked.connect(self.rebuild_even)
+        v.addLayout(hrow(QtWidgets.QLabel(T("Liczba pasm:", "Number of bands:")), self.sp_k, b_k, None))
+        self.inner = QtWidgets.QWidget()
+        self.grid = QtWidgets.QGridLayout(self.inner)
+        self.edits = []
+        self.e_hi = None
+        self.fill(bb)
+        sa = QtWidgets.QScrollArea()
+        sa.setWidget(self.inner)
+        sa.setWidgetResizable(True)
+        sa.setMinimumHeight(min(self.inner.sizeHint().height() + 8, 420))
+        v.addWidget(sa)
+        v.addWidget(note_label(T("Pasma przylegaj\u0105 do siebie: g\u00f3rna granica pasma = dolny pr\u00f3g nast\u0119pnego. Warto\u015bci musz\u0105 rosn\u0105\u0107. "
+                                 "Zastosowanie skali przekolorowuje siatk\u0119 od razu (bez ponownego czytania), je\u015bli wynik delty jest w pami\u0119ci.",
+                                 "Bands are adjacent: the top of a band = the lower limit of the next one. Values must increase. "
+                                 "Applying the scale recolors the mesh immediately (no re-read) when a delta result is in memory.")))
+        ok = styled_button(T("Zastosuj", "Apply"), RUN_COLOR)
+        ok.clicked.connect(self.apply)
+        b_auto = QtWidgets.QPushButton(T("Wr\u00f3\u0107 do skali automatycznej", "Back to automatic scale"))
+        b_auto.clicked.connect(self.to_auto)
+        cancel = QtWidgets.QPushButton(T("Anuluj", "Cancel"))
+        cancel.clicked.connect(self.reject)
+        v.addLayout(hrow(ok, b_auto, None, cancel))
+        self.resize(600, 640)
+
+    def fill(self, bb):
+        clear_layout(self.grid)
+        K = len(bb) - 1
         for c, h in enumerate((T("Pasmo", "Band"), T("Kolor", "Color"), T("od", "from"))):
             lab = QtWidgets.QLabel(h)
             lab.setStyleSheet("font-weight:bold")
-            g.addWidget(lab, 0, c)
-        g.addWidget(QtWidgets.QLabel(T("g\u00f3ra", "top")), 1, 0)
-        g.addWidget(QtWidgets.QLabel(T("do", "to")), 1, 1)
+            self.grid.addWidget(lab, 0, c)
+        self.grid.addWidget(QtWidgets.QLabel(T("g\u00f3ra", "top")), 1, 0)
+        self.grid.addWidget(QtWidgets.QLabel(T("do", "to")), 1, 1)
         self.e_hi = QtWidgets.QLineEdit("%.6g" % bb[-1])
-        g.addWidget(self.e_hi, 1, 2)
+        self.grid.addWidget(self.e_hi, 1, 2)
         cols = DELTA.band_colors(K)
         self.edits = [None] * K
-        for r, i in enumerate(range(K - 1, -1, -1), start=2):
-            g.addWidget(QtWidgets.QLabel("%d" % (i + 1)), r, 0)
+        for row, i in enumerate(range(K - 1, -1, -1), start=2):
+            self.grid.addWidget(QtWidgets.QLabel("%d" % (i + 1)), row, 0)
             sw = QtWidgets.QLabel()
             sw.setFixedSize(34, 16)
             sw.setStyleSheet("background:%s;border:1px solid #555" % rgb_hex(cols[i]))
-            g.addWidget(sw, r, 1)
+            self.grid.addWidget(sw, row, 1)
             e = QtWidgets.QLineEdit("%.6g" % bb[i])
-            g.addWidget(e, r, 2)
+            self.grid.addWidget(e, row, 2)
             self.edits[i] = e
-        sa = QtWidgets.QScrollArea()
-        sa.setWidget(inner)
-        sa.setWidgetResizable(True)
-        sa.setMinimumHeight(min(inner.sizeHint().height() + 8, 420))
-        v.addWidget(sa)
-        v.addWidget(note_label(T("Pasma przylegaj\u0105 do siebie: g\u00f3rna granica pasma = dolny pr\u00f3g nast\u0119pnego. Warto\u015bci musz\u0105 rosn\u0105\u0107.",
-                                 "Bands are adjacent: the top of a band = the lower limit of the next one. Values must increase.")))
-        ok = styled_button(T("Zastosuj", "Apply"), RUN_COLOR)
-        ok.clicked.connect(self.apply)
-        cancel = QtWidgets.QPushButton(T("Anuluj", "Cancel"))
-        cancel.clicked.connect(self.reject)
-        v.addLayout(hrow(ok, None, cancel))
+
+    def values(self):
+        return [to_float(e.text()) for e in self.edits] + [to_float(self.e_hi.text())]
+
+    def rebuild_even(self):
+        vals = self.values()
+        lo = vals[0] if vals and vals[0] is not None else 0.0
+        hi = vals[-1] if vals and vals[-1] is not None else lo + 1.0
+        if hi <= lo:
+            hi = lo + 1.0
+        K = self.sp_k.value()
+        self.fill([lo + (hi - lo) * i / float(K) for i in range(K + 1)])
+
+    def to_auto(self):
+        DELTA.manual_bounds.pop(self.m, None)
+        DELTA.auto_scale = True
+        self._recolor()
+        self.accept()
 
     def apply(self):
-        vals = [to_float(e.text()) for e in self.edits] + [to_float(self.e_hi.text())]
+        vals = self.values()
         for i, x in enumerate(vals):
             if x is None:
                 BUS.status(T("Warto\u015b\u0107 nr %d nie jest liczb\u0105.", "Value #%d is not a number.", i + 1), "err")
@@ -8069,14 +9983,31 @@ class DeltaScaleEditor(_QDialog):
             if i and x <= vals[i - 1]:
                 BUS.status(T("Warto\u015bci musz\u0105 rosn\u0105\u0107 (pasmo %d).", "Values must increase (band %d).", i), "err")
                 return
-        DELTA.manual_bounds = vals
-        DELTA.band_count = len(vals) - 1
+        DELTA.manual_bounds[self.m] = vals
         DELTA.auto_scale = False
-        BUS.status(T("Zapisano r\u0119czn\u0105 skal\u0119 (%d pasm) \u2013 zadzia\u0142a przy nast\u0119pnej analizie.",
-                     "Manual scale saved (%d bands) \u2013 used by the next analysis.", len(vals) - 1))
+        save_settings()
+        if not self._recolor():
+            BUS.status(T("Zapisano r\u0119czn\u0105 skal\u0119 %s (%d pasm) \u2013 zadzia\u0142a przy nast\u0119pnej analizie.",
+                         "Manual scale %s saved (%d bands) \u2013 used by the next analysis.", DELTA.metric_label(self.m), len(vals) - 1))
         self.accept()
 
+    def _recolor(self):
+        """Przelicza pasma metryki z danych w pamieci i przekolorowuje siatke."""
+        if not (DELTA.done and self.m in DELTA.res and not DELTA.single):
+            return False
+        studio = self.parent()
+        while studio is not None and not isinstance(studio, StudioWindow):
+            studio = studio.parent()
 
+        def work():
+            DELTA.recompute(self.m)
+            DELTA.apply_view(self.m)
+            PRESENT.invalidate_frame()
+        if studio is not None:
+            studio.runner.run(work)
+        else:
+            work()
+        return True
 # ========================= GUI: PODGLAD SLAJDU =========================
 # Jak w makrze ANSYS SHOTS - podglad jest w CZTERECH miejscach i wszedzie
 # rysuje te same prymitywy, ktore trafia do pliku .pptx (slide_ops):
@@ -8860,71 +10791,85 @@ class DiagnosticsDialog(_QDialog):
 
 
 # =========================== GUI: KARTA "START" =========================
-# Przeglad stanu pracy: model w sesji, pieciu krokow przebiegu (co jest
-# zrobione, co dalej) z przyciskami "Przejdz" i szybkimi akcjami, narzedzia
-# (przywroc siatke, diagnostyka, pomoc). Karta odswieza sie po kazdej akcji.
+# Pulpit: model w sesji, karta "Automat REF vs INF" (najszybsza droga:
+# dwa pliki + folder -> delta, zrzuty, raport, powierzchnie, PPTX) i stan
+# kazdego kroku z przyciskami "Przejdz" / szybka akcja. Odswiezana po
+# kazdej akcji.
 class StartTab(_QWidget):
     def __init__(self, studio):
         super(StartTab, self).__init__()
         self.studio = studio
         v = QtWidgets.QVBoxLayout(self)
+        v.setSpacing(8)
+        v.addWidget(page_title(T("Start", "Start"),
+                               T("Stan pracy i szybkie akcje. Najszybsza droga: \u201eAutomat REF vs INF\u201d \u2013 wskazujesz dwa pliki .hm i folder, "
+                                 "a makro robi delt\u0119 wszystkich metryk, zrzuty wybranych widok\u00f3w, raport jako\u015bci, analiz\u0119 powierzchni i prezentacj\u0119.",
+                                 "Work status and quick actions. Fastest path: \u201cREF vs INF workflow\u201d \u2013 choose two .hm files and a folder and the macro "
+                                 "produces the delta of all metrics, shots of the chosen views, the quality report, the surface analysis and the presentation.")))
         # --- model ---
         self.lab_model = QtWidgets.QLabel()
         self.lab_model.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
         self.lab_model.setWordWrap(True)
+        self.lab_model.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Preferred)
         b_ref = QtWidgets.QPushButton(T("Od\u015bwie\u017c", "Refresh"))
         b_ref.clicked.connect(lambda: self.studio.runner.run(self.refresh, busy=False))
         tip(b_ref, T("Odczytuje ponownie liczby element\u00f3w, w\u0119z\u0142\u00f3w i komponent\u00f3w z sesji HyperMesha.",
                      "Re-reads the element, node and component counts from the HyperMesh session."))
         v.addWidget(group(T("Model w sesji HyperMesha", "Model in the HyperMesh session"), hrow(self.lab_model, None, b_ref)))
+        # --- automat ---
+        hl = QtWidgets.QHBoxLayout()
+        txt = QtWidgets.QVBoxLayout()
+        t = QtWidgets.QLabel(T("\u26a1 Automat REF vs INF", "\u26a1 REF vs INF workflow"))
+        f = t.font()
+        f.setPointSizeF(f.pointSizeF() + 2)
+        f.setBold(True)
+        t.setFont(f)
+        t.setStyleSheet("color:%s" % HDR_COLOR)
+        txt.addWidget(t)
+        self.lab_flow = QtWidgets.QLabel()
+        self.lab_flow.setWordWrap(True)
+        txt.addWidget(self.lab_flow)
+        hl.addLayout(txt, 1)
+        b_go = QtWidgets.QPushButton(T("Ustawienia automatu \u2192", "Workflow settings \u2192"))
+        b_go.clicked.connect(lambda: self.studio.goto("flow"))
+        b_run = styled_button(T("\u25b6 Uruchom automat (F8)", "\u25b6 Run the workflow (F8)"), GO_COLOR, big=True)
+        b_run.clicked.connect(lambda: self.studio.tab_flow.run())
+        hl.addLayout(vcol(b_run, b_go))
+        v.addWidget(card(hl, GO_COLOR))
         # --- kroki ---
         grid = QtWidgets.QGridLayout()
         grid.setSpacing(8)
         self.cards = {}
-        steps = [("mq", 1, T("Metryki i grupy kolor\u00f3w", "Metrics & color groups"), T("\u25b6 Analizuj (F5)", "\u25b6 Analyze (F5)"), lambda: self.studio.tab_mq.analyze()),
-                 ("delta", 2, T("Delta REF / INF", "Delta REF / INF"), T("Wykonaj analiz\u0119", "Run the analysis"), lambda: self.studio.tab_delta.run()),
-                 ("report", 3, T("Raport jako\u015bci", "Quality report"), T("Generuj raport", "Generate report"), lambda: self.studio.tab_report.generate()),
-                 ("views", 4, T("Widoki i zrzuty", "Views & screenshots"), T("Zapami\u0119taj widok (1)", "Remember view (1)"), lambda: self.studio.tab_views.remember()),
-                 ("ppt", 5, T("Prezentacja PPTX", "PowerPoint"), T("\u25b6 Seria \u2192 PPTX (F7)", "\u25b6 Series \u2192 PPTX (F7)"), lambda: self.studio.tab_ppt.series()),
-                 ("preview", 6, T("Podgl\u0105d slajdu", "Slide preview"), T("Podgl\u0105d na \u017cywo (F6)", "Live preview (F6)"), lambda: self.studio.live_toggle())]
-        for i, (key, num, title, act, fn) in enumerate(steps):
-            card = QtWidgets.QFrame()
-            card.setObjectName("card")
-            card.setStyleSheet("#card{background:white;border:1px solid #c8d0da;border-radius:4px}")
-            cl = QtWidgets.QVBoxLayout(card)
-            cl.setContentsMargins(10, 8, 10, 8)
-            cl.addWidget(step_label(num if num <= 5 else "\u25a3", title))
+        steps = [("mq", T("Metryki i grupy kolor\u00f3w", "Metrics & color groups"), T("\u25b6 Analizuj (F5)", "\u25b6 Analyze (F5)"), lambda: self.studio.tab_mq.analyze()),
+                 ("delta", T("Delta REF / INF", "Delta REF / INF"), T("\u25b6 Wykonaj analiz\u0119", "\u25b6 Run the analysis"), lambda: self.studio.tab_delta.run()),
+                 ("surf", T("Powierzchnie \u2013 elementy krytyczne", "Surfaces \u2013 critical elements"), T("\u25b6 Analizuj", "\u25b6 Analyze"), lambda: self.studio.tab_surf.run()),
+                 ("report", T("Raport jako\u015bci", "Quality report"), T("\u25b6 Generuj raport", "\u25b6 Generate report"), lambda: self.studio.tab_report.generate()),
+                 ("views", T("Widoki i zrzuty", "Views & screenshots"), T("\u25cf Zapami\u0119taj widok (1)", "\u25cf Remember view (1)"), lambda: self.studio.tab_views.remember()),
+                 ("ppt", T("Prezentacja PPTX", "PowerPoint"), T("\u25b6 Seria \u2192 PPTX (F7)", "\u25b6 Series \u2192 PPTX (F7)"), lambda: self.studio.tab_ppt.series())]
+        for i, (key, title, act, fn) in enumerate(steps):
+            cl = QtWidgets.QVBoxLayout()
+            cl.setSpacing(4)
+            tl = QtWidgets.QLabel("<b>%s</b>" % h_esc(title))
+            tl.setTextFormat(QtCore.Qt.RichText)
+            cl.addWidget(tl)
             st = QtWidgets.QLabel()
             st.setWordWrap(True)
-            st.setMinimumHeight(52)
+            st.setMinimumHeight(48)
             st.setAlignment(QtCore.Qt.AlignTop)
+            st.setStyleSheet("color:#334")
             cl.addWidget(st, 1)
             b_go = QtWidgets.QPushButton(T("Przejd\u017a \u2192", "Go \u2192"))
             b_go.clicked.connect(lambda _=False, k=key: self.studio.goto(k))
-            b_act = styled_button(act, RUN_COLOR if key in ("mq", "delta") else (GO_COLOR if key in ("ppt", "report") else HDR_COLOR))
+            b_act = styled_button(act, RUN_COLOR if key in ("mq", "delta", "surf") else (GO_COLOR if key in ("ppt", "report") else HDR_COLOR))
             b_act.clicked.connect(lambda _=False, f=fn: f())
             cl.addLayout(hrow(b_go, None, b_act))
-            grid.addWidget(card, i // 3, i % 3)
+            grid.addWidget(card(cl), i // 3, i % 3)
             self.cards[key] = st
-        v.addWidget(group(T("Przebieg pracy", "Workflow"), grid))
-        # --- narzedzia ---
-        b_rs = QtWidgets.QPushButton(T("Przywr\u00f3\u0107 siatk\u0119 (zdejmij kolory)", "Restore mesh (remove colors)"))
-        b_rs.clicked.connect(self.studio.restore_any)
-        tip(b_rs, T("Odk\u0142ada elementy do pierwotnych komponent\u00f3w i usuwa komponenty narz\u0119dzia (tylko puste) \u2013 nic nie ginie.",
-                    "Puts elements back into their original components and removes the tool components (empty only) \u2013 nothing is lost."))
-        b_diag = QtWidgets.QPushButton(T("Diagnostyka / weryfikacja odczytu metryk\u2026", "Diagnostics / metric read verification\u2026"))
-        b_diag.clicked.connect(self.studio.show_diagnostics)
-        b_help = QtWidgets.QPushButton(T("? Pomoc (F1)", "? Help (F1)"))
-        b_help.clicked.connect(self.studio.show_help)
-        v.addWidget(group(T("Narz\u0119dzia", "Tools"), hrow(b_rs, b_diag, b_help, None)))
-        v.addWidget(note_label(T("Szybki start: 1) na karcie \u201eMetryki\u201d zaznacz metryki i kliknij \u201eAnalizuj i koloruj\u201d (F5); 2) ustaw model w oknie graficznym "
-                                 "i zapami\u0119taj widoki (klawisz 1) \u2013 opcjonalnie; 3) na karcie \u201ePrezentacja\u201d wybierz plik i uk\u0142ad (podgl\u0105d na \u017cywo: F6), "
-                                 "kliknij \u201eSeria \u2192 PPTX\u201d (F7) \u2013 najpierw zobaczysz wszystkie slajdy, potem powstanie plik. Delta REF/INF i raport to osobne kroki, "
-                                 "te\u017c z eksportem na slajd. Wszystkie opcje zapisuj\u0105 si\u0119 same.",
-                                 "Quick start: 1) on the \u201cMetrics\u201d tab tick metrics and click \u201cAnalyze and color\u201d (F5); 2) set the model in the graphics window "
-                                 "and remember views (key 1) \u2013 optional; 3) on the \u201cPowerPoint\u201d tab choose the file and layout (live preview: F6), "
-                                 "click \u201cSeries \u2192 PPTX\u201d (F7) \u2013 you first see all slides, then the file is written. The REF/INF delta and the report are separate steps, "
-                                 "also exportable to a slide. All options are saved automatically.")))
+        v.addWidget(group(T("Kroki (ka\u017cdy dzia\u0142a te\u017c osobno)", "Steps (each works on its own too)"), grid))
+        v.addWidget(note_label(T("Skr\u00f3ty: F8 automat \u2022 F5 analiza metryk \u2022 F6 podgl\u0105d na \u017cywo \u2022 F7 seria PPTX \u2022 1 zapami\u0119taj widok \u2022 K zrzuty \u2022 F1 pomoc. "
+                                 "Wszystkie opcje zapisuj\u0105 si\u0119 same. \u201ePrzywr\u00f3\u0107 siatk\u0119\u201d (pasek boczny) zdejmuje kolory narz\u0119dzia \u2013 nic nie ginie.",
+                                 "Shortcuts: F8 workflow \u2022 F5 metrics analysis \u2022 F6 live preview \u2022 F7 PPTX series \u2022 1 remember view \u2022 K shots \u2022 F1 help. "
+                                 "All options are saved automatically. \u201cRestore mesh\u201d (sidebar) removes the tool colors \u2013 nothing is lost.")))
         v.addStretch(1)
 
     def refresh(self):
@@ -8933,8 +10878,6 @@ class StartTab(_QWidget):
             ne, nn, nc = HM.count(HM.ent.Element), HM.count(HM.ent.Node), HM.count(HM.ent.Component)
             s = "<b>%s</b><br>%s" % (h_esc(f or T("(model niezapisany / nieznany plik)", "(unsaved model / unknown file)")),
                                      h_esc(T("elementy: %d \u2022 w\u0119z\u0142y: %d \u2022 komponenty: %d", "elements: %d \u2022 nodes: %d \u2022 components: %d", ne, nn, nc)))
-            if MQ.analyzed:
-                s += "<br>" + h_esc(T("z ostatniej analizy: 2D %d, 3D %d, inne %d", "from the last analysis: 2D %d, 3D %d, other %d", MQ.n2d, MQ.n3d, MQ.nskip))
             if MESH.active():
                 s += "<br><span style='color:%s'>%s</span>" % (WARN_COLOR, h_esc(T("siatka jest POKOLOROWANA przez narz\u0119dzie (%s) \u2013 \u201ePrzywr\u00f3\u0107 siatk\u0119\u201d zdejmuje kolory",
                                                                                       "the mesh is COLORED by the tool (%s) \u2013 \u201cRestore mesh\u201d removes the colors",
@@ -8943,6 +10886,19 @@ class StartTab(_QWidget):
             s = "<span style='color:%s'>%s</span>" % (ERR_COLOR, h_esc(T("Brak API HyperMesha \u2013 uruchom plik w HyperMesh 2023+ (File > Run > Python Script).",
                                                                         "No HyperMesh API \u2013 run the file in HyperMesh 2023+ (File > Run > Python Script).")))
         self.lab_model.setText(s)
+        fl = FLOW
+        if fl.last:
+            self.lab_flow.setText(T("Ostatni przebieg: %s (%s) \u2013 %d plik\u00f3w, %d zrzut\u00f3w delty.\nREF: %s \u2022 INF: %s",
+                                    "Last run: %s (%s) \u2013 %d files, %d delta shots.\nREF: %s \u2022 INF: %s",
+                                    fl.last["name"], fl.last["when"], len(fl.last["files"]), fl.last["n_shots"],
+                                    os.path.basename(fl.ref_file), os.path.basename(fl.inf_file)))
+        else:
+            self.lab_flow.setText(T("REF: %s \u2022 INF: %s \u2022 folder: %s\nWynik: podfoldery 01_delta (zrzuty metryka \u00d7 widok + legendy), 02_raport_jakosci, "
+                                    "03_powierzchnie, 04_prezentacja oraz index.html.",
+                                    "REF: %s \u2022 INF: %s \u2022 folder: %s\nOutput: subfolders 01_delta (shots metric \u00d7 view + legends), 02_raport_jakosci, "
+                                    "03_powierzchnie, 04_prezentacja and index.html.",
+                                    os.path.basename(fl.ref_file) or T("(nie wybrano)", "(not chosen)"), os.path.basename(fl.inf_file) or T("(nie wybrano)", "(not chosen)"),
+                                    fl.out_dir or T("(nie wybrano)", "(not chosen)")))
         c = self.cards
         if MQ.analyzed:
             c["mq"].setText(T("Analiza z %s: %d element\u00f3w, metryki: %s.\nNa siatce: %s. Poza norm\u0105 (\u2265 1 metryka): %d.",
@@ -8951,27 +10907,35 @@ class StartTab(_QWidget):
                               MQ.label(MQ.view) if MQ.view else T("(kolory zdj\u0119te)", "(colors removed)"),
                               MQ.stats.get("all", {}).get("nBad", 0)))
         else:
-            c["mq"].setText(T("Brak analizy. Zaznacz metryki (AR, Jacobian, Jacobian Zero, Skewness) i kliknij \u201eAnalizuj i koloruj\u201d \u2013 siatka zostanie pokolorowana wg prog\u00f3w.",
-                              "No analysis yet. Tick metrics (AR, Jacobian, Jacobian Zero, Skewness) and click \u201cAnalyze and color\u201d \u2013 the mesh is colored by thresholds."))
+            c["mq"].setText(T("Brak analizy. AR, Jacobian, Jacobian Zero, Skewness czytane naraz; siatka kolorowana wg prog\u00f3w (paleta ANSYS).",
+                              "No analysis yet. AR, Jacobian, Jacobian Zero, Skewness read at once; the mesh is colored by thresholds (ANSYS palette)."))
         if DELTA.done:
-            cnt = DELTA.counts
-            c["delta"].setText(T("Wynik na siatce: %s (%s), %s.\nW skali %d \u2022 bez zmian %d \u2022 bez odpowiednika %d \u2022 MAX %s (el. %s)",
-                                 "Result on the mesh: %s (%s), %s.\nIn scale %d \u2022 no change %d \u2022 unmatched %d \u2022 MAX %s (el. %s)",
-                                 DELTA.delta_label(), DELTA.dim_label(), DELTA.when, cnt["band"], cnt["gray"], cnt["unm"],
-                                 fmt_num(DELTA.max_info[0], 4) if DELTA.max_info else "-", DELTA.max_info[1] if DELTA.max_info else "-"))
+            c["delta"].setText(T("Wynik na siatce: %s (%s), metryki: %s.\nElement\u00f3w %d \u2022 %s",
+                                 "Result on the mesh: %s (%s), metrics: %s.\nElements %d \u2022 %s",
+                                 DELTA.delta_label(), DELTA.dim_label(), ", ".join(DELTA.delta_tag(m) for m in DELTA.analyzed), len(DELTA.elems), DELTA.when))
         else:
-            c["delta"].setText(T("Brak wyniku. Por\u00f3wnuje dwa modele .hm (REF \u2192 INF) po ID element\u00f3w: pogorszenie AR / Jacobiana / Skewness albo przesuni\u0119cie w\u0119z\u0142\u00f3w [mm]; jeden model: pasma wg warto\u015bci albo podzia\u0142 wg progu.",
-                                 "No result. Compares two .hm models (REF \u2192 INF) by element ID: AR / Jacobian / Skewness worsening or node displacement [mm]; one model: bands by value or threshold split."))
+            c["delta"].setText(T("Brak wyniku. Por\u00f3wnuje REF \u2192 INF po ID element\u00f3w dla wielu metryk naraz (AR, Jacobian, Skewness, przesuni\u0119cie); "
+                                 "na siatce jedna metryka, inne wygaszone, \u201ebez zmian\u201d bezbarwne.",
+                                 "No result. Compares REF \u2192 INF by element ID for several metrics at once (AR, Jacobian, Skewness, displacement); "
+                                 "one metric on the mesh, others dimmed, \u201cno change\u201d colorless."))
+        if SURF.last:
+            pairs = SURF.stat_pairs()
+            c["surf"].setText(T("Wynik z %s (%s).\n%s", "Result from %s (%s).\n%s", SURF.last["when"], SURF.last["source"],
+                                "; ".join("%s: %s" % p for p in pairs) or "-"))
+        else:
+            c["surf"].setText(T("Brak wyniku. Wskazujesz powierzchnie (ID / w HM), makro bierze przylegaj\u0105ce elementy 3D i sprawdza metryki w zadanych "
+                                "przedzia\u0142ach tolerancji: % w normie w REF i INF + delta.",
+                                "No result. Pick surfaces (IDs / in HM), the macro takes the adjacent 3D elements and checks the metrics against the given "
+                                "tolerance ranges: % within in REF and INF + delta."))
         if REPORT.last:
             c["report"].setText(T("Ostatni raport: %s (%d element\u00f3w).\nPliki: %s", "Last report: %s (%d elements).\nFiles: %s",
                                   REPORT.last["when"], REPORT.last["nsel"], ", ".join(os.path.basename(f) for f in REPORT.last_files[:4]) or "-"))
         else:
-            c["report"].setText(T("Brak raportu. TXT / CSV / XLSX / HTML ze statystykami, histogramami, wska\u017anikiem 0\u2013100; por\u00f3wnanie REF vs INF ze zgodno\u015bci\u0105 element\u00f3w i zestawieniem w\u0119z\u0142\u00f3w.",
-                                  "No report. TXT / CSV / XLSX / HTML with statistics, histograms, 0\u2013100 score; REF vs INF comparison with element identity and node comparison."))
-        c["views"].setText(T("Zapami\u0119tanych widok\u00f3w: %d (zaznaczonych: %d, z klatk\u0105 WYSIWYG: %d).\nZrzuty: folder %s.",
-                             "Remembered views: %d (ticked: %d, with a WYSIWYG frame: %d).\nScreenshots: folder %s.",
-                             len(VIEWS.views), len(VIEWS.selected()), sum(1 for r in VIEWS.views if VIEWS.shot_ok(r)),
-                             VIEWS.target_dir()[0] or T("(nie wybrano)", "(not chosen)")))
+            c["report"].setText(T("Brak raportu. TXT / CSV / XLSX / HTML ze statystykami, histogramami, wska\u017anikiem 0\u2013100; por\u00f3wnanie REF vs INF.",
+                                  "No report. TXT / CSV / XLSX / HTML with statistics, histograms, 0\u2013100 score; REF vs INF comparison."))
+        c["views"].setText(T("Zapami\u0119tanych widok\u00f3w: %d (zaznaczonych: %d).\nZaznaczone widoki s\u0105 kamerami automatu i serii PPTX.",
+                             "Remembered views: %d (ticked: %d).\nTicked views are the cameras of the workflow and the PPTX series.",
+                             len(VIEWS.views), len(VIEWS.selected())))
         p = PRESENT.target(False)
         le = PRESENT.last_export
         c["ppt"].setText(T("Plik: %s\nTryb: %s, uk\u0142ad: %s.%s", "File: %s\nMode: %s, layout: %s.%s",
@@ -8979,10 +10943,259 @@ class StartTab(_QWidget):
                            T("dopisanie slajd\u00f3w", "append slides") if PRESENT.mode == "append" else T("nowa prezentacja", "new presentation"),
                            PRESENT.style.layout,
                            ("\n" + T("Ostatni eksport: %d slajd(\u00f3w), %s", "Last export: %d slide(s), %s", le["n"], le["when"])) if le else ""))
-        c["preview"].setText(T("Karta \u201ePodgl\u0105d slajdu\u201d pokazuje przyk\u0142adowy slajd z bie\u017c\u0105cych opcji i \u201eco powstanie\u201d; okno na \u017cywo (F6) odswie\u017ca si\u0119 po ka\u017cdej zmianie opcji.",
-                               "The \u201cSlide preview\u201d tab shows a sample slide from the current options and \u201cwhat will be made\u201d; the live window (F6) refreshes after every option change."))
 
+    def set_busy(self, on):
+        pass
+# ==================== GUI: KARTA "AUTOMAT REF vs INF" ==================
+# Jedna karta = caly przebieg: 1 pliki i folder, 2 zakres delty (metryki,
+# elementy, widoki), 3 co wygenerowac, plan folderow, "Uruchom". Po
+# przebiegu: podglad slajdow (opcja) -> zapis PPTX -> otwarcie folderu.
+class WorkflowTab(_QWidget):
+    def __init__(self, studio):
+        super(WorkflowTab, self).__init__()
+        self.studio = studio
+        v = QtWidgets.QVBoxLayout(self)
+        v.setSpacing(8)
+        v.addWidget(page_title(T("Automat REF vs INF", "REF vs INF workflow"),
+                               T("Jeden przebieg: wczytuje REF i INF (ka\u017cdy raz), liczy delt\u0119 wszystkich zaznaczonych metryk, robi zrzuty wybranych widok\u00f3w "
+                                 "(inne metryki i komponenty spoza narz\u0119dzia wygaszone, \u201ebez zmian\u201d bezbarwne), raport jako\u015bci, analiz\u0119 powierzchni i prezentacj\u0119 "
+                                 "\u2013 wszystko w podfolderach wskazanego folderu.",
+                                 "One run: loads REF and INF (once each), computes the delta of all ticked metrics, captures the chosen views "
+                                 "(other metrics and non-tool components dimmed, \u201cno change\u201d colorless), the quality report, the surface analysis and the presentation "
+                                 "\u2013 all in subfolders of the chosen folder.")))
+        # --- 1 pliki ---
+        g = QtWidgets.QGridLayout()
+        self.e_ref, self.e_inf, self.e_out, self.e_name = QtWidgets.QLineEdit(), QtWidgets.QLineEdit(), QtWidgets.QLineEdit(), QtWidgets.QLineEdit()
+        g.addWidget(QtWidgets.QLabel(T("Plik REF (.hm):", "REF file (.hm):")), 0, 0)
+        g.addWidget(self.e_ref, 0, 1)
+        g.addWidget(file_row(self, self.e_ref, T("Wybierz plik REF (.hm)", "Choose the REF file (.hm)"), "HyperMesh (*.hm);;*.*", start_fn=HM.model_dir), 0, 2)
+        g.addWidget(QtWidgets.QLabel(T("Plik INF (.hm):", "INF file (.hm):")), 1, 0)
+        g.addWidget(self.e_inf, 1, 1)
+        g.addWidget(file_row(self, self.e_inf, T("Wybierz plik INF (.hm)", "Choose the INF file (.hm)"), "HyperMesh (*.hm);;*.*", start_fn=HM.model_dir), 1, 2)
+        g.addWidget(QtWidgets.QLabel(T("Folder wynik\u00f3w:", "Output folder:")), 2, 0)
+        g.addWidget(self.e_out, 2, 1)
+        g.addWidget(dir_row(self, self.e_out, T("Folder wynik\u00f3w automatu", "Workflow output folder")), 2, 2)
+        self.cb_stamp = QtWidgets.QCheckBox(T("dopisz dat\u0119 i godzin\u0119 do nazwy folderu przebiegu", "append date and time to the run folder name"))
+        g.addWidget(QtWidgets.QLabel(T("Nazwa przebiegu:", "Run name:")), 3, 0)
+        g.addLayout(hrow(self.e_name, 12, self.cb_stamp, None), 3, 1, 1, 2)
+        self.e_name.setPlaceholderText(T("(puste = nazwa pliku INF)", "(empty = INF file name)"))
+        g.setColumnStretch(1, 1)
+        v.addWidget(group(T("1  Pliki i folder wynik\u00f3w \u2013 wczytanie ZAST\u0118PUJE model w sesji", "1  Files and output folder \u2013 loading REPLACES the model in the session"), g))
+        # --- 2 zakres ---
+        z = QtWidgets.QGridLayout()
+        self.cb_m = {}
+        row = []
+        for key, lab in (("ar", "Aspect Ratio"), ("jac", "Jacobian"), ("skew", "Skewness"), ("disp", T("Przesuni\u0119cie w\u0119z\u0142\u00f3w [mm]", "Node displacement [mm]"))):
+            cb = QtWidgets.QCheckBox(lab)
+            self.cb_m[key] = cb
+            row.append(cb)
+        z.addWidget(QtWidgets.QLabel(T("Metryki delty:", "Delta metrics:")), 0, 0)
+        z.addLayout(hrow(*(row + [None])), 0, 1)
+        self.cb_2d = QtWidgets.QCheckBox(T("2D (pow\u0142oki)", "2D (shells)"))
+        self.cb_3d = QtWidgets.QCheckBox(T("3D (bry\u0142y)", "3D (solids)"))
+        b_delta = QtWidgets.QPushButton(T("Progi i wy\u015bwietlanie delty \u2192", "Delta thresholds and display \u2192"))
+        b_delta.clicked.connect(lambda: self.studio.goto("delta"))
+        z.addWidget(QtWidgets.QLabel(T("Elementy:", "Elements:")), 1, 0)
+        z.addLayout(hrow(self.cb_2d, self.cb_3d, 16, b_delta, None), 1, 1)
+        self.lab_views = QtWidgets.QLabel()
+        b_views = QtWidgets.QPushButton(T("Wybierz widoki \u2192", "Choose views \u2192"))
+        b_views.clicked.connect(lambda: self.studio.goto("views"))
+        z.addWidget(QtWidgets.QLabel(T("Widoki (kamery):", "Views (cameras):")), 2, 0)
+        z.addLayout(hrow(self.lab_views, 12, b_views, None), 2, 1)
+        z.setColumnStretch(1, 1)
+        v.addWidget(group(T("2  Zakres delty", "2  Delta scope"), z))
+        # --- 3 co wygenerowac ---
+        w = QtWidgets.QGridLayout()
+        self.cb_delta = QtWidgets.QCheckBox(T("Delta + zrzuty widok\u00f3w  \u2192  01_delta/<metryka>/<widok>.png + legenda SVG", "Delta + view shots  \u2192  01_delta/<metric>/<view>.png + legend SVG"))
+        self.cb_report = QtWidgets.QCheckBox(T("Raport jako\u015bci REF vs INF (TXT / HTML / XLSX / CSV)  \u2192  02_raport_jakosci", "Quality report REF vs INF (TXT / HTML / XLSX / CSV)  \u2192  02_raport_jakosci"))
+        self.cb_surf = QtWidgets.QCheckBox(T("Elementy krytyczne z powierzchni (tolerancje)  \u2192  03_powierzchnie", "Critical elements from surfaces (tolerances)  \u2192  03_powierzchnie"))
+        b_surf = QtWidgets.QPushButton(T("Powierzchnie i kryteria \u2192", "Surfaces and criteria \u2192"))
+        b_surf.clicked.connect(lambda: self.studio.goto("surf"))
+        b_rep = QtWidgets.QPushButton(T("Opcje raportu \u2192", "Report options \u2192"))
+        b_rep.clicked.connect(lambda: self.studio.goto("report"))
+        self.cb_pptx = QtWidgets.QCheckBox(T("Prezentacja PPTX  \u2192  04_prezentacja", "PPTX presentation  \u2192  04_prezentacja"))
+        self.cb_prev = QtWidgets.QCheckBox(T("podgl\u0105d wszystkich slajd\u00f3w przed zapisem", "preview all slides before saving"))
+        b_ppt = QtWidgets.QPushButton(T("Uk\u0142ad slajd\u00f3w \u2192", "Slide layout \u2192"))
+        b_ppt.clicked.connect(lambda: self.studio.goto("ppt"))
+        self.cb_open = QtWidgets.QCheckBox(T("otw\u00f3rz folder wynik\u00f3w po zako\u0144czeniu", "open the output folder when finished"))
+        w.addWidget(self.cb_delta, 0, 0)
+        w.addWidget(self.cb_report, 1, 0)
+        w.addWidget(b_rep, 1, 1)
+        w.addWidget(self.cb_surf, 2, 0)
+        w.addWidget(b_surf, 2, 1)
+        w.addLayout(hrow(self.cb_pptx, 12, self.cb_prev, None), 3, 0)
+        w.addWidget(b_ppt, 3, 1)
+        w.addWidget(self.cb_open, 4, 0)
+        w.setColumnStretch(0, 1)
+        v.addWidget(group(T("3  Co wygenerowa\u0107", "3  What to generate"), w))
+        # --- plan + start ---
+        self.plan = QtWidgets.QPlainTextEdit()
+        self.plan.setReadOnly(True)
+        self.plan.setMaximumHeight(120)
+        self.plan.setStyleSheet("font-size:8.5pt;background:#f7f9fc")
+        v.addWidget(group(T("Co powstanie", "What will be made"), vcol(self.plan)))
+        self.b_run = styled_button(T("\u25b6 Uruchom automat (F8)", "\u25b6 Run the workflow (F8)"), GO_COLOR, big=True)
+        self.b_run.clicked.connect(self.run)
+        tip(self.b_run, T("Wczytuje REF i INF, liczy delt\u0119, robi zrzuty, raporty i prezentacj\u0119 \u2013 wszystko do folderu przebiegu.",
+                          "Loads REF and INF, computes the delta, captures shots, writes reports and the presentation \u2013 all into the run folder."))
+        b_dir = QtWidgets.QPushButton(T("Otw\u00f3rz folder przebiegu", "Open the run folder"))
+        b_dir.clicked.connect(self.open_dir)
+        b_idx = QtWidgets.QPushButton(T("Otw\u00f3rz index.html", "Open index.html"))
+        b_idx.clicked.connect(self.open_index)
+        b_ppt2 = QtWidgets.QPushButton(T("Otw\u00f3rz prezentacj\u0119", "Open the presentation"))
+        b_ppt2.clicked.connect(self.open_pptx)
+        v.addLayout(hrow(self.b_run, None, b_dir, b_idx, b_ppt2))
+        self.res = QtWidgets.QTextBrowser()
+        self.res.setMinimumHeight(140)
+        v.addWidget(self.res, 1)
+        self._loading = False
+        self.load_from_engine()
+        for k, cb in self.cb_m.items():
+            cb.toggled.connect(lambda on, k=k: self._delta_opt("metrics", k, on))
+        self.cb_2d.toggled.connect(lambda on: self._delta_opt("dim2", None, on))
+        self.cb_3d.toggled.connect(lambda on: self._delta_opt("dim3", None, on))
 
+    # ---------------------------------------------------------- dane <-> okno
+    def load_from_engine(self):
+        self._loading = True
+        F = FLOW
+        self.e_ref.setText(F.ref_file or DELTA.ref_file)
+        self.e_inf.setText(F.inf_file or DELTA.inf_file)
+        self.e_out.setText(F.out_dir)
+        self.e_name.setText(F.name)
+        self.cb_stamp.setChecked(F.stamp)
+        for k, cb in self.cb_m.items():
+            cb.setChecked(bool(DELTA.metrics.get(k)))
+        self.cb_2d.setChecked(DELTA.dim2)
+        self.cb_3d.setChecked(DELTA.dim3)
+        self.cb_delta.setChecked(F.do_delta)
+        self.cb_report.setChecked(F.do_report)
+        self.cb_surf.setChecked(F.do_surf)
+        self.cb_pptx.setChecked(F.do_pptx)
+        self.cb_prev.setChecked(PRESENT.preview_on)
+        self.cb_open.setChecked(F.open_after)
+        self._loading = False
+        self.refresh()
+
+    def store_to_engine(self):
+        """Tylko pola automatu; metryki i wymiary delty ida do DELTA od razu
+        przy zmianie (_delta_opt) - karta Delta ma te same opcje."""
+        F = FLOW
+        F.ref_file, F.inf_file = self.e_ref.text().strip(), self.e_inf.text().strip()
+        F.out_dir, F.name, F.stamp = self.e_out.text().strip(), self.e_name.text().strip(), self.cb_stamp.isChecked()
+        F.do_delta, F.do_report, F.do_surf, F.do_pptx = self.cb_delta.isChecked(), self.cb_report.isChecked(), self.cb_surf.isChecked(), self.cb_pptx.isChecked()
+        PRESENT.preview_on = self.cb_prev.isChecked()
+        F.open_after = self.cb_open.isChecked()
+
+    def _delta_opt(self, key, k, on):
+        if self._loading:
+            return
+        if key == "metrics":
+            DELTA.metrics[k] = bool(on)
+        else:
+            setattr(DELTA, key, bool(on))
+        try:
+            self.studio.tab_delta.load_from_engine()
+        except Exception:
+            pass
+        self.refresh()
+
+    def refresh(self):
+        n = len(VIEWS.selected())
+        self.lab_views.setText(T("zaznaczonych widok\u00f3w: %d%s", "ticked views: %d%s", n,
+                                 "" if n else T(" \u2013 u\u017cyta zostanie bie\u017c\u0105ca kamera", " \u2013 the current camera will be used")))
+        try:
+            self.store_to_engine()
+            self.plan.setPlainText("\n".join(FLOW.plan_lines()))
+        except Exception as e:
+            self.plan.setPlainText("%s" % e)
+        info = FLOW.last
+        if not info:
+            self.res.setHtml("<i>%s</i>" % h_esc(T("(brak przebiegu \u2013 wska\u017c pliki, folder i kliknij \u201eUruchom automat\u201d)",
+                                                   "(no run yet \u2013 choose the files, the folder and click \u201cRun the workflow\u201d)")))
+            return
+        H = ["<div style='color:%s'><b>%s</b> %s \u2022 %s \u2022 %.0f s</div>" % (HDR_COLOR, h_esc(T("Ostatni przebieg:", "Last run:")), h_esc(info["name"]), h_esc(info["when"]), info["seconds"])]
+        H.append("<div>%s</div>" % h_esc(info["root"]))
+        if DELTA.done:
+            H.append(html_table(DELTA.summary_rows()))
+        if SURF.last:
+            H.append(html_table(SURF.summary_rows()))
+        H.append("<div style='margin-top:6px'>%s</div>" % "<br>".join(h_esc(ln) for ln in info["log"]))
+        if info.get("pptx_msg"):
+            H.append("<div style='color:%s'>%s</div>" % (OK_COLOR, h_esc(info["pptx_msg"])))
+        self.res.setHtml("".join(H))
+
+    # ---------------------------------------------------------- akcje
+    def run(self):
+        self.store_to_engine()
+        self.studio.tab_delta.store_to_engine()
+        self.studio.tab_surf.store_to_engine()
+        try:
+            self.studio.tab_report.store_to_engine()
+        except ValueError as e:
+            BUS.status("%s" % e, "err")
+            return
+        F = FLOW
+        for f, lab in ((F.ref_file, "REF"), (F.inf_file, "INF")):
+            if not os.path.isfile(f):
+                BUS.status(T("Wska\u017c istniej\u0105cy plik %s (.hm).", "Choose an existing %s file (.hm).", lab), "err")
+                return
+        if not F.out_dir:
+            d = ask_dir(self, T("Folder wynik\u00f3w automatu", "Workflow output folder"), HM.model_dir())
+            if not d:
+                return
+            self.e_out.setText(os.path.normpath(d))
+            F.out_dir = self.e_out.text().strip()
+        if not yes_no(self, T("Automat REF vs INF", "REF vs INF workflow"),
+                      T("Automat wczyta REF, a potem INF, ZAST\u0118PUJ\u0105C model w sesji HyperMesha (niezapisane zmiany przepadn\u0105). "
+                        "Wyniki trafi\u0105 do:\n%s\n\nKontynuowa\u0107?",
+                        "The workflow loads REF and then INF, REPLACING the model in the HyperMesh session (unsaved changes are lost). "
+                        "Results go to:\n%s\n\nContinue?", F.root_dir())):
+            BUS.status(T("Anulowano.", "Cancelled."), "warn")
+            return
+        save_settings()
+        BUS.log("-" * 40)
+        info = self.studio.runner.run(lambda: FLOW.run(deliver=False))
+        if info:
+            self.done(info)          # poza runnerem: podglad slajdow i zapis PPTX to osobny krok
+
+    def done(self, info):
+        PRESENT.invalidate_frame()
+        self.studio.tab_ppt.load_from_engine()
+        self.studio.tab_delta.load_from_engine()
+        if FLOW.do_pptx and FLOW.items:
+            self.studio.runner.run(FLOW.deliver_pptx, busy=False)
+        self.refresh()
+        if FLOW.open_after and info:
+            open_path(info["root"])
+        if info:
+            msg_box(self, T("Automat zako\u0144czony", "Workflow finished"),
+                    T("Przebieg %s zako\u0144czony (%.0f s).\n\nFolder: %s\nPlik\u00f3w: %d, zrzut\u00f3w delty: %d.\n\n%s",
+                      "Run %s finished (%.0f s).\n\nFolder: %s\nFiles: %d, delta shots: %d.\n\n%s",
+                      info["name"], info["seconds"], info["root"], len(info["files"]), info["n_shots"], "\n".join(info["log"][-4:])))
+
+    def open_dir(self):
+        if FLOW.last:
+            open_path(FLOW.last["root"])
+        else:
+            BUS.status(T("Brak przebiegu w tej sesji.", "No run in this session."), "warn")
+
+    def open_index(self):
+        p = os.path.join(FLOW.last["root"], "index.html") if FLOW.last else ""
+        if p and os.path.isfile(p):
+            open_path(p)
+        else:
+            BUS.status(T("Brak index.html z ostatniego przebiegu.", "No index.html from the last run."), "warn")
+
+    def open_pptx(self):
+        p = (FLOW.last or {}).get("pptx") or ""
+        if p and os.path.isfile(p):
+            open_path(p)
+        else:
+            BUS.status(T("Brak prezentacji z ostatniego przebiegu.", "No presentation from the last run."), "warn")
+
+    def set_busy(self, on):
+        self.b_run.setEnabled(not on)
 # ==================== GUI: KARTA "METRYKI I GRUPY" =====================
 # Kroki: 1 zakres i wymiar elementow, 2 tabela metryk (prog, tryb legendy,
 # liczba pasm, "Legenda..."), 3 opcje grup i kolory specjalne, 4 "Analizuj
@@ -8992,6 +11205,10 @@ class MqTab(_QWidget):
         super(MqTab, self).__init__()
         self.studio = studio
         v = QtWidgets.QVBoxLayout(self)
+        v.setSpacing(8)
+        v.addWidget(page_title(T("Metryki i grupy kolor\u00f3w", "Metrics & color groups"),
+                               T("Jeden model: kilka metryk czytanych naraz, elementy dzielone na grupy (komponenty) wg prog\u00f3w i pasm \u2013 legenda pokazuje dok\u0142adnie kolory z siatki.",
+                                 "One model: several metrics read at once, elements split into groups (components) by thresholds and bands \u2013 the legend shows exactly the mesh colors.")))
         # --- zakres ---
         self.rb_all = QtWidgets.QRadioButton(T("ca\u0142a siatka", "whole mesh"))
         self.rb_disp = QtWidgets.QRadioButton(T("tylko wy\u015bwietlone", "displayed only"))
@@ -9227,19 +11444,28 @@ class MqTab(_QWidget):
 
 
 # =================== GUI: KARTA "DELTA REF / INF" ======================
-# Kroki: 1 tryb (delta / jeden model: pasma / jeden model: prog), 2 pliki,
-# 3 metryka (grupa radiowa) i typ elementow (OSOBNA grupa radiowa), skala,
-# opcje, 4 analiza, widocznosc, "Sprawdz delte" po ID (z danych analizy).
+# Kroki: 1 tryb, 2 pliki (+ opcje zaawansowane zwiniete), 3 metryki
+# (wiele naraz, progi per metryka) i elementy 2D / 3D, 4 wyswietlanie
+# ("bez zmian" bezbarwne + przezroczystosc zmieniana NA ZYWO, wygaszanie
+# innych komponentow), analiza, przelacznik metryki na siatce, widocznosc,
+# "Sprawdz delte" po ID (z danych analizy), tabela wynikow.
 class DeltaTab(_QWidget):
     def __init__(self, studio):
         super(DeltaTab, self).__init__()
         self.studio = studio
+        self._loading = False
         v = QtWidgets.QVBoxLayout(self)
-        # --- tryb ---
+        v.setSpacing(8)
+        v.addWidget(page_title(T("Delta REF / INF", "Delta REF / INF"),
+                               T("Pogorszenie metryk element\u00f3w o tym samym ID (REF \u2192 INF) \u2013 wiele metryk w jednym przebiegu. Na siatce jedna metryka naraz: "
+                                 "jej pasma (paleta ANSYS), pozosta\u0142e metryki i komponenty spoza narz\u0119dzia wygaszone, elementy \u201ebez zmian\u201d bezbarwne i przezroczyste.",
+                                 "Metric worsening of elements with the same ID (REF \u2192 INF) \u2013 several metrics in one pass. One metric on the mesh at a time: "
+                                 "its bands (ANSYS palette), the other metrics and non-tool components dimmed, \u201cno change\u201d elements colorless and transparent.")))
+        # --- 1 tryb ---
         self.rb_mode = {}
         mrow = []
         for key, pl, en, tp in (("delta", "Delta REF \u2192 INF (dwa modele)", "Delta REF \u2192 INF (two models)",
-                                  T("Pogorszenie metryki INF wzgl\u0119dem REF dla element\u00f3w o tym samym ID (albo przesuni\u0119cie w\u0119z\u0142\u00f3w).",
+                                  T("Pogorszenie metryk INF wzgl\u0119dem REF dla element\u00f3w o tym samym ID (albo przesuni\u0119cie w\u0119z\u0142\u00f3w).",
                                     "Metric worsening of INF vs REF for elements with the same ID (or node displacement).")),
                                  ("single", "Jeden model: pasma wg warto\u015bci", "One model: bands by value",
                                   T("Elementy jednego modelu dzielone na pasma kolor\u00f3w wg warto\u015bci metryki.", "Elements of one model split into color bands by the metric value.")),
@@ -9252,14 +11478,12 @@ class DeltaTab(_QWidget):
             mrow.append(rb)
         radio_group(self, *mrow)
         v.addWidget(group(T("1  Tryb", "1  Mode"), hrow(*(mrow + [None]))))
-        # --- pliki ---
+        # --- 2 pliki ---
         g = QtWidgets.QGridLayout()
         self.e_ref = QtWidgets.QLineEdit()
         self.e_inf = QtWidgets.QLineEdit()
-        b_ref = QtWidgets.QPushButton(T("Wybierz\u2026", "Browse\u2026"))
-        b_inf = QtWidgets.QPushButton(T("Wybierz\u2026", "Browse\u2026"))
-        b_ref.clicked.connect(lambda: self.pick(self.e_ref, "REF"))
-        b_inf.clicked.connect(lambda: self.pick(self.e_inf, "INF"))
+        b_ref = file_row(self, self.e_ref, T("Wybierz plik REF (.hm)", "Choose the REF file (.hm)"), "HyperMesh (*.hm);;*.*", start_fn=HM.model_dir)
+        b_inf = file_row(self, self.e_inf, T("Wybierz plik INF (.hm)", "Choose the INF file (.hm)"), "HyperMesh (*.hm);;*.*", start_fn=HM.model_dir)
         self.lab_ref = QtWidgets.QLabel(T("Plik REF:", "REF file:"))
         self.lab_inf = QtWidgets.QLabel(T("Plik INF:", "INF file:"))
         g.addWidget(self.lab_ref, 0, 0)
@@ -9269,72 +11493,98 @@ class DeltaTab(_QWidget):
         g.addWidget(self.e_inf, 1, 1)
         g.addWidget(b_inf, 1, 2)
         self.b_inf = b_inf
-        self.cb_open = QtWidgets.QCheckBox(T("INF = aktualnie otwarty model (wtedy wybierasz tylko REF; model jest prze\u0142adowywany z dysku \u2013 zapisz go)",
-                                             "INF = currently open model (then choose REF only; the model is reloaded from disk \u2013 save it)"))
-        self.cb_refc = QtWidgets.QCheckBox(T("Do\u0142\u0105cz REF jako komponent (nak\u0142adka poka\u017c/ukryj)", "Add REF as a component (show/hide overlay)"))
-        self.cb_infc = QtWidgets.QCheckBox(T("Zbierz pozosta\u0142e elementy INF w komponencie", "Collect the remaining INF elements in a component"))
-        for i, cb in enumerate((self.cb_open, self.cb_refc, self.cb_infc)):
-            g.addWidget(cb, 2 + i, 0, 1, 3)
+        self.cb_open = QtWidgets.QCheckBox(T("INF = aktualnie otwarty model (wybierasz tylko REF; model jest prze\u0142adowywany z dysku \u2013 zapisz go)",
+                                             "INF = currently open model (choose REF only; the model is reloaded from disk \u2013 save it)"))
+        g.addWidget(self.cb_open, 2, 0, 1, 3)
         self.cb_open.toggled.connect(self.sync)
-        v.addWidget(group(T("2  Pliki wej\u015bciowe (.hm) \u2013 wczytanie ZAST\u0118PUJE model w sesji", "2  Input files (.hm) \u2013 loading REPLACES the model in the session"), g))
-        # --- parametry ---
-        p = QtWidgets.QGridLayout()
-        self.rb_metric = {}
-        mrow = []
-        for key, lab in (("ar", "Aspect Ratio"), ("jac", "Jacobian"), ("skew", "Skewness"), ("disp", T("Przesuni\u0119cie (mm)", "Displacement (mm)"))):
-            rb = QtWidgets.QRadioButton(lab)
-            rb.toggled.connect(lambda on, k=key: on and self.on_metric(k))
-            self.rb_metric[key] = rb
-            mrow.append(rb)
-        radio_group(self, *mrow)                                   # metryka: wlasna grupa
-        p.addWidget(QtWidgets.QLabel(T("Metryka jako\u015bci:", "Quality metric:")), 0, 0)
-        p.addLayout(hrow(*(mrow + [None])), 0, 1)
-        self.rb_2d = QtWidgets.QRadioButton(T("2D (pow\u0142oki)", "2D (shells)"))
-        self.rb_3d = QtWidgets.QRadioButton(T("3D (bry\u0142y)", "3D (solids)"))
-        radio_group(self, self.rb_2d, self.rb_3d)                  # typ elementow: OSOBNA grupa (nie odznacza metryki)
-        p.addWidget(QtWidgets.QLabel(T("Typ element\u00f3w:", "Element type:")), 1, 0)
-        p.addLayout(hrow(self.rb_2d, self.rb_3d, None), 1, 1)
+        g.setColumnStretch(1, 1)
+        # zaawansowane
+        a = QtWidgets.QGridLayout()
+        self.cb_refc = QtWidgets.QCheckBox(T("Do\u0142\u0105cz REF jako komponent (nak\u0142adka poka\u017c/ukryj)", "Add REF as a component (show/hide overlay)"))
+        self.cb_infc = QtWidgets.QCheckBox(T("Zbierz pozosta\u0142e elementy INF (inne wymiary) w komponencie", "Collect the remaining INF elements (other dimensions) in a component"))
         self.e_prefix = QtWidgets.QLineEdit()
+        self.e_prefix.setMaximumWidth(120)
+        tip(self.e_prefix, T("Wsp\u00f3lny prefiks komponent\u00f3w delty: <prefiks>_<metryka>_b00_\u2026, np. D_dAR_b00_0_0p05.",
+                             "Common prefix of the delta components: <prefix>_<metric>_b00_\u2026, e.g. D_dAR_b00_0_0p05."))
         self.e_target = QtWidgets.QLineEdit()
-        p.addWidget(QtWidgets.QLabel(T("Prefiks nazw komponent\u00f3w:", "Component name prefix:")), 2, 0)
-        p.addWidget(self.e_prefix, 2, 1)
-        p.addWidget(QtWidgets.QLabel(T("Komponent przy przywracaniu (opc.):", "Restore into component (opt.):")), 3, 0)
-        p.addWidget(self.e_target, 3, 1)
         tip(self.e_target, T("Puste = elementy wracaj\u0105 do pierwotnych komponent\u00f3w; nazwa = wszystkie do jednego komponentu.",
                              "Empty = elements return to their original components; a name = all into one component."))
-        self.lab_fail = QtWidgets.QLabel()
-        self.e_fail = QtWidgets.QLineEdit()
-        self.e_fail.setMaximumWidth(110)
-        p.addWidget(self.lab_fail, 4, 0)
-        p.addLayout(hrow(self.e_fail, None), 4, 1)
-        p.setColumnStretch(1, 1)
-        v.addWidget(group(T("3  Parametry", "3  Parameters"), p))
-        # --- skala i opcje ---
-        s = QtWidgets.QGridLayout()
-        self.cb_auto = QtWidgets.QCheckBox(T("Skala automatyczna (zakres z danych)", "Automatic scale (range from data)"))
-        b_scale = QtWidgets.QPushButton(T("R\u0119czna skala (progi pasm)\u2026", "Manual scale (band limits)\u2026"))
-        b_scale.clicked.connect(self.edit_scale)
-        s.addLayout(hrow(self.cb_auto, b_scale, None), 0, 0, 1, 2)
-        self.lab_dead = QtWidgets.QLabel()
-        self.e_dead = QtWidgets.QLineEdit()
-        self.e_dead.setMaximumWidth(110)
-        s.addWidget(self.lab_dead, 1, 0)
-        s.addLayout(hrow(self.e_dead, None), 1, 1)
+        a.addWidget(self.cb_refc, 0, 0, 1, 2)
+        a.addWidget(self.cb_infc, 1, 0, 1, 2)
+        a.addLayout(hrow(QtWidgets.QLabel(T("Prefiks komponent\u00f3w:", "Component prefix:")), self.e_prefix, 16,
+                         QtWidgets.QLabel(T("Komponent przy przywracaniu (opc.):", "Restore into component (opt.):")), self.e_target), 2, 0, 1, 2)
+        gv = QtWidgets.QVBoxLayout()
+        gv.addLayout(g)
+        gv.addWidget(Collapsible(T("Opcje zaawansowane (nak\u0142adka REF, prefiks, przywracanie)", "Advanced options (REF overlay, prefix, restore)"), a))
+        v.addWidget(group(T("2  Pliki wej\u015bciowe (.hm) \u2013 wczytanie ZAST\u0118PUJE model w sesji", "2  Input files (.hm) \u2013 loading REPLACES the model in the session"), gv))
+        # --- 3 metryki i elementy ---
+        p = QtWidgets.QGridLayout()
+        heads = [T("Metryka", "Metric"), T("Pr\u00f3g \u201ebez zmian\u201d (|D| <)", "\u201cNo change\u201d threshold (|D| <)"),
+                 T("Poza norm\u0105 gdy (jeden model)", "Out of limits when (one model)"), T("Skala", "Scale")]
+        for c, h in enumerate(heads):
+            lab = QtWidgets.QLabel(h)
+            lab.setStyleSheet("font-weight:bold;color:#444")
+            p.addWidget(lab, 0, c)
+        self.w = {}
+        for r, (key, lab) in enumerate((("ar", "Aspect Ratio"), ("jac", "Jacobian"), ("skew", "Skewness"), ("disp", T("Przesuni\u0119cie w\u0119z\u0142\u00f3w [mm]", "Node displacement [mm]"))), start=1):
+            use = QtWidgets.QCheckBox(lab)
+            use.setStyleSheet("font-weight:bold")
+            dead = QtWidgets.QLineEdit()
+            dead.setMaximumWidth(90)
+            tip(dead, T("Pogorszenie mniejsze ni\u017c ten pr\u00f3g (w tym poprawa) = \u201ebez zmian\u201d (bezbarwne). Dla przesuni\u0119cia: tolerancja [mm].",
+                        "Worsening below this threshold (including improvement) = \u201cno change\u201d (colorless). For displacement: tolerance [mm]."))
+            fl = QtWidgets.QLineEdit()
+            fl.setMaximumWidth(90)
+            fo = QtWidgets.QLabel("<" if key == "jac" else ">")
+            fo.setStyleSheet("font-weight:bold")
+            bs = QtWidgets.QPushButton(T("R\u0119czna\u2026", "Manual\u2026"))
+            bs.clicked.connect(lambda _=False, k=key: self.edit_scale(k))
+            p.addWidget(use, r, 0)
+            p.addLayout(hrow(dead, None), r, 1)
+            p.addLayout(hrow(fo, fl, None, spacing=3), r, 2)
+            p.addWidget(bs, r, 3)
+            self.w[key] = {"use": use, "dead": dead, "fail": fl, "fail_op": fo, "scale": bs}
+        self.cb_2d = QtWidgets.QCheckBox(T("2D (pow\u0142oki)", "2D (shells)"))
+        self.cb_3d = QtWidgets.QCheckBox(T("3D (bry\u0142y)", "3D (solids)"))
+        self.cb_auto = QtWidgets.QCheckBox(T("skala automatyczna (0 \u2026 maks. pogorszenie)", "automatic scale (0 \u2026 max worsening)"))
         self.sp_bands = QtWidgets.QSpinBox()
         self.sp_bands.setRange(2, 96)
-        self.cb_nice = QtWidgets.QCheckBox(T("zaokr\u0105glaj g\u00f3rny zakres do \u201e\u0142adnej\u201d liczby", "round the scale top to a \u201cnice\u201d number"))
-        s.addWidget(QtWidgets.QLabel(T("Liczba pasm gradientu (2\u201396):", "Number of gradient bands (2\u201396):")), 2, 0)
-        s.addLayout(hrow(self.sp_bands, 12, self.cb_nice, None), 2, 1)
-        self.cb_mark = QtWidgets.QCheckBox(T("Oznacz element MAX i MIN (etykieta + wsp\u00f3\u0142rz\u0119dne)", "Mark the MAX and MIN element (label + coordinates)"))
-        self.cb_fade = QtWidgets.QCheckBox(T("Wycisz elementy \u201ebez zmian\u201d (przezroczysto\u015b\u0107 %):", "Fade \u201cno change\u201d elements (transparency %):"))
+        self.cb_nice = QtWidgets.QCheckBox(T("\u201e\u0142adna\u201d g\u00f3rna granica", "\u201cnice\u201d scale top"))
+        p.addLayout(hrow(QtWidgets.QLabel(T("Elementy:", "Elements:")), self.cb_2d, self.cb_3d, 20, self.cb_auto,
+                         QtWidgets.QLabel(T("pasm:", "bands:")), self.sp_bands, self.cb_nice, None), 5, 0, 1, 4)
+        p.setColumnStretch(4, 1)
+        v.addWidget(group(T("3  Metryki (liczone naraz) i elementy", "3  Metrics (computed together) and elements"), p))
+        # --- 4 wyswietlanie ---
+        d = QtWidgets.QGridLayout()
+        self.cb_fade = QtWidgets.QCheckBox(T("Elementy \u201ebez zmian\u201d wycisz:", "Fade \u201cno change\u201d elements:"))
+        self.cb_fade.setStyleSheet("font-weight:bold")
+        self.rb_white = QtWidgets.QRadioButton(T("bezbarwne (bia\u0142e)", "colorless (white)"))
+        self.rb_gray = QtWidgets.QRadioButton(T("szare", "gray"))
+        radio_group(self, self.rb_white, self.rb_gray)
         self.sp_fade = QtWidgets.QSpinBox()
         self.sp_fade.setRange(0, 100)
-        self.cb_imp = QtWidgets.QCheckBox(T("Poka\u017c poprawione elementy (magenta)", "Show improved elements (magenta)"))
-        s.addWidget(self.cb_mark, 3, 0, 1, 2)
-        s.addLayout(hrow(self.cb_fade, self.sp_fade, None), 4, 0, 1, 2)
-        s.addWidget(self.cb_imp, 5, 0, 1, 2)
-        s.setColumnStretch(1, 1)
-        v.addWidget(group(T("Skala i opcje", "Scale and options"), s))
+        self.sp_fade.setSuffix(" %")
+        self.sl_fade = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+        self.sl_fade.setRange(0, 100)
+        self.sl_fade.setMaximumWidth(160)
+        self.sl_fade.valueChanged.connect(lambda x: self.sp_fade.setValue(x) if self.sp_fade.value() != x else None)
+        self.sp_fade.valueChanged.connect(lambda x: self.sl_fade.setValue(x) if self.sl_fade.value() != x else None)
+        b_fade = QtWidgets.QPushButton(T("Zastosuj na siatce", "Apply on the mesh"))
+        b_fade.clicked.connect(self.apply_fade)
+        tip(b_fade, T("Zmienia kolor i przezroczysto\u015b\u0107 komponentu \u201ebez zmian\u201d od razu (bez ponownej analizy). Suwak dzia\u0142a te\u017c na \u017cywo.",
+                      "Changes the color and transparency of the \u201cno change\u201d component immediately (no re-analysis). The slider also works live."))
+        self.lab_transp = QtWidgets.QLabel()
+        self.lab_transp.setStyleSheet("color:#556")
+        d.addLayout(hrow(self.cb_fade, self.rb_white, self.rb_gray, 10, QtWidgets.QLabel(T("przezroczysto\u015b\u0107:", "transparency:")), self.sl_fade, self.sp_fade, b_fade, None), 0, 0, 1, 2)
+        d.addWidget(self.lab_transp, 1, 0, 1, 2)
+        self.cb_hide = QtWidgets.QCheckBox(T("Wyga\u015b komponenty spoza narz\u0119dzia i pozosta\u0142ych metryk (na ekranie i zrzutach: tylko bie\u017c\u0105ca metryka + \u201ebez zmian\u201d)",
+                                             "Dim non-tool components and the other metrics (screen and shots: only the current metric + \u201cno change\u201d)"))
+        self.cb_mark = QtWidgets.QCheckBox(T("Oznacz element MAX i MIN (etykieta + wsp\u00f3\u0142rz\u0119dne)", "Mark the MAX and MIN element (label + coordinates)"))
+        self.cb_imp = QtWidgets.QCheckBox(T("Poka\u017c poprawione elementy (ciemnozielone)", "Show improved elements (dark green)"))
+        d.addWidget(self.cb_hide, 2, 0, 1, 2)
+        d.addLayout(hrow(self.cb_mark, 16, self.cb_imp, None), 3, 0, 1, 2)
+        d.setColumnStretch(1, 1)
+        v.addWidget(group(T("4  Wy\u015bwietlanie na siatce i zrzutach", "4  Display on the mesh and shots"), d))
         # --- akcje ---
         self.b_run = styled_button(T("\u25b6 Wykonaj analiz\u0119", "\u25b6 Run the analysis"), RUN_COLOR, big=True)
         self.b_run.clicked.connect(self.run)
@@ -9342,31 +11592,66 @@ class DeltaTab(_QWidget):
         b_leg.clicked.connect(lambda: self.studio.show_legend("delta"))
         b_rs = QtWidgets.QPushButton(T("Przywr\u00f3\u0107 siatk\u0119", "Restore mesh"))
         b_rs.clicked.connect(lambda: self.studio.runner.run(lambda: (DELTA.restore(), PRESENT.invalidate_frame())))
-        b_ppt = QtWidgets.QPushButton(T("Wynik \u2192 slajd PPTX", "Result \u2192 PPTX slide"))
+        b_all = styled_button(T("Metryki \u00d7 widoki \u2192 PPTX", "Metrics \u00d7 views \u2192 PPTX"), GO_COLOR)
+        b_all.clicked.connect(lambda: self.studio.tab_ppt.delta_all_to_pptx())
+        tip(b_all, T("Dla ka\u017cdej metryki: widok na siatce (inne wygaszone) \u00d7 ka\u017cdy zaznaczony widok z karty \u201eWidoki\u201d \u2192 slajd z obrazem i legend\u0105.",
+                     "For each metric: view on the mesh (others dimmed) \u00d7 each ticked view from the \u201cViews\u201d page \u2192 slide with image and legend."))
+        b_ppt = QtWidgets.QPushButton(T("Wynik \u2192 slajd", "Result \u2192 slide"))
         b_ppt.clicked.connect(lambda: self.studio.tab_ppt.delta_to_pptx())
-        v.addLayout(hrow(self.b_run, None, b_leg, b_rs, b_ppt))
+        v.addLayout(hrow(self.b_run, None, b_leg, b_rs, b_all, b_ppt))
+        self.view_row = QtWidgets.QHBoxLayout()
+        lab = QtWidgets.QLabel(T("Poka\u017c na siatce:", "Show on mesh:"))
+        lab.setStyleSheet("font-weight:bold")
+        self.view_row.addWidget(lab)
+        self.view_btns = {}
+        vg = QtWidgets.QButtonGroup(self)
+        vg.setExclusive(True)
+        for m in DELTA_ORDER:
+            b = QtWidgets.QPushButton(DELTA.metric_label(m))
+            b.setCheckable(True)
+            b.clicked.connect(lambda _=False, m=m: self.show_view(m))
+            vg.addButton(b)
+            self.view_row.addWidget(b)
+            self.view_btns[m] = b
+        self.view_row.addStretch(1)
+        v.addLayout(self.view_row)
+        self.vis_row = QtWidgets.QHBoxLayout()
+        lab2 = QtWidgets.QLabel(T("Widoczno\u015b\u0107:", "Visibility:"))
+        lab2.setStyleSheet("font-weight:bold")
+        self.vis_row.addWidget(lab2)
         b_tr = QtWidgets.QPushButton(T("REF: poka\u017c/ukryj", "REF: show/hide"))
-        b_ti = QtWidgets.QPushButton(T("INF: poka\u017c/ukryj", "INF: show/hide"))
+        b_ti = QtWidgets.QPushButton(T("Pasma: poka\u017c/ukryj", "Bands: show/hide"))
         b_tg = QtWidgets.QPushButton(T("\u201eBez zmian\u201d: poka\u017c/ukryj", "\u201cNo change\u201d: show/hide"))
         b_tr.clicked.connect(lambda: self.studio.runner.run(DELTA.toggle_ref, busy=False))
         b_ti.clicked.connect(lambda: self.studio.runner.run(DELTA.toggle_inf, busy=False))
         b_tg.clicked.connect(lambda: self.studio.runner.run(DELTA.toggle_gray, busy=False))
+        for b in (b_tr, b_ti, b_tg):
+            self.vis_row.addWidget(b)
+        self.vis_row.addStretch(1)
         self.e_insp = QtWidgets.QLineEdit()
         self.e_insp.setMaximumWidth(90)
         self.e_insp.setPlaceholderText("ID")
         self.e_insp.returnPressed.connect(self.inspect)
         b_insp = QtWidgets.QPushButton(T("Sprawd\u017a delt\u0119 (po ID)", "Check delta (by ID)"))
         b_insp.clicked.connect(self.inspect)
-        tip(b_insp, T("Q(REF), Q(INF), \u0394, pogorszenie D i pasmo elementu o podanym ID \u2013 z danych ostatniej analizy (dzia\u0142a niezale\u017cnie od bie\u017c\u0105cych opcji).",
-                      "Q(REF), Q(INF), \u0394, worsening D and the band of the element with the given ID \u2013 from the last analysis (independent of the current options)."))
-        v.addLayout(hrow(QtWidgets.QLabel(T("Widoczno\u015b\u0107:", "Visibility:")), b_tr, b_ti, b_tg, None,
-                         QtWidgets.QLabel(T("Element:", "Element:")), self.e_insp, b_insp))
+        tip(b_insp, T("Q(REF), Q(INF), \u0394, pogorszenie D i pasmo elementu o podanym ID dla metryki na siatce \u2013 z danych ostatniej analizy.",
+                      "Q(REF), Q(INF), \u0394, worsening D and the band of the element with the given ID for the metric on the mesh \u2013 from the last analysis."))
+        self.vis_row.addWidget(QtWidgets.QLabel(T("Element:", "Element:")))
+        self.vis_row.addWidget(self.e_insp)
+        self.vis_row.addWidget(b_insp)
+        v.addLayout(self.vis_row)
         self.res = QtWidgets.QTextBrowser()
-        self.res.setMinimumHeight(110)
+        self.res.setMinimumHeight(120)
         v.addWidget(self.res, 1)
         self.load_from_engine()
+        self.sp_fade.valueChanged.connect(self.fade_live)
+        self.cb_fade.toggled.connect(self.fade_live)
+        self.rb_white.toggled.connect(self.fade_live)
+        self.cb_hide.toggled.connect(self.hide_live)
 
+    # ---------------------------------------------------------- dane <-> okno
     def load_from_engine(self):
+        self._loading = True
         D = DELTA
         self.rb_mode[D.mode()].setChecked(True)
         self.e_ref.setText(D.ref_file)
@@ -9374,20 +11659,24 @@ class DeltaTab(_QWidget):
         self.cb_open.setChecked(D.use_open_inf)
         self.cb_refc.setChecked(D.mk_ref_comp)
         self.cb_infc.setChecked(D.mk_inf_comp)
-        self.rb_metric[D.metric].setChecked(True)
-        (self.rb_3d if D.dim == "3d" else self.rb_2d).setChecked(True)
         self.e_prefix.setText(D.prefix)
         self.e_target.setText(D.restore_target)
+        for m, w in self.w.items():
+            w["use"].setChecked(bool(D.metrics.get(m)))
+            w["dead"].setText(fmt_num(D.deadband.get(m, 0.01), 6))
+            w["fail"].setText(fmt_num(D.fail_limit.get(m, 0.0), 6))
+        self.cb_2d.setChecked(D.dim2)
+        self.cb_3d.setChecked(D.dim3)
         self.cb_auto.setChecked(D.auto_scale)
-        self.e_dead.setText(fmt_num(D.deadband, 6))
         self.sp_bands.setValue(int(D.band_count))
         self.cb_nice.setChecked(D.nice_round)
-        self.cb_mark.setChecked(D.mark_extremes)
         self.cb_fade.setChecked(D.fade_gray)
+        (self.rb_gray if D.fade_style == "gray" else self.rb_white).setChecked(True)
         self.sp_fade.setValue(int(D.fade_level))
+        self.cb_hide.setChecked(D.hide_others)
+        self.cb_mark.setChecked(D.mark_extremes)
         self.cb_imp.setChecked(D.show_improved)
-        self.e_fail.setText(fmt_num(D.fail_limit, 6))
-        self.labels()
+        self._loading = False
         self.sync()
 
     def store_to_engine(self):
@@ -9398,37 +11687,24 @@ class DeltaTab(_QWidget):
             if rb.isChecked():
                 D.set_mode(k)
         D.mk_ref_comp, D.mk_inf_comp = self.cb_refc.isChecked(), self.cb_infc.isChecked()
-        for k, rb in self.rb_metric.items():
-            if rb.isChecked():
-                D.metric = k
-        D.dim = "3d" if self.rb_3d.isChecked() else "2d"
+        for m, w in self.w.items():
+            D.metrics[m] = w["use"].isChecked()
+            D.deadband[m] = to_float(w["dead"].text(), D.deadband.get(m, 0.01))
+            D.fail_limit[m] = to_float(w["fail"].text(), D.fail_limit.get(m, 0.0))
+        D.dim2, D.dim3 = self.cb_2d.isChecked(), self.cb_3d.isChecked()
         D.prefix = self.e_prefix.text().strip()
         D.restore_target = self.e_target.text().strip()
         D.auto_scale = self.cb_auto.isChecked()
-        D.deadband = to_float(self.e_dead.text(), D.deadband)
         D.band_count = self.sp_bands.value()
         D.nice_round, D.mark_extremes = self.cb_nice.isChecked(), self.cb_mark.isChecked()
         D.fade_gray, D.fade_level = self.cb_fade.isChecked(), self.sp_fade.value()
+        D.fade_style = "gray" if self.rb_gray.isChecked() else "white"
+        D.hide_others = self.cb_hide.isChecked()
         D.show_improved = self.cb_imp.isChecked()
-        D.fail_limit = to_float(self.e_fail.text(), D.fail_limit)
-
-    def labels(self):
-        m = DELTA.metric
-        self.lab_dead.setText(T("Tolerancja zmiany (mm) (D <):", "Change tolerance (mm) (D <):") if m == "disp"
-                              else T("Pr\u00f3g \u201ebez zmian\u201d (|D| <):", "\u201cNo change\u201d threshold (|D| <):"))
-        self.lab_fail.setText(T("Poza norm\u0105 gdy warto\u015b\u0107 <:", "Out of limits when value <:") if m == "jac"
-                              else T("Poza norm\u0105 gdy warto\u015b\u0107 >:", "Out of limits when value >:"))
 
     def on_mode(self, key):
         DELTA.set_mode(key)
         self.sync()
-
-    def on_metric(self, key):
-        DELTA.metric = key
-        DELTA.prefix = self.e_prefix.text().strip()
-        DELTA.on_metric_change()
-        self.e_prefix.setText(DELTA.prefix)
-        self.labels()
 
     def sync(self, *a):
         mode = DELTA.mode()
@@ -9439,24 +11715,22 @@ class DeltaTab(_QWidget):
         self.lab_ref.setText(T("Plik modelu:", "Model file:") if single else T("Plik REF:", "REF file:"))
         self.cb_refc.setEnabled(not single)
         self.cb_infc.setEnabled(not single)
-        self.rb_metric["disp"].setEnabled(not single)
-        if single and self.rb_metric["disp"].isChecked():
-            self.rb_metric["ar"].setChecked(True)
+        self.w["disp"]["use"].setEnabled(not single)
         fail = mode == "fail"
-        self.lab_fail.setVisible(fail)
-        self.e_fail.setVisible(fail)
-        for w in (self.cb_auto, self.lab_dead, self.e_dead, self.sp_bands, self.cb_nice):
+        for m, w in self.w.items():
+            w["dead"].setEnabled(not single)
+            w["fail"].setVisible(fail)
+            w["fail_op"].setVisible(fail)
+            w["scale"].setEnabled(not fail)
+        for w in (self.cb_auto, self.sp_bands, self.cb_nice):
             w.setEnabled(not fail)
-        self.cb_fade.setEnabled(mode == "delta")
-        self.sp_fade.setEnabled(mode == "delta")
-        self.cb_imp.setEnabled(mode == "delta")
+        for w in (self.cb_fade, self.rb_white, self.rb_gray, self.sp_fade, self.sl_fade, self.cb_imp):
+            w.setEnabled(not single)
+        self.lab_transp.setText(T("Przezroczysto\u015b\u0107 i kolor \u201ebez zmian\u201d mo\u017cna zmienia\u0107 po analizie \u2013 dzia\u0142aj\u0105 od razu. %s",
+                                  "Transparency and the \u201cno change\u201d color can be changed after the analysis \u2013 they apply immediately. %s",
+                                  HM.transparency_note() if HM.ok() else ""))
 
-    def pick(self, edit, which):
-        start = os.path.dirname(edit.text()) if edit.text() else HM.model_dir()
-        p = ask_open_file(self, T("Wybierz plik %s (.hm)", "Choose the %s file (.hm)", which), "HyperMesh (*.hm);;*.*", start)
-        if p:
-            edit.setText(os.path.normpath(p))
-
+    # ---------------------------------------------------------- akcje
     def run(self):
         self.store_to_engine()
         D = DELTA
@@ -9489,55 +11763,92 @@ class DeltaTab(_QWidget):
         PRESENT.invalidate_frame()
         lm = DELTA.legend_model()
         if lm:
-            c = DELTA.counts
+            r = DELTA.res[DELTA.view]
+            c = r.counts
             if DELTA.single:
-                msg = T("Gotowe (%s, %s): %d element\u00f3w w pasmach.", "Done (%s, %s): %d elements in bands.", DELTA.dim_label(), DELTA.metric_label(), c["band"])
+                msg = T("Gotowe (%s): %s. Na siatce: %s, %d element\u00f3w w pasmach.", "Done (%s): %s. On the mesh: %s, %d elements in bands.",
+                        DELTA.dim_label(), ", ".join(DELTA.metric_label(m) for m in DELTA.analyzed), DELTA.metric_label(), c["band"])
             else:
-                msg = T("Gotowe (%s, %s). W skali: %d | bez zmian: %d | bez odpow.: %d | poprawione: %d",
-                        "Done (%s, %s). In scale: %d | no change: %d | unmatched: %d | improved: %d",
-                        DELTA.dim_label(), DELTA.metric_label(), c["band"], c["gray"], c["unm"], c["imp"])
-            if DELTA.clamped:
-                msg += T(" | powy\u017cej zakresu: %d", " | above range: %d", DELTA.clamped)
-            if getattr(DELTA, "paint_fail", 0):
+                msg = T("Gotowe (%s): %s. Na siatce %s: w skali %d | bez zmian %d | bez odpow. %d | poprawione %d",
+                        "Done (%s): %s. On the mesh %s: in scale %d | no change %d | unmatched %d | improved %d",
+                        DELTA.dim_label(), ", ".join(DELTA.delta_tag(m) for m in DELTA.analyzed), DELTA.delta_label(), c["band"], c["gray"], c["unm"], c["imp"])
+            if r.clamped:
+                msg += T(" | powy\u017cej zakresu: %d", " | above range: %d", r.clamped)
+            if DELTA.paint_fail:
                 BUS.status(msg + T(" UWAGA: %d grup nie utworzono.", " WARNING: %d groups not created.", DELTA.paint_fail), "warn")
             else:
                 BUS.status(msg)
             self.studio.show_legend("delta")
 
-    def refresh(self):
-        if not DELTA.done:
-            self.res.setHtml("<i>%s</i>" % h_esc(T("(brak wyniku \u2013 wybierz tryb, pliki, metryk\u0119 i typ element\u00f3w, potem \u201eWykonaj analiz\u0119\u201d)",
-                                                   "(no result \u2013 choose the mode, files, metric and element type, then \u201cRun the analysis\u201d)")))
+    def show_view(self, m):
+        def work():
+            DELTA.apply_view(m)
+            PRESENT.invalidate_frame()
+        self.studio.runner.run(work)
+
+    def fade_live(self, *a):
+        if self._loading or not (DELTA.done and DELTA.view) or DELTA.single:
             return
-        c = DELTA.counts
-        rows = [(T("Tryb", "Mode"), {"delta": T("delta REF \u2192 INF", "delta REF \u2192 INF"), "single": T("jeden model: pasma", "one model: bands"),
-                                     "fail": T("jeden model: pr\u00f3g", "one model: threshold")}.get("fail" if DELTA.fail_active else ("single" if DELTA.single else "delta"))),
-                (T("Metryka / typ", "Metric / type"), "%s / %s" % (DELTA.metric_label(), DELTA.dim_label())),
-                (T("Model w sesji", "Model in the session"), HM.model_file() or "-"),
-                (T("Analiza", "Analysis"), DELTA.when)]
-        if DELTA.fail_active and DELTA.fail_info:
-            rows.append((T("Poza norm\u0105 / w normie", "Out of / within limits"), "%d / %d  (%s %s)" % (DELTA.fail_info[0], DELTA.fail_info[1], DELTA.fail_info[3], DELTA.fail_info[2])))
-        else:
-            rows.append((T("W skali", "In scale"), "%d" % c["band"]))
-            if not DELTA.single:
-                rows.append((T("Bez zmian / bez odpowiednika / poprawione", "No change / unmatched / improved"), "%d / %d / %d" % (c["gray"], c["unm"], c["imp"])))
-        for tag, info in (("MAX", DELTA.max_info), ("MIN", DELTA.min_info)):
-            if info:
-                xyz = info[2] if len(info) > 2 and info[2] else None
-                rows.append(("%s %s" % (tag, DELTA.delta_label()), "%s  (el. %s%s)" % (fmt_num(info[0], 4), info[1],
-                                                                                        (", %s (%g, %g, %g)" % ((T("\u015brodek", "center"),) + tuple(xyz))) if xyz else "")))
+        self.studio.runner.run(lambda: DELTA.set_fade(self.cb_fade.isChecked(), self.sp_fade.value(),
+                                                      "gray" if self.rb_gray.isChecked() else "white"), busy=False)
+
+    def apply_fade(self):
+        self.store_to_engine()
+        if not (DELTA.done and DELTA.view):
+            BUS.status(T("Najpierw wykonaj analiz\u0119 \u2013 opcje zostan\u0105 u\u017cyte przy kolorowaniu.", "Run the analysis first \u2013 the options are used when coloring."), "warn")
+            return
+
+        def work():
+            how = DELTA.set_fade()
+            PRESENT.invalidate_frame()
+            BUS.status({"transp": T("\u201eBez zmian\u201d: %s, przezroczysto\u015b\u0107 %d%% (%s).", "\u201cNo change\u201d: %s, transparency %d%% (%s)."),
+                        "white": T("\u201eBez zmian\u201d: bezbarwne (ta wersja HM nie obs\u0142uguje przezroczysto\u015bci).", "\u201cNo change\u201d: colorless (this HM version has no transparency)."),
+                        "hidden": T("\u201eBez zmian\u201d: ukryte (brak przezroczysto\u015bci w tej wersji HM).", "\u201cNo change\u201d: hidden (no transparency in this HM version)."),
+                        "": T("\u201eBez zmian\u201d: bez wyciszenia.", "\u201cNo change\u201d: not faded.")}[how]
+                       % ((T("bia\u0142e", "white") if DELTA.fade_style == "white" else T("szare", "gray"), DELTA.fade_level, HM.transparency_note()) if how == "transp" else ()))
+        self.studio.runner.run(work, busy=False)
+
+    def hide_live(self, on):
+        if self._loading or not (DELTA.done and DELTA.view):
+            return
+        self.studio.runner.run(lambda: DELTA.set_hide_others(on), busy=False)
+
+    def refresh(self):
+        for m, b in self.view_btns.items():
+            b.setEnabled(m in DELTA.analyzed)
+            b.setChecked(DELTA.done and m == DELTA.view)
+        if not DELTA.done:
+            self.res.setHtml("<i>%s</i>" % h_esc(T("(brak wyniku \u2013 wybierz tryb, pliki i metryki, potem \u201eWykonaj analiz\u0119\u201d)",
+                                                   "(no result \u2013 choose the mode, files and metrics, then \u201cRun the analysis\u201d)")))
+            return
+        H = ["<div style='color:%s'>%s</div>" % (HDR_COLOR, h_esc(T("Tryb: %s \u2022 elementy %s: %d (2D %d, 3D %d) \u2022 model: %s \u2022 %s",
+                                                                    "Mode: %s \u2022 elements %s: %d (2D %d, 3D %d) \u2022 model: %s \u2022 %s",
+                                                                    {"delta": T("delta REF \u2192 INF", "delta REF \u2192 INF"), "single": T("jeden model: pasma", "one model: bands"),
+                                                                     "fail": T("jeden model: pr\u00f3g", "one model: threshold")}["fail" if DELTA.fail_active else ("single" if DELTA.single else "delta")],
+                                                                    DELTA.dim_label(), len(DELTA.elems), DELTA.n2d, DELTA.n3d, os.path.basename(HM.model_file() or "-"), DELTA.when)))]
+        H.append(html_table(DELTA.summary_rows()))
+        r = DELTA.res.get(DELTA.view)
+        if r is not None:
+            extra = []
+            for tag, info in (("MAX", r.max_info), ("MIN", r.min_info)):
+                if info:
+                    xyz = info[2] if len(info) > 2 and info[2] else None
+                    extra.append("%s %s = %s (el. %s%s)" % (tag, DELTA.delta_label(), fmt_num(info[0], 4), info[1],
+                                                            (", %s (%g, %g, %g)" % ((T("\u015brodek", "center"),) + tuple(xyz))) if xyz else ""))
+            state = {"transp": T("bezbarwne + przezroczysto\u015b\u0107 %d%%", "colorless + transparency %d%%") % DELTA.fade_level if DELTA.fade_style == "white" else T("szare + przezroczysto\u015b\u0107 %d%%", "gray + transparency %d%%") % DELTA.fade_level,
+                     "white": T("bezbarwne (bez przezroczysto\u015bci w HM)", "colorless (no transparency in HM)"), "hidden": T("ukryte", "hidden"), "": T("szare", "gray")}[DELTA.gray_faded]
+            H.append("<div>%s</div>" % h_esc(T("Na siatce: %s \u2022 \u201ebez zmian\u201d: %s \u2022 inne komponenty: %s", "On the mesh: %s \u2022 \u201cno change\u201d: %s \u2022 other components: %s",
+                                               DELTA.delta_label(), state, T("wygaszone", "dimmed") if DELTA.hidden_others else T("widoczne", "visible"))))
+            if extra:
+                H.append("<div>%s</div>" % h_esc(" \u2022 ".join(extra)))
         if DELTA.skipped[0] or DELTA.skipped[1]:
-            rows.append((T("Pomini\u0119te (inny wymiar) REF / INF", "Skipped (other dimension) REF / INF"), "%d / %d" % DELTA.skipped))
-        H = ["<table cellspacing=0 cellpadding=3>"]
-        for k, val in rows:
-            H.append("<tr><td style='color:#555'>%s</td><td><b>%s</b></td></tr>" % (h_esc(k), h_esc(val)))
-        H.append("</table>")
+            H.append("<div>%s</div>" % h_esc(T("Pomini\u0119te (inny wymiar) REF / INF: %d / %d", "Skipped (other dimension) REF / INF: %d / %d", DELTA.skipped[0], DELTA.skipped[1])))
         self.res.setHtml("".join(H))
 
-    def edit_scale(self):
+    def edit_scale(self, m=None):
         self.store_to_engine()
-        if DeltaScaleEditor(self).exec_():
-            self.cb_auto.setChecked(False)
+        if DeltaScaleEditor(self, m).exec_():
+            self.cb_auto.setChecked(DELTA.auto_scale)
 
     def inspect(self):
         eid = to_float(self.e_insp.text())
@@ -9553,8 +11864,251 @@ class DeltaTab(_QWidget):
 
     def set_busy(self, on):
         self.b_run.setEnabled(not on)
+# ================ GUI: KARTA "POWIERZCHNIE - ELEMENTY KRYTYCZNE" ========
+# Kroki: 1 zrodlo elementow (powierzchnie: ID / wskazanie w HM / zaznaczenie;
+# komponenty; zestawy; ID elementow) i wymiar, 2 modele (REF vs INF albo
+# biezacy), 3 kryteria tolerancji [od, do] osobne dla tej funkcji, 4 plik
+# wynikowy i formaty, analiza, tabela wynikow (% w tolerancji REF / INF / delta).
+class SurfaceTab(_QWidget):
+    def __init__(self, studio):
+        super(SurfaceTab, self).__init__()
+        self.studio = studio
+        v = QtWidgets.QVBoxLayout(self)
+        v.setSpacing(8)
+        v.addWidget(page_title(T("Powierzchnie \u2013 elementy krytyczne", "Surfaces \u2013 critical elements"),
+                               T("Wskazujesz powierzchnie, makro wyodr\u0119bnia przylegaj\u0105ce elementy 3D (i/lub 2D) i sprawdza ich metryki w zadanych przedzia\u0142ach tolerancji. "
+                                 "Wynik: udzia\u0142 element\u00f3w spe\u0142niaj\u0105cych kryteria w REF i INF oraz delta (punkty procentowe), najgorsze elementy, zestawy poza tolerancj\u0105.",
+                                 "You pick surfaces, the macro extracts the adjacent 3D (and/or 2D) elements and checks their metrics against the given tolerance ranges. "
+                                 "Result: share of elements meeting the criteria in REF and INF and the delta (percentage points), worst elements, out-of-tolerance sets.")))
+        # --- 1 zrodlo ---
+        g = QtWidgets.QGridLayout()
+        self.rb_src = {}
+        for key, pl, en in (("surfs", "Powierzchnie (ID):", "Surfaces (IDs):"), ("comps", "Komponenty (nazwy)", "Components (names)"),
+                            ("sets", "Zestawy (nazwy)", "Sets (names)"), ("elems", "ID element\u00f3w", "Element IDs")):
+            self.rb_src[key] = QtWidgets.QRadioButton(T(pl, en))
+        radio_group(self, *self.rb_src.values())
+        g.addWidget(self.rb_src["surfs"], 0, 0)
+        g.addLayout(hrow(QtWidgets.QLabel(T("albo:", "or:")), self.rb_src["comps"], self.rb_src["sets"], self.rb_src["elems"], None), 1, 0, 1, 2)
+        self.e_surf = QtWidgets.QLineEdit()
+        self.e_surf.setPlaceholderText(T("np. 12 13 20-25", "e.g. 12 13 20-25"))
+        b_pick = QtWidgets.QPushButton(T("Wska\u017c w HM\u2026", "Pick in HM\u2026"))
+        b_pick.clicked.connect(self.pick_surfs)
+        tip(b_pick, T("Interaktywne wskazanie powierzchni w oknie graficznym HyperMesha (API Pythona). Gdy niedost\u0119pne \u2013 zaznacz powierzchnie w HM i u\u017cyj \u201eZ zaznaczenia\u201d.",
+                      "Interactive surface selection in the HyperMesh graphics window (Python API). If unavailable \u2013 select surfaces in HM and use \u201cFrom selection\u201d."))
+        b_mark = QtWidgets.QPushButton(T("Z zaznaczenia HM", "From HM selection"))
+        b_mark.clicked.connect(self.from_mark)
+        tip(b_mark, T("Pobiera ID powierzchni ze znacznika 1 HyperMesha (zaznaczone w panelu / oknie).", "Takes surface IDs from HyperMesh mark 1 (selected in a panel / window)."))
+        g.addLayout(hrow(self.e_surf, b_pick, b_mark), 0, 1)
+        self.e_src = QtWidgets.QLineEdit()
+        self.e_src.setPlaceholderText(T("komponenty / zestawy po przecinku albo ID element\u00f3w (12 13 20-25)", "components / sets comma separated or element IDs (12 13 20-25)"))
+        g.addWidget(QtWidgets.QLabel(T("Nazwy / ID:", "Names / IDs:")), 2, 0)
+        g.addWidget(self.e_src, 2, 1)
+        self.cb_2d = QtWidgets.QCheckBox(T("2D (pow\u0142oki)", "2D (shells)"))
+        self.cb_3d = QtWidgets.QCheckBox(T("3D (bry\u0142y)", "3D (solids)"))
+        self.sp_shared = QtWidgets.QSpinBox()
+        self.sp_shared.setRange(1, 8)
+        tip(self.sp_shared, T("Element nale\u017cy do powierzchni, gdy co najmniej tyle jego w\u0119z\u0142\u00f3w le\u017cy na niej: 3 = ca\u0142a \u015bciana (tetra), 1 = dotyka cho\u0107 jednym w\u0119z\u0142em.",
+                              "An element belongs to the surface when at least this many of its nodes lie on it: 3 = a whole face (tetra), 1 = touches with one node."))
+        g.addLayout(hrow(QtWidgets.QLabel(T("Elementy:", "Elements:")), self.cb_2d, self.cb_3d, 16,
+                         QtWidgets.QLabel(T("element na powierzchni gdy \u2265", "on the surface when \u2265")), self.sp_shared, QtWidgets.QLabel(T("w\u0119z\u0142\u00f3w", "nodes")), None), 4, 0, 1, 2)
+        g.setColumnStretch(1, 1)
+        v.addWidget(group(T("1  Sk\u0105d wzi\u0105\u0107 elementy", "1  Where to take the elements from"), g))
+        # --- 2 modele ---
+        m = QtWidgets.QGridLayout()
+        self.rb_pair = QtWidgets.QRadioButton(T("REF vs INF (wczyta oba pliki \u2013 ZAST\u0118PUJE model w sesji)", "REF vs INF (loads both files \u2013 REPLACES the model in the session)"))
+        self.rb_cur = QtWidgets.QRadioButton(T("bie\u017c\u0105cy model w sesji", "current model in the session"))
+        radio_group(self, self.rb_pair, self.rb_cur)
+        self.e_ref, self.e_inf = QtWidgets.QLineEdit(), QtWidgets.QLineEdit()
+        m.addWidget(self.rb_pair, 0, 0, 1, 3)
+        m.addWidget(QtWidgets.QLabel("REF (.hm):"), 1, 0, QtCore.Qt.AlignRight)
+        m.addWidget(self.e_ref, 1, 1)
+        m.addWidget(file_row(self, self.e_ref, T("Wybierz plik REF (.hm)", "Choose the REF file (.hm)"), "HyperMesh (*.hm);;*.*", start_fn=HM.model_dir), 1, 2)
+        m.addWidget(QtWidgets.QLabel("INF (.hm):"), 2, 0, QtCore.Qt.AlignRight)
+        m.addWidget(self.e_inf, 2, 1)
+        m.addWidget(file_row(self, self.e_inf, T("Wybierz plik INF (.hm)", "Choose the INF file (.hm)"), "HyperMesh (*.hm);;*.*", start_fn=HM.model_dir), 2, 2)
+        m.addWidget(self.rb_cur, 3, 0, 1, 3)
+        m.setColumnStretch(1, 1)
+        v.addWidget(group(T("2  Modele", "2  Models"), m))
+        # --- 3 kryteria ---
+        c = QtWidgets.QGridLayout()
+        for col, h in enumerate((T("Metryka", "Metric"), T("od (\u2265)", "from (\u2265)"), T("do (\u2264)", "to (\u2264)"), T("Opis", "Description"))):
+            lab = QtWidgets.QLabel(h)
+            lab.setStyleSheet("font-weight:bold;color:#444")
+            c.addWidget(lab, 0, col)
+        self.crit = {}
+        for r, k in enumerate(SURF_METRICS, start=1):
+            use = QtWidgets.QCheckBox(REP[k].label)
+            lo, hi = QtWidgets.QLineEdit(), QtWidgets.QLineEdit()
+            for e in (lo, hi):
+                e.setMaximumWidth(90)
+                e.setPlaceholderText("\u2013")
+            c.addWidget(use, r, 0)
+            c.addWidget(lo, r, 1)
+            c.addWidget(hi, r, 2)
+            c.addWidget(note_label(REP[k].desc), r, 3)
+            self.crit[k] = {"use": use, "lo": lo, "hi": hi}
+        b_def = QtWidgets.QPushButton(T("Domy\u015blne kryteria", "Default criteria"))
+        b_def.clicked.connect(self.defaults)
+        c.addLayout(hrow(b_def, None, note_label(T("Puste pole = brak ograniczenia z tej strony. Przedzia\u0142y s\u0105 niezale\u017cne od prog\u00f3w raportu i delty.",
+                                                    "Empty field = no limit on that side. The ranges are independent of the report and delta thresholds."))), len(SURF_METRICS) + 1, 0, 1, 4)
+        c.setColumnStretch(3, 1)
+        v.addWidget(group(T("3  Kryteria tolerancji (osobne dla tej funkcji)", "3  Tolerance criteria (specific to this function)"), c))
+        # --- 4 wynik ---
+        o = QtWidgets.QGridLayout()
+        self.e_out = QtWidgets.QLineEdit()
+        b_out = file_row(self, self.e_out, T("Zapisz wynik jako", "Save the result as"), T("Tekst (*.txt);;Wszystkie (*.*)", "Text (*.txt);;All (*.*)"), save=True,
+                         start_fn=lambda: os.path.join(HM.model_dir() or "", "%s_powierzchnie.txt" % (HM.model_name() if HM.ok() else "powierzchnie")))
+        self.cb_fmt = dict((f, QtWidgets.QCheckBox(lab)) for f, lab in (("txt", "TXT"), ("csv", "CSV"), ("xlsx", "XLSX"), ("html", "HTML")))
+        self.cb_sets = QtWidgets.QCheckBox(T("zestawy (sets) element\u00f3w poza tolerancj\u0105 w modelu", "sets of out-of-tolerance elements in the model"))
+        o.addWidget(QtWidgets.QLabel(T("Plik (baza nazwy):", "File (base name):")), 0, 0)
+        o.addWidget(self.e_out, 0, 1)
+        o.addWidget(b_out, 0, 2)
+        o.addLayout(hrow(*([self.cb_fmt[k] for k in ("txt", "csv", "xlsx", "html")] + [16, self.cb_sets, None])), 1, 0, 1, 3)
+        o.setColumnStretch(1, 1)
+        v.addWidget(group(T("4  Plik wynikowy", "4  Output file"), o))
+        self.b_go = styled_button(T("\u25b6 Analizuj elementy z powierzchni", "\u25b6 Analyse the surface elements"), RUN_COLOR, big=True)
+        self.b_go.clicked.connect(self.run)
+        b_html = QtWidgets.QPushButton(T("Otw\u00f3rz HTML", "Open HTML"))
+        b_html.clicked.connect(self.open_html)
+        b_ppt = QtWidgets.QPushButton(T("Wynik \u2192 slajd PPTX", "Result \u2192 PPTX slide"))
+        b_ppt.clicked.connect(lambda: self.studio.tab_ppt.surface_to_pptx())
+        v.addLayout(hrow(self.b_go, None, b_html, b_ppt))
+        self.res = QtWidgets.QTextBrowser()
+        self.res.setMinimumHeight(120)
+        v.addWidget(self.res, 1)
+        for rb in self.rb_src.values():
+            rb.toggled.connect(self.sync)
+        self.load_from_engine()
 
+    # ---------------------------------------------------------- dane <-> okno
+    def load_from_engine(self):
+        S = SURF
+        self.rb_src.get(S.source, self.rb_src["surfs"]).setChecked(True)
+        self.e_surf.setText(S.surf_text)
+        self.e_src.setText(S.src_text)
+        self.cb_2d.setChecked(S.dim2)
+        self.cb_3d.setChecked(S.dim3)
+        self.sp_shared.setValue(int(S.min_shared))
+        (self.rb_cur if S.models == "current" else self.rb_pair).setChecked(True)
+        self.e_ref.setText(S.ref_file or DELTA.ref_file)
+        self.e_inf.setText(S.inf_file or DELTA.inf_file)
+        for k, w in self.crit.items():
+            cc = S.crit.get(k, {})
+            w["use"].setChecked(bool(cc.get("use")))
+            w["lo"].setText("" if to_float(cc.get("lo")) is None else fmt_num(cc["lo"], 6))
+            w["hi"].setText("" if to_float(cc.get("hi")) is None else fmt_num(cc["hi"], 6))
+        self.e_out.setText(S.out_file)
+        for k, cb in self.cb_fmt.items():
+            cb.setChecked(bool(S.fmt.get(k)))
+        self.cb_sets.setChecked(S.make_sets)
+        self.sync()
 
+    def store_to_engine(self):
+        S = SURF
+        for k, rb in self.rb_src.items():
+            if rb.isChecked():
+                S.source = k
+        S.surf_text, S.src_text = self.e_surf.text().strip(), self.e_src.text().strip()
+        S.dim2, S.dim3 = self.cb_2d.isChecked(), self.cb_3d.isChecked()
+        S.min_shared = self.sp_shared.value()
+        S.models = "current" if self.rb_cur.isChecked() else "pair"
+        S.ref_file, S.inf_file = self.e_ref.text().strip(), self.e_inf.text().strip()
+        for k, w in self.crit.items():
+            S.crit[k] = {"use": w["use"].isChecked(), "lo": to_float(w["lo"].text()), "hi": to_float(w["hi"].text())}
+        S.out_file = self.e_out.text().strip()
+        S.fmt = dict((k, cb.isChecked()) for k, cb in self.cb_fmt.items())
+        S.make_sets = self.cb_sets.isChecked()
+
+    def sync(self, *a):
+        surfs = self.rb_src["surfs"].isChecked()
+        self.e_surf.setEnabled(surfs)
+        self.e_src.setEnabled(not surfs)
+
+    def defaults(self):
+        SURF.reset_crit()
+        for k, w in self.crit.items():
+            cc = SURF.crit[k]
+            w["use"].setChecked(bool(cc["use"]))
+            w["lo"].setText("" if cc["lo"] is None else fmt_num(cc["lo"], 6))
+            w["hi"].setText("" if cc["hi"] is None else fmt_num(cc["hi"], 6))
+
+    # ---------------------------------------------------------- wybor powierzchni
+    def pick_surfs(self):
+        if not HM.ok():
+            BUS.status(T("Brak API HyperMesha.", "No HyperMesh API."), "err")
+            return
+        BUS.status(T("Wska\u017c powierzchnie w oknie graficznym HyperMesha i zatwierd\u017a\u2026", "Pick surfaces in the HyperMesh graphics window and confirm\u2026"), "info")
+        ids = HM.interactive_ids("Surface")
+        if ids is None:
+            BUS.status(T("Ta wersja HM nie ma interaktywnego wyboru z Pythona \u2013 zaznacz powierzchnie w HM i kliknij \u201eZ zaznaczenia HM\u201d albo wpisz ID.",
+                         "This HM version has no interactive selection from Python \u2013 select surfaces in HM and click \u201cFrom HM selection\u201d or type the IDs."), "warn")
+            return
+        self._set_ids(ids)
+
+    def from_mark(self):
+        if not HM.ok():
+            BUS.status(T("Brak API HyperMesha.", "No HyperMesh API."), "err")
+            return
+        self._set_ids(HM.mark_ids("surfs"))
+
+    def _set_ids(self, ids):
+        if not ids:
+            BUS.status(T("Nie wybrano \u017cadnej powierzchni.", "No surface selected."), "warn")
+            return
+        self.rb_src["surfs"].setChecked(True)
+        self.e_surf.setText(" ".join("%d" % i for i in ids))
+        BUS.status(T("Powierzchnie: %d (ID: %s%s)", "Surfaces: %d (IDs: %s%s)", len(ids), " ".join("%d" % i for i in ids[:12]), " \u2026" if len(ids) > 12 else ""))
+
+    # ---------------------------------------------------------- akcje
+    def run(self):
+        self.store_to_engine()
+        if SURF.models == "pair":
+            for f, lab in ((SURF.ref_file, "REF"), (SURF.inf_file, "INF")):
+                if not os.path.isfile(f):
+                    BUS.status(T("Wska\u017c istniej\u0105cy plik %s (.hm).", "Choose an existing %s file (.hm).", lab), "err")
+                    return
+            if not yes_no(self, T("Uwaga", "Warning"), T("Analiza wczyta kolejno REF i INF, ZAST\u0118PUJ\u0104C model w sesji HyperMesha (na ko\u0144cu zostanie INF).\n\nKontynuowa\u0107?",
+                                                          "The analysis loads REF and then INF, REPLACING the model in the HyperMesh session (INF stays loaded).\n\nContinue?")):
+                return
+        if not SURF.out_file and any(SURF.fmt.values()):
+            BUS.status(T("Brak pliku wynikowego \u2013 wynik tylko w oknie (wska\u017c plik, aby zapisa\u0107 TXT / XLSX / HTML).",
+                         "No output file \u2013 result only in the window (choose a file to save TXT / XLSX / HTML)."), "warn")
+        save_settings()
+
+        def done(msg):
+            BUS.log(msg)
+            BUS.status(msg.splitlines()[0])
+            PRESENT.invalidate_frame()
+            self.refresh()
+        self.studio.runner.run(SURF.run, done)
+
+    def open_html(self):
+        htmls = [f for f in SURF.last_files if f.lower().endswith(".html")]
+        if htmls:
+            open_path(htmls[-1])
+        else:
+            BUS.status(T("Brak raportu HTML z ostatniej analizy.", "No HTML report from the last analysis."), "warn")
+
+    def refresh(self):
+        if not SURF.last:
+            self.res.setHtml("<i>%s</i>" % h_esc(T("(brak wyniku \u2013 wska\u017c powierzchnie, kryteria i kliknij \u201eAnalizuj\u201d)",
+                                                   "(no result \u2013 choose surfaces, criteria and click \u201cAnalyse\u201d)")))
+            return
+        H = ["<div style='color:%s'><b>%s</b> %s \u2022 %s \u2022 %s" % (HDR_COLOR, h_esc(T("Wynik:", "Result:")), h_esc(SURF.last["when"]), h_esc(SURF.last["source"]),
+                                                                    h_esc(T("elementy %s, \u2265 %d w\u0119z\u0142\u00f3w na powierzchni", "elements %s, \u2265 %d nodes on the surface", SURF.last["dims"], SURF.last["min_shared"])))]
+        for lab in SURF.last["labels"]:
+            r = SURF.results[lab]
+            H.append("<br>%s: %d %s (2D %d, 3D %d) \u2013 %s" % (lab, r["n"], h_esc(T("element\u00f3w", "elements")), r["n2d"], r["n3d"], h_esc(os.path.basename(r["file"] or "-"))))
+        H.append("</div>")
+        H.append(html_table(SURF.summary_rows()))
+        for lab, val in SURF.stat_pairs():
+            H.append("<div><b>%s:</b> %s</div>" % (h_esc(lab), h_esc(val)))
+        if SURF.last_files:
+            H.append("<div>%s<br>%s</div>" % (h_esc(T("Pliki:", "Files:")), "<br>".join(h_esc(f) for f in SURF.last_files)))
+        self.res.setHtml("".join(H))
+
+    def set_busy(self, on):
+        self.b_go.setEnabled(not on)
 # =================== GUI: KARTA "RAPORT JAKOSCI" =======================
 # Kroki: 1 zrodlo (otwarty model / plik .hm / porownanie REF vs INF), 2 zakres
 # i co sprawdzac (1D / 2D / 3D, zgodnosc ID, topologia, WEZLY, objetosc),
@@ -9564,6 +12118,10 @@ class ReportTab(_QWidget):
         super(ReportTab, self).__init__()
         self.studio = studio
         v = QtWidgets.QVBoxLayout(self)
+        v.setSpacing(8)
+        v.addWidget(page_title(T("Raport jako\u015bci", "Quality report"),
+                               T("Statystyki, histogramy i wska\u017anik 0\u2013100 dla modelu w sesji, pliku .hm albo pary REF vs INF (raport por\u00f3wnawczy ze zgodno\u015bci\u0105 element\u00f3w i w\u0119z\u0142\u00f3w).",
+                                 "Statistics, histograms and a 0\u2013100 score for the model in the session, a .hm file or a REF vs INF pair (comparison report with element and node identity).")))
         # --- zrodlo ---
         g = QtWidgets.QGridLayout()
         self.rb_cur = QtWidgets.QRadioButton(T("Aktualny model (otwarty w HyperMesh)", "Current model (open in HyperMesh)"))
@@ -9571,6 +12129,9 @@ class ReportTab(_QWidget):
         self.rb_cmp = QtWidgets.QRadioButton(T("Por\u00f3wnanie dw\u00f3ch siatek: A = REF vs B = INF (wczyta oba pliki)", "Compare two meshes: A = REF vs B = INF (loads both files)"))
         radio_group(self, self.rb_cur, self.rb_file, self.rb_cmp)
         self.e_file, self.e_ref, self.e_inf = QtWidgets.QLineEdit(), QtWidgets.QLineEdit(), QtWidgets.QLineEdit()
+        for e in (self.e_file, self.e_ref, self.e_inf):
+            e.setMinimumWidth(120)
+            e.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Fixed)
         g.addWidget(self.rb_cur, 0, 0, 1, 3)
         g.addWidget(self.rb_file, 1, 0)
         g.addWidget(self.e_file, 1, 1)
@@ -9624,6 +12185,8 @@ class ReportTab(_QWidget):
         v.addWidget(group(T("3  Metryki", "3  Metrics"), mg))
         # --- plik i formaty ---
         self.e_out = QtWidgets.QLineEdit()
+        self.e_out.setMinimumWidth(120)
+        self.e_out.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Fixed)
         b_out = QtWidgets.QPushButton(T("Przegl\u0105daj\u2026", "Browse\u2026"))
         b_out.clicked.connect(self.browse_out)
         self.cb_fmt = dict((f, QtWidgets.QCheckBox(lab)) for f, lab in (
@@ -9876,6 +12439,10 @@ class ViewsTab(_QWidget):
         super(ViewsTab, self).__init__()
         self.studio = studio
         v = QtWidgets.QVBoxLayout(self)
+        v.setSpacing(8)
+        v.addWidget(page_title(T("Widoki i zrzuty", "Views & screenshots"),
+                               T("Zapami\u0119tane kamery (z klatk\u0105 WYSIWYG). Zaznaczone widoki s\u0105 kamerami automatu, serii PPTX i serii delty; \u201eGeneruj zrzuty\u201d eksportuje je do plik\u00f3w.",
+                                 "Remembered cameras (with a WYSIWYG frame). Ticked views are the cameras of the workflow, the PPTX series and the delta series; \u201cGenerate screenshots\u201d exports them to files.")))
         self.b_rem = styled_button(T("\u25cf Zapami\u0119taj widok (1)", "\u25cf Remember view (1)"), HDR_COLOR)
         self.b_rem.clicked.connect(self.remember)
         tip(self.b_rem, T("Zapisuje kamer\u0119 (orientacja, zoom, pan) i PE\u0141N\u0104 klatk\u0119 okna graficznego (WYSIWYG) z miniatur\u0105.",
@@ -9910,6 +12477,8 @@ class ViewsTab(_QWidget):
         # --- zapis ---
         g = QtWidgets.QGridLayout()
         self.e_dir = QtWidgets.QLineEdit()
+        self.e_dir.setMinimumWidth(120)
+        self.e_dir.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Fixed)
         b_dir = QtWidgets.QPushButton(T("Wybierz\u2026", "Browse\u2026"))
         b_dir.clicked.connect(self.pick_dir)
         self.cb_mdir = QtWidgets.QCheckBox(T("Zapisz do folderu otwartego modelu (.hm)", "Save to the open model's folder (.hm)"))
@@ -10169,8 +12738,14 @@ class PptTab(_QWidget):
         super(PptTab, self).__init__()
         self.studio = studio
         v = QtWidgets.QVBoxLayout(self)
+        v.setSpacing(8)
+        v.addWidget(page_title(T("Prezentacja PPTX", "PowerPoint"),
+                               T("Plik i uk\u0142ad slajd\u00f3w z interaktywnym podgl\u0105dem; seria metryk, delta, raport i powierzchnie trafiaj\u0105 na slajdy (podgl\u0105d wszystkich slajd\u00f3w przed zapisem).",
+                                 "File and slide layout with an interactive preview; the metric series, delta, report and surfaces go to slides (all slides previewed before saving).")))
         f = QtWidgets.QGridLayout()
         self.e_file = QtWidgets.QLineEdit()
+        self.e_file.setMinimumWidth(120)
+        self.e_file.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Fixed)
         b_f = QtWidgets.QPushButton(T("Wybierz\u2026", "Browse\u2026"))
         b_f.clicked.connect(self.browse)
         self.rb_app = QtWidgets.QRadioButton(T("dopisz slajdy, je\u015bli plik istnieje (np. firmowy szablon; kopia .bak)", "append slides if the file exists (e.g. company template; .bak copy)"))
@@ -10237,16 +12812,26 @@ class PptTab(_QWidget):
         b_live.clicked.connect(self.studio.live_toggle)
         b_sum = QtWidgets.QPushButton(T("Slajd zbiorczy", "Summary slide"))
         b_sum.clicked.connect(lambda: self.deliver(PRESENT.summary_items))
-        v.addLayout(hrow(self.b_series, b_cur, b_prev, b_live, b_sum, None))
+        v.addLayout(hrow(self.b_series, None, b_cur, b_sum))
+        v.addLayout(hrow(b_prev, b_live, None))
         b_v = QtWidgets.QPushButton(amp(T("Widoki z karty \u201eWidoki\u201d \u2192 PPTX", "Views from \u201cViews\u201d \u2192 PPTX")))
         b_v.clicked.connect(lambda: self.deliver(PRESENT.shots_items))
-        b_d = QtWidgets.QPushButton(T("Wynik delty REF/INF \u2192 slajd", "REF/INF delta result \u2192 slide"))
+        b_d = QtWidgets.QPushButton(T("Delta: bie\u017c\u0105cy wynik \u2192 slajd", "Delta: current result \u2192 slide"))
         b_d.clicked.connect(self.delta_to_pptx)
+        b_da = QtWidgets.QPushButton(T("Delta: metryki \u00d7 widoki \u2192 PPTX", "Delta: metrics \u00d7 views \u2192 PPTX"))
+        b_da.clicked.connect(self.delta_all_to_pptx)
+        tip(b_da, T("Ka\u017cda metryka delty (na siatce tylko ona, reszta wygaszona) \u00d7 ka\u017cdy zaznaczony widok \u2192 slajd z obrazem i legend\u0105 + slajd zbiorczy.",
+                    "Each delta metric (only it on the mesh, the rest dimmed) \u00d7 each ticked view \u2192 slide with image and legend + summary slide."))
         b_r = QtWidgets.QPushButton(T("Raport jako\u015bci \u2192 slajd z tabel\u0105", "Quality report \u2192 table slide"))
         b_r.clicked.connect(self.report_to_pptx)
+        b_s = QtWidgets.QPushButton(T("Powierzchnie \u2192 slajd", "Surfaces \u2192 slide"))
+        b_s.clicked.connect(self.surface_to_pptx)
         b_last = QtWidgets.QPushButton(T("Ostatni eksport\u2026", "Last export\u2026"))
         b_last.clicked.connect(self.show_last)
-        v.addWidget(group(T("3  Eksport z innych kart", "3  Export from other tabs"), hrow(b_v, b_d, b_r, None, b_last)))
+        eg = QtWidgets.QGridLayout()
+        eg.addLayout(hrow(b_d, b_da, b_v, None), 0, 0)
+        eg.addLayout(hrow(b_r, b_s, None, b_last), 1, 0)
+        v.addWidget(group(T("3  Eksport z innych kart", "3  Export from other pages"), eg))
         v.addStretch(1)
         self.load_from_engine()
 
@@ -10355,6 +12940,17 @@ class PptTab(_QWidget):
     def delta_to_pptx(self):
         self.deliver(PRESENT.delta_items)
 
+    def delta_all_to_pptx(self):
+        """Wszystkie metryki delty x zaznaczone widoki + slajd zbiorczy."""
+        if not DELTA.done:
+            BUS.status(T("Najpierw wykonaj analiz\u0119 delty (karta Delta).", "Run the delta analysis first (Delta page)."), "warn")
+            self.studio.goto("delta")
+            return
+        self.deliver(lambda: PRESENT.delta_all_items() + [PRESENT.delta_summary_item()])
+
+    def surface_to_pptx(self):
+        self.deliver(PRESENT.surface_items)
+
     def report_to_pptx(self):
         self.deliver(PRESENT.report_items)
 
@@ -10378,6 +12974,8 @@ class PreviewTab(_QWidget):
         super(PreviewTab, self).__init__()
         self.studio = studio
         v = QtWidgets.QVBoxLayout(self)
+        v.setSpacing(8)
+        v.addWidget(page_title(T("Podgl\u0105d slajdu", "Slide preview"), ""))
         v.addWidget(note_label(T("Ta karta tylko pokazuje, co powstanie z bie\u017c\u0105cych opcji. Opcje zmieniasz na kartach \u201eMetryki\u201d, \u201eWidoki\u201d i \u201ePrezentacja\u201d "
                                  "(tam te\u017c interaktywny kadr). Ten sam podgl\u0105d w osobnym oknie, widoczny przy pracy na ka\u017cdej karcie: F6 (\u201ePodgl\u0105d na \u017cywo\u201d).",
                                  "This tab only shows what the current options produce. You change them on the \u201cMetrics\u201d, \u201cViews\u201d and \u201cPowerPoint\u201d tabs "
@@ -10406,15 +13004,25 @@ class PreviewTab(_QWidget):
 
 
 # =========================== GUI: OKNO GLOWNE ==========================
-# StudioWindow: naglowek (tytul, skroty, PL / EN, Diagnostyka, Pomoc), karty
-# Start / 1 Metryki / 2 Delta / 3 Raport / 4 Widoki / 5 Prezentacja / Podglad
-# slajdu, pasek stanu z paskiem postepu i globalnym "Przerwij", dziennik.
-# Okno jest dzieckiem glownego okna HyperMesha (trzyma sie nad nim), ale
-# NIEMODALNE. Kazda zmiana opcji (checkbox, radio, pole, lista) odswieza po
-# LIVE_DELAY_MS podglad slajdu (karta "Podglad slajdu", okno na zywo, plotno
-# karty PPTX) - jedno miejsce (_hook_changes) zamiast wywolan w kazdej obsludze.
+# StudioWindow: zwarty naglowek (tytul, PL / EN), PASEK BOCZNY z lista kart
+# (Start, Automat, Metryki, Delta, Powierzchnie, Raport, Widoki, Prezentacja,
+# Podglad) i narzedziami (Przywroc siatke, Diagnostyka, Pomoc, Podglad na
+# zywo), stos kart, pasek stanu z paskiem postepu i globalnym "Przerwij",
+# dziennik. Okno jest dzieckiem glownego okna HyperMesha (trzyma sie nad
+# nim), ale NIEMODALNE. Kazda zmiana opcji odswieza po LIVE_DELAY_MS podglad
+# slajdu (karta "Podglad slajdu", okno na zywo, plotno karty PPTX) - jedno
+# miejsce (_hook_changes) zamiast wywolan w kazdej obsludze.
 class StudioWindow(_QWidget):
-    TAB_KEYS = ("start", "mq", "delta", "report", "views", "ppt", "preview")
+    PAGES = (("start", "Start", "Start", "\u2302"),
+             ("flow", "Automat REF vs INF", "REF vs INF workflow", "\u26a1"),
+             ("mq", "Metryki i grupy", "Metrics & groups", "\u25a6"),
+             ("delta", "Delta REF / INF", "Delta REF / INF", "\u0394"),
+             ("surf", "Powierzchnie", "Surfaces", "\u25c8"),
+             ("report", "Raport jako\u015bci", "Quality report", "\u2630"),
+             ("views", "Widoki i zrzuty", "Views & screenshots", "\u25c9"),
+             ("ppt", "Prezentacja PPTX", "PowerPoint", "\u25ad"),
+             ("preview", "Podgl\u0105d slajdu", "Slide preview", "\u29c9"))
+    TAB_KEYS = tuple(p[0] for p in PAGES)
 
     def __init__(self, parent=None):
         super(StudioWindow, self).__init__(parent, QtCore.Qt.Window)
@@ -10435,22 +13043,18 @@ class StudioWindow(_QWidget):
         hdr = QtWidgets.QFrame()
         hdr.setStyleSheet("QFrame{background:%s}QLabel{color:white}" % HDR_COLOR)
         hl = QtWidgets.QHBoxLayout(hdr)
-        hl.setContentsMargins(12, 8, 10, 8)
-        tv = QtWidgets.QVBoxLayout()
-        t = QtWidgets.QLabel(APP_TITLE)
+        hl.setContentsMargins(14, 7, 10, 7)
+        t = QtWidgets.QLabel("%s  <span style='font-size:9pt;font-weight:normal;color:#cfe0f5'>v%s</span>" % (APP_TITLE, VERSION))
+        t.setTextFormat(QtCore.Qt.RichText)
         tf = t.font()
-        tf.setPointSizeF(tf.pointSizeF() + 6)
+        tf.setPointSizeF(tf.pointSizeF() + 5)
         tf.setBold(True)
         t.setFont(tf)
-        s = QtWidgets.QLabel(T("Metryki \u2192 grupy kolor\u00f3w \u2022 delta REF/INF \u2022 raport \u2022 widoki i zrzuty \u2022 podgl\u0105d slajdu i eksport PPTX   "
-                               "|   F5 analiza \u2022 F6 podgl\u0105d na \u017cywo \u2022 F7 seria PPTX \u2022 1 widok \u2022 K zrzuty \u2022 F1 pomoc",
-                               "Metrics \u2192 color groups \u2022 REF/INF delta \u2022 report \u2022 views & screenshots \u2022 slide preview and PPTX export   "
-                               "|   F5 analysis \u2022 F6 live preview \u2022 F7 PPTX series \u2022 1 view \u2022 K shots \u2022 F1 help"))
-        s.setStyleSheet("color:#cfe0f5")
-        s.setWordWrap(True)
-        tv.addWidget(t)
-        tv.addWidget(s)
-        hl.addLayout(tv, 1)
+        hl.addWidget(t)
+        s = QtWidgets.QLabel(T("jako\u015b\u0107 siatki \u2022 delta REF / INF \u2022 powierzchnie \u2022 raport \u2022 zrzuty \u2022 PPTX",
+                               "mesh quality \u2022 REF / INF delta \u2022 surfaces \u2022 report \u2022 shots \u2022 PPTX"))
+        s.setStyleSheet("color:#cfe0f5;margin-left:14px")
+        hl.addWidget(s, 1)
         for code in ("pl", "en"):
             b = QtWidgets.QPushButton(code.upper())
             b.setCheckable(True)
@@ -10459,43 +13063,74 @@ class StudioWindow(_QWidget):
             b.setStyleSheet("QPushButton{background:#16487a;color:white;border:1px solid #cfe0f5;font-weight:bold}"
                             "QPushButton:checked{background:white;color:%s}" % HDR_COLOR)
             b.clicked.connect(lambda _=False, c=code: self.switch_lang(c))
-            hl.addWidget(b, 0, QtCore.Qt.AlignTop)
-        bd = QtWidgets.QPushButton(T("Diagnostyka", "Diagnostics"))
-        bd.setStyleSheet("QPushButton{background:#16487a;color:white;border:1px solid #cfe0f5;padding:2px 8px}")
-        bd.clicked.connect(self.show_diagnostics)
-        hl.addWidget(bd, 0, QtCore.Qt.AlignTop)
-        bh = QtWidgets.QPushButton(T("? Pomoc (F1)", "? Help (F1)"))
-        bh.setStyleSheet("QPushButton{background:#16487a;color:white;border:1px solid #cfe0f5;padding:2px 8px}")
-        bh.clicked.connect(self.show_help)
-        hl.addWidget(bh, 0, QtCore.Qt.AlignTop)
+            hl.addWidget(b)
         v.addWidget(hdr)
-        # --- karty ---
-        self.tabs = QtWidgets.QTabWidget()
+        # --- pasek boczny + karty ---
+        body = QtWidgets.QHBoxLayout()
+        body.setContentsMargins(0, 0, 0, 0)
+        body.setSpacing(0)
+        side = QtWidgets.QFrame()
+        side.setFixedWidth(196)
+        side.setStyleSheet("QFrame{background:#f3f6fa;border-right:1px solid #d5dde6}")
+        sl = QtWidgets.QVBoxLayout(side)
+        sl.setContentsMargins(0, 0, 0, 8)
+        sl.setSpacing(4)
+        self.nav = QtWidgets.QListWidget()
+        self.nav.setStyleSheet("QListWidget{background:#f3f6fa;border:none;font-size:10pt;outline:0}"
+                               "QListWidget::item{padding:8px 10px;border-bottom:1px solid #e3e9f0;color:#1b2733}"
+                               "QListWidget::item:selected{background:%s;color:white}"
+                               "QListWidget::item:hover:!selected{background:#e3ecf6}" % HDR_COLOR)
+        self.nav.setFocusPolicy(QtCore.Qt.NoFocus)
+        for key, pl, en, icon in self.PAGES:
+            it = QtWidgets.QListWidgetItem("%s  %s" % (icon, T(pl, en)))
+            it.setToolTip(T(pl, en))
+            self.nav.addItem(it)
+        sl.addWidget(self.nav, 1)
+        tools = QtWidgets.QVBoxLayout()
+        tools.setContentsMargins(8, 4, 8, 0)
+        tools.setSpacing(4)
+        tl = QtWidgets.QLabel(T("Narz\u0119dzia", "Tools"))
+        tl.setStyleSheet("color:#667;font-weight:bold;font-size:8pt")
+        tools.addWidget(tl)
+        b_rs = QtWidgets.QPushButton(T("Przywr\u00f3\u0107 siatk\u0119", "Restore mesh"))
+        b_rs.clicked.connect(self.restore_any)
+        tip(b_rs, T("Odk\u0142ada elementy do pierwotnych komponent\u00f3w, w\u0142\u0105cza wygaszone komponenty i usuwa komponenty narz\u0119dzia (tylko puste) \u2013 nic nie ginie.",
+                    "Puts elements back into their original components, shows dimmed components and removes the tool components (empty only) \u2013 nothing is lost."))
+        b_live = QtWidgets.QPushButton(T("Podgl\u0105d na \u017cywo (F6)", "Live preview (F6)"))
+        b_live.clicked.connect(self.live_toggle)
+        b_diag = QtWidgets.QPushButton(T("Diagnostyka\u2026", "Diagnostics\u2026"))
+        b_diag.clicked.connect(self.show_diagnostics)
+        tip(b_diag, T("Sprawdza API, nazwy danych metryk, dok\u0142adne kolory RGB i przezroczysto\u015b\u0107 komponent\u00f3w w tej wersji HM.",
+                      "Checks the API, metric data names, exact RGB colors and component transparency in this HM version."))
+        b_help = QtWidgets.QPushButton(T("? Pomoc (F1)", "? Help (F1)"))
+        b_help.clicked.connect(self.show_help)
+        for b in (b_rs, b_live, b_diag, b_help):
+            b.setStyleSheet("QPushButton{text-align:left;padding:4px 8px}")
+            tools.addWidget(b)
+        sl.addLayout(tools)
+        body.addWidget(side)
+        self.stack = QtWidgets.QStackedWidget()
         self.tab_start = StartTab(self)
+        self.tab_flow = WorkflowTab(self)
         self.tab_mq = MqTab(self)
         self.tab_delta = DeltaTab(self)
+        self.tab_surf = SurfaceTab(self)
         self.tab_report = ReportTab(self)
         self.tab_views = ViewsTab(self)
         self.tab_ppt = PptTab(self)
         self.tab_preview = PreviewTab(self)
-        self.tab_list = [self.tab_start, self.tab_mq, self.tab_delta, self.tab_report, self.tab_views, self.tab_ppt, self.tab_preview]
-        for w, pl, en in ((self.tab_start, "Start", "Start"),
-                          (self.tab_mq, "1  Metryki i grupy", "1  Metrics & groups"),
-                          (self.tab_delta, "2  Delta REF / INF", "2  Delta REF / INF"),
-                          (self.tab_report, "3  Raport jako\u015bci", "3  Quality report"),
-                          (self.tab_views, "4  Widoki i zrzuty", "4  Views & screenshots"),
-                          (self.tab_ppt, "5  Prezentacja PPTX", "5  PowerPoint"),
-                          (self.tab_preview, "\u25a3 Podgl\u0105d slajdu", "\u25a3 Slide preview")):
+        self.tab_list = [self.tab_start, self.tab_flow, self.tab_mq, self.tab_delta, self.tab_surf, self.tab_report,
+                         self.tab_views, self.tab_ppt, self.tab_preview]
+        for w in self.tab_list:
             sa = QtWidgets.QScrollArea()
             sa.setWidget(w)
             sa.setWidgetResizable(True)
             sa.setFrameShape(QtWidgets.QFrame.NoFrame)
-            self.tabs.addTab(sa, amp(T(pl, en)))
-        self.tabs.currentChanged.connect(self.on_tab)
+            self.stack.addWidget(sa)
         cont = QtWidgets.QWidget()
         cl = QtWidgets.QVBoxLayout(cont)
-        cl.setContentsMargins(8, 6, 8, 4)
-        cl.addWidget(self.tabs, 1)
+        cl.setContentsMargins(10, 8, 10, 4)
+        cl.addWidget(self.stack, 1)
         # --- pasek stanu: status, postep, przerwij, dziennik ---
         self.status = QtWidgets.QLabel()
         self.status.setWordWrap(True)
@@ -10510,8 +13145,8 @@ class StudioWindow(_QWidget):
         self.b_stop = QtWidgets.QPushButton(T("\u25a0 Przerwij", "\u25a0 Stop"))
         self.b_stop.setEnabled(False)
         self.b_stop.clicked.connect(self.stop)
-        tip(self.b_stop, T("Przerywa d\u0142ug\u0105 operacj\u0119 (analiza, raport, seria) w najbli\u017cszym bezpiecznym miejscu.",
-                           "Stops a long operation (analysis, report, series) at the next safe point."))
+        tip(self.b_stop, T("Przerywa d\u0142ug\u0105 operacj\u0119 (analiza, raport, seria, automat) w najbli\u017cszym bezpiecznym miejscu.",
+                           "Stops a long operation (analysis, report, series, workflow) at the next safe point."))
         self.b_log = QtWidgets.QPushButton(T("Dziennik", "Log"))
         self.b_log.setCheckable(True)
         self.b_log.toggled.connect(self._toggle_log)
@@ -10528,7 +13163,8 @@ class StudioWindow(_QWidget):
         self.log.setStyleSheet("font-family:Consolas,monospace;font-size:8pt")
         self.log.setVisible(False)
         cl.addWidget(self.log)
-        v.addWidget(cont, 1)
+        body.addWidget(cont, 1)
+        v.addLayout(body, 1)
         # --- polaczenia z silnikami ---
         BUS.status_cb = self.set_status
         BUS.log_cb = self.add_log
@@ -10543,15 +13179,17 @@ class StudioWindow(_QWidget):
             sc.setContext(QtCore.Qt.WindowShortcut)
             sc.activated.connect(lambda fn=fn: self.hotkey(fn))
         for key, fn in ((QtCore.Qt.Key_F1, self.show_help), (QtCore.Qt.Key_F5, self.tab_mq.analyze),
-                        (QtCore.Qt.Key_F6, self.live_toggle), (QtCore.Qt.Key_F7, self.tab_ppt.series)):
+                        (QtCore.Qt.Key_F6, self.live_toggle), (QtCore.Qt.Key_F7, self.tab_ppt.series),
+                        (QtCore.Qt.Key_F8, self.tab_flow.run)):
             sc = QtWidgets.QShortcut(QtGui.QKeySequence(key), self)
             sc.setContext(QtCore.Qt.WindowShortcut)
             sc.activated.connect(fn)
+        self.nav.currentRowChanged.connect(self.on_tab)
         # szerokosc wg zawartosci kart (bez poziomego przewijania przy skali
         # ekranu 125-150 %), ale nie wiecej niz 95 % ekranu
         scr = screen_rect(self)
-        want = max([1000] + [t.sizeHint().width() + 60 for t in self.tab_list])
-        self.resize(min(want, int(scr.width() * 0.95)), min(920, int(scr.height() * 0.88)))
+        want = max([1060] + [t.sizeHint().width() + 60 + 196 for t in self.tab_list])
+        self.resize(min(want, int(scr.width() * 0.95)), min(940, int(scr.height() * 0.9)))
         geo = GUI_PREFS.get("win_geo") or []
         if len(geo) == 4:
             r = QtCore.QRect(*[int(x) for x in geo])
@@ -10561,9 +13199,9 @@ class StudioWindow(_QWidget):
             self.b_log.setChecked(True)
         self._hook_changes()
         self.refresh_all()
-        self.tabs.setCurrentIndex(max(0, min(len(self.TAB_KEYS) - 1, int(GUI_PREFS.get("tab", 0)))))
-        self.set_status(T("Gotowy. Zaznacz metryki na karcie \u201e1 Metryki\u201d i kliknij \u201eAnalizuj i koloruj\u201d (F5), potem \u201eSeria \u2192 PPTX\u201d (F7). Karta Start pokazuje stan pracy.",
-                          "Ready. Tick metrics on the \u201c1 Metrics\u201d tab and click \u201cAnalyze and color\u201d (F5), then \u201cSeries \u2192 PPTX\u201d (F7). The Start tab shows the work status."))
+        self.nav.setCurrentRow(max(0, min(len(self.TAB_KEYS) - 1, int(GUI_PREFS.get("tab", 0)))))
+        self.set_status(T("Gotowy. Najszybciej: \u201eAutomat REF vs INF\u201d (F8) \u2013 dwa pliki + folder. Osobno: F5 analiza metryk, karta Delta, F7 seria PPTX. Karta Start pokazuje stan pracy.",
+                          "Ready. Fastest: \u201cREF vs INF workflow\u201d (F8) \u2013 two files + folder. Separately: F5 metrics analysis, Delta page, F7 PPTX series. The Start page shows the work status."))
 
     # ---------------------------------------------------------- stan / dziennik
     def set_status(self, msg, level="ok"):
@@ -10605,7 +13243,7 @@ class StudioWindow(_QWidget):
         self.set_status(T("Przerywanie\u2026 (operacja zatrzyma si\u0119 w najbli\u017cszym bezpiecznym miejscu)", "Stopping\u2026 (the operation stops at the next safe point)"), "warn")
 
     def refresh_all(self):
-        for tab in (self.tab_mq, self.tab_delta, self.tab_report, self.tab_start):
+        for tab in (self.tab_mq, self.tab_delta, self.tab_surf, self.tab_report, self.tab_flow, self.tab_start):
             try:
                 tab.refresh()
             except Exception as e:
@@ -10617,16 +13255,26 @@ class StudioWindow(_QWidget):
 
     def goto(self, key):
         if key in self.TAB_KEYS:
-            self.tabs.setCurrentIndex(self.TAB_KEYS.index(key))
+            self.nav.setCurrentRow(self.TAB_KEYS.index(key))
+
+    def current_key(self):
+        i = self.nav.currentRow()
+        return self.TAB_KEYS[i] if 0 <= i < len(self.TAB_KEYS) else "start"
 
     def on_tab(self, idx):
+        if idx < 0:
+            return
+        self.stack.setCurrentIndex(idx)
         GUI_PREFS["tab"] = int(idx)
-        if idx == self.TAB_KEYS.index("preview"):
+        key = self.TAB_KEYS[idx]
+        if key == "preview":
             self.tab_preview.refresh(not self.runner.busy)
-        elif idx == self.TAB_KEYS.index("ppt"):
+        elif key == "ppt":
             self.tab_ppt.refresh_preview()
-        elif idx == 0:
+        elif key == "start":
             self.tab_start.refresh()
+        elif key == "flow":
+            self.tab_flow.load_from_engine()     # metryki / wymiary delty moga byc zmienione na karcie Delta
 
     def hotkey(self, fn):
         f = app_instance().focusWidget()
@@ -10666,8 +13314,10 @@ class StudioWindow(_QWidget):
             self.tab_ppt.refresh_preview()
         except Exception as e:
             BUS.log("preview ppt: %s" % e)
-        if self.tabs.currentIndex() == self.TAB_KEYS.index("preview"):
+        if self.current_key() == "preview":
             self.tab_preview.refresh(capture)
+        elif self.current_key() == "flow":
+            self.tab_flow.refresh()
         if self.live is not None:
             self.live.refresh(capture)
 
@@ -10745,7 +13395,7 @@ class StudioWindow(_QWidget):
         b = QtWidgets.QPushButton(T("Zamknij", "Close"))
         b.clicked.connect(d.close)
         lay.addLayout(hrow(None, b))
-        d.resize(800, 680)
+        d.resize(820, 700)
         d.show()
 
     def switch_lang(self, code):
@@ -10762,7 +13412,7 @@ class StudioWindow(_QWidget):
         self.close()
 
     def store_all(self):
-        for tab in (self.tab_mq, self.tab_delta, self.tab_views, self.tab_ppt, self.tab_report):
+        for tab in (self.tab_mq, self.tab_delta, self.tab_surf, self.tab_views, self.tab_ppt, self.tab_flow, self.tab_report):
             try:
                 tab.store_to_engine()
             except Exception:
@@ -10786,8 +13436,6 @@ class StudioWindow(_QWidget):
             BUS.status_cb = BUS.log_cb = BUS.confirm_cb = BUS.info_cb = None
             PRESENT.preview_cb = PRESENT.ask_path_cb = PRESENT.open_cb = PRESENT.render_cb = None
         super(StudioWindow, self).closeEvent(ev)
-
-
 # ================================ POMOC ================================
 # Tresc okna "? Pomoc" (HTML). Jedna funkcja na jezyk - latwo dopisac akapit.
 def help_html():
@@ -10795,124 +13443,139 @@ def help_html():
 
 
 _HELP_PL = """
-<h2>HM Quality Studio 3.0 \u2013 jedno narz\u0119dzie zamiast trzech makr</h2>
+<h2>HM Quality Studio 4.0 \u2013 jedno narz\u0119dzie zamiast trzech makr</h2>
 <p>Okno jest niemodalne: w trakcie pracy mo\u017cna obraca\u0107 model, zmienia\u0107 wy\u015bwietlanie i zapami\u0119tywa\u0107 widoki.
-Ustawienia (progi, legendy, opcje, kadry) zapisuj\u0105 si\u0119 same w pliku <code>.hm_quality_studio.json</code> w katalogu u\u017cytkownika.
-Skr\u00f3ty: <b>F5</b> analiza metryk, <b>F6</b> podgl\u0105d na \u017cywo, <b>F7</b> seria \u2192 PPTX, <b>1</b> zapami\u0119taj widok, <b>K</b> zrzuty, <b>F1</b> pomoc.
-Karta <b>Start</b> pokazuje stan ka\u017cdego kroku i ma przyciski \u201ePrzejd\u017a\u201d.</p>
+Ustawienia (progi, legendy, opcje, kadry, pliki) zapisuj\u0105 si\u0119 same w pliku <code>.hm_quality_studio.json</code> w katalogu u\u017cytkownika.
+Skr\u00f3ty: <b>F8</b> automat REF vs INF, <b>F5</b> analiza metryk, <b>F6</b> podgl\u0105d na \u017cywo, <b>F7</b> seria \u2192 PPTX, <b>1</b> zapami\u0119taj widok, <b>K</b> zrzuty, <b>F1</b> pomoc.
+Pasek boczny prowadzi po kartach; karta <b>Start</b> pokazuje stan ka\u017cdego kroku. \u201ePrzywr\u00f3\u0107 siatk\u0119\u201d zdejmuje kolory narz\u0119dzia i w\u0142\u0105cza wygaszone komponenty \u2013 nic nie ginie.</p>
 
-<h3>1. Metryki i grupy kolor\u00f3w</h3>
+<h3>Automat REF vs INF (najszybsza droga)</h3>
 <ul>
-<li>Zaznacz metryki: <b>Aspect Ratio, Jacobian Ratio, Jacobian Zero, Skewness</b>. S\u0105 czytane <b>jednocze\u015bnie</b>,
-w jednym przebiegu po elementach (2D i/lub 3D, ca\u0142a siatka albo tylko wy\u015bwietlone).</li>
-<li><b>Podzia\u0142 wg progu</b>: elementy w normie trafiaj\u0105 do jednej grupy bazowej (zielonej), elementy poza norm\u0105 \u2013
-do kolejnych pasm kolor\u00f3w (np. AR: 4\u20135 niebieski \u2026 12\u201315 czerwony), warto\u015bci poza ostatni\u0105 granic\u0105 \u2013 do osobnej grupy
-\u201epoza skal\u0105\u201d (magenta).</li>
-<li><b>Legenda r\u0119czna</b> (\u201eLegenda\u2026\u201d): liczba kolor\u00f3w, granice i kolor ka\u017cdego pasma. <b>Legenda automatyczna</b>: przedzia\u0142y od progu
-do warto\u015bci skrajnej podzielone na wskazan\u0105 liczb\u0119 pasm. Kolory pochodz\u0105 z <b>palety 64 kolor\u00f3w HyperMesha</b>, wi\u0119c legenda,
-okno i slajd pokazuj\u0105 dok\u0142adnie kolory z siatki.</li>
-<li>\u201ePoka\u017c na siatce\u201d prze\u0142\u0105cza metryk\u0119 <b>bez ponownego czytania</b>. \u201eZbiorczo\u201d = ile metryk element przekracza.
-<b>Zestawy (sets)</b> powstaj\u0105 dla wszystkich metryk naraz. <b>Przywr\u00f3\u0107 siatk\u0119</b> odk\u0142ada elementy do pierwotnych komponent\u00f3w \u2013 nic nie ginie.</li>
-<li>Nazwy danych HM (aspect / aspectratio, skew / skewness \u2026) s\u0105 dobierane automatycznie; odczyt hurtowy paruje warto\u015bci z ID element\u00f3w.
-<b>Diagnostyka</b> (nag\u0142\u00f3wek okna) pokazuje nazwy danych i warto\u015bci na pr\u00f3bce element\u00f3w oraz sprawdza zgodno\u015b\u0107 odczytu hurtowego z pojedynczym
-i wzorce geometrii (Jacobian Zero, tet collapse).</li>
+<li>Wskazujesz plik <b>REF</b>, plik <b>INF</b> i <b>folder wynik\u00f3w</b>; opcjonalnie widoki (karta \u201eWidoki\u201d \u2013 zaznaczone widoki s\u0105 kamerami; brak = bie\u017c\u0105ca kamera).</li>
+<li>Automat wczytuje REF, potem INF (ka\u017cdy plik <b>raz</b>): liczy delt\u0119 wszystkich zaznaczonych metryk, raport jako\u015bci i analiz\u0119 powierzchni na tym samym modelu.</li>
+<li>Dla ka\u017cdej metryki nak\u0142ada widok na siatk\u0119 (pozosta\u0142e metryki i komponenty spoza narz\u0119dzia <b>wygaszone</b>, elementy \u201ebez zmian\u201d <b>bezbarwne i przezroczyste</b>)
+i robi zrzut ka\u017cdego widoku do <code>01_delta/&lt;metryka&gt;/</code> (+ legenda SVG).</li>
+<li>Raport jako\u015bci REF, INF i por\u00f3wnawczy \u2192 <code>02_raport_jakosci</code>; elementy krytyczne z powierzchni \u2192 <code>03_powierzchnie</code>;
+prezentacja \u2192 <code>04_prezentacja</code> (z podgl\u0105dem slajd\u00f3w przed zapisem); w folderze przebiegu <code>podsumowanie.txt</code> i <code>index.html</code> z galeri\u0105.</li>
 </ul>
 
-<h3>2. Delta REF / INF</h3>
+<h3>Delta REF / INF (wiele metryk)</h3>
 <ul>
 <li><b>Tryb</b>: delta REF \u2192 INF (dwa modele), jeden model: pasma wg warto\u015bci, jeden model: podzia\u0142 wg progu. Pliki s\u0105 wczytywane kolejno
 (<b>zast\u0119puj\u0105 model w sesji</b> \u2013 okno pyta wcze\u015bniej). Elementy dopasowywane s\u0105 po ID.</li>
-<li>Pogorszenie D: AR i Skewness: INF \u2212 REF; Jacobian: REF \u2212 INF; Przesuni\u0119cie: maks. przesuni\u0119cie w\u0119z\u0142\u00f3w elementu [mm].
-D poni\u017cej progu \u201ebez zmian\u201d (w tym poprawa) = szary, brak odpowiednika = magenta.</li>
-<li>Metryka i typ element\u00f3w to <b>osobne</b> wybory (wyb\u00f3r 2D/3D nie odznacza metryki). \u201eSprawd\u017a delt\u0119 (po ID)\u201d pokazuje Q(REF), Q(INF), \u0394, D
-i pasmo elementu <b>z danych ostatniej analizy</b> \u2013 dzia\u0142a niezale\u017cnie od bie\u017c\u0105cych opcji okna.</li>
-<li>Opcje: skala automatyczna / r\u0119czna, wyciszanie \u201ebez zmian\u201d (przezroczysto\u015b\u0107), znaczniki MIN / MAX, poprawione, nak\u0142adka REF
-(plik REF do\u0142\u0105czony do sesji jako ukryty komponent; \u201ePrzywr\u00f3\u0107 siatk\u0119\u201d usuwa <b>wszystkie</b> do\u0142\u0105czone encje).</li>
+<li>Metryki (AR, Jacobian, Skewness, przesuni\u0119cie w\u0119z\u0142\u00f3w) s\u0105 czytane <b>naraz</b>; ka\u017cda ma w\u0142asny pr\u00f3g \u201ebez zmian\u201d i skal\u0119 (automatyczn\u0105 albo r\u0119czn\u0105).
+Pogorszenie D: AR i Skewness: INF \u2212 REF; Jacobian: REF \u2212 INF; przesuni\u0119cie: maks. przesuni\u0119cie w\u0119z\u0142\u00f3w elementu [mm].</li>
+<li><b>Poka\u017c na siatce</b> prze\u0142\u0105cza metryk\u0119 bez ponownego czytania: jej elementy trafiaj\u0105 do komponent\u00f3w pasm (paleta ANSYS: niebieski \u2192 czerwony),
+komponenty pozosta\u0142ych metryk s\u0105 wtedy puste i wygaszone. Komponent mo\u017ce zawiera\u0107 element tylko raz \u2013 dlatego na siatce jest jedna metryka naraz.</li>
+<li>Elementy \u201ebez zmian\u201d: <b>bezbarwne (bia\u0142e) + przezroczysto\u015b\u0107</b>. Poziom i kolor zmieniasz po analizie <b>od razu</b> (suwak / \u201eZastosuj na siatce\u201d).
+Makro pr\u00f3buje kilku sposob\u00f3w ustawienia przezroczysto\u015bci (r\u00f3\u017cne wersje HM) i sprawdza wynik odczytem; gdy \u017caden nie dzia\u0142a \u2013 elementy zostaj\u0105 bia\u0142e
+(\u201eDiagnostyka\u201d pokazuje, kt\u00f3ry spos\u00f3b dzia\u0142a).</li>
+<li>\u201eWyga\u015b komponenty spoza narz\u0119dzia\u201d: na ekranie i na zrzutach zostaje tylko bie\u017c\u0105ca metryka i \u201ebez zmian\u201d. \u201eZrzuty: metryki \u00d7 widoki \u2192 PPTX\u201d robi seri\u0119
+(ka\u017cda metryka \u00d7 ka\u017cdy zaznaczony widok) + slajd zbiorczy.</li>
+<li>\u201eSprawd\u017a delt\u0119 (po ID)\u201d pokazuje Q(REF), Q(INF), \u0394, D i pasmo elementu dla metryki na siatce <b>z danych ostatniej analizy</b>.</li>
 </ul>
 
-<h3>3. Raport jako\u015bci</h3>
+<h3>Powierzchnie \u2013 elementy krytyczne</h3>
 <ul>
-<li>\u0179r\u00f3d\u0142o: otwarty model, plik .hm albo por\u00f3wnanie A = REF vs B = INF. Metryki: AR, Jacobian, Skew, Warpage, Taper, k\u0105ty, Tet collapse,
-min. d\u0142ugo\u015b\u0107 kraw\u0119dzi. Wyniki: TXT, CSV, XLSX (wykresy), interaktywny HTML (wska\u017anik 0\u2013100, histogramy, trend, <code>*createmark</code>).</li>
-<li>Por\u00f3wnanie: osobne raporty _REF / _INF + raport por\u00f3wnawczy: zgodno\u015b\u0107 element\u00f3w (ID, typ, topologia, warto\u015bci, obj\u0119to\u015b\u0107 / pole) i
-<b>zestawienie w\u0119z\u0142\u00f3w</b> (w\u0119z\u0142y razem, wsp\u00f3lne ID, tylko A / tylko B, bez zmiany po\u0142o\u017cenia, PRZESUNI\u0118TE ponad tolerancj\u0119, maks. i \u015brednie
-przesuni\u0119cie, najbardziej przesuni\u0119te w\u0119z\u0142y; arkusz \u201eW\u0119z\u0142y\u201d w XLSX) z werdyktem.</li>
+<li>Wskazujesz powierzchnie: ID (np. <code>12 13 20-25</code>), \u201eWska\u017c w HM\u201d (interaktywnie) albo \u201eZ zaznaczenia HM\u201d. Makro bierze w\u0119z\u0142y le\u017c\u0105ce na powierzchniach
+i elementy 3D (i/lub 2D), kt\u00f3re maj\u0105 na nich \u2265 N w\u0119z\u0142\u00f3w (3 = ca\u0142a \u015bciana). Gdy siatka nie jest skojarzona z geometri\u0105 \u2013 \u017ar\u00f3d\u0142em mo\u017ce by\u0107 komponent
+(np. siatka 2D powierzchni), zestaw albo ID element\u00f3w.</li>
+<li><b>Kryteria tolerancji</b> [od, do] s\u0105 osobne dla tej funkcji (niezale\u017cne od prog\u00f3w raportu i delty). Wynik: liczba i % element\u00f3w w tolerancji w REF i INF,
+delta w punktach procentowych, udzia\u0142 element\u00f3w spe\u0142niaj\u0105cych wszystkie kryteria, najgorsze elementy, zestawy (sets) element\u00f3w poza tolerancj\u0105. Zapis TXT / CSV / XLSX / HTML, slajd PPTX.</li>
 </ul>
 
-<h3>4. Widoki i zrzuty</h3>
+<h3>Metryki i grupy kolor\u00f3w (jeden model)</h3>
 <ul>
-<li>\u201eZapami\u0119taj widok\u201d (klawisz <b>1</b>) zapisuje kamer\u0119 i <b>pe\u0142n\u0105 klatk\u0119</b> (WYSIWYG) z miniatur\u0105. \u201eGeneruj zrzuty\u201d (klawisz <b>K</b>)
-eksportuje zaznaczone widoki. HyperMesh zapisuje zrzut zawsze na bia\u0142ym tle \u2013 wybrany kolor t\u0142a jest nak\u0142adany na obraz.</li>
-<li>\u201eNagrywaj uk\u0142ad\u201d do\u0142\u0105cza komendy z command.tcl (sekcje, style, maskowanie) do widoku. Raport HTML jest te\u017c <b>sesj\u0105</b> (\u201eWczytaj sesj\u0119\u2026\u201d).</li>
+<li>Zaznacz metryki: <b>Aspect Ratio, Jacobian Ratio, Jacobian Zero, Skewness</b> \u2013 czytane jednocze\u015bnie (2D i/lub 3D, ca\u0142a siatka albo tylko wy\u015bwietlone).
+<b>Podzia\u0142 wg progu</b>: w normie = jedna zielona grupa, poza norm\u0105 = pasma kolor\u00f3w (paleta ANSYS bez zieleni), poza ostatni\u0105 granic\u0105 = osobna grupa.</li>
+<li>Legenda r\u0119czna / automatyczna (\u201eLegenda\u2026\u201d). Komponenty dostaj\u0105 <b>dok\u0142adny kolor RGB</b> (HM 2021+), a w starszych wersjach najbli\u017cszy z palety 64 kolor\u00f3w \u2013
+legenda, okno i slajd zawsze pokazuj\u0105 kolor faktycznie u\u017cyty na siatce. \u201ePoka\u017c na siatce\u201d prze\u0142\u0105cza metryk\u0119 bez ponownego czytania.</li>
 </ul>
 
-<h3>5. Prezentacja PPTX i podgl\u0105d slajdu (jak w ANSYS SHOTS)</h3>
+<h3>Raport jako\u015bci</h3>
 <ul>
-<li><b>Interaktywny podgl\u0105d</b> na karcie PPTX: uk\u0142ad \u201ew\u0142asny kadr\u201d \u2013 przeci\u0105gasz obraz myszk\u0105, skalujesz uchwytami w rogach (Shift = proporcje),
-szybkie dopasowania (1/2 lewa, pe\u0142ny\u2026), zapisane kadry pod w\u0142asn\u0105 nazw\u0105. Przeci\u0105gni\u0119cie obrazu w innym uk\u0142adzie prze\u0142\u0105cza na w\u0142asny kadr.</li>
-<li>Karta <b>\u201ePodgl\u0105d slajdu\u201d</b> (tylko do odczytu): przyk\u0142adowy slajd z bie\u017c\u0105cego stanu + \u201eco powstanie\u201d (plik, tryb, seria, delta, raport, widoki).
-Okno <b>\u201ePodgl\u0105d na \u017cywo\u201d (F6)</b>: to samo w osobnym oknie, odswie\u017cane samo po ka\u017cdej zmianie opcji.</li>
-<li><b>Seria (F7)</b>: ka\u017cda metryka (+ widok zbiorczy) \u00d7 kamera \u2192 slajd z obrazem, legend\u0105 i tabel\u0105 statystyk (natywne kszta\u0142ty PowerPointa).
-Przed zapisem <b>podgl\u0105d wszystkich slajd\u00f3w</b> (tytu\u0142y, uk\u0142ad, usuwanie, \u201eUtw\u00f3rz\u201d / \u201eAnuluj\u201d), po zapisie <b>galeria wyeksportowanych slajd\u00f3w</b>
-z przyciskami \u201eOtw\u00f3rz prezentacj\u0119\u201d / \u201eOtw\u00f3rz folder\u201d.</li>
-<li>Plik: nowa prezentacja 16:9 albo dopisanie slajd\u00f3w do istniej\u0105cej (np. firmowy szablon; kopia <code>.bak.pptx</code>). Z innych kart: widoki,
-wynik delty, raport jako\u015bci (tabela + wska\u017anik).</li>
+<li>\u0179r\u00f3d\u0142o: otwarty model, plik .hm albo por\u00f3wnanie A = REF vs B = INF. Wyniki: TXT, CSV, XLSX (wykresy), interaktywny HTML (wska\u017anik 0\u2013100, histogramy, trend, <code>*createmark</code>).
+Por\u00f3wnanie: raporty _REF / _INF + raport por\u00f3wnawczy (zgodno\u015b\u0107 element\u00f3w, zestawienie w\u0119z\u0142\u00f3w, werdykt).</li>
+</ul>
+
+<h3>Widoki i zrzuty</h3>
+<ul>
+<li>\u201eZapami\u0119taj widok\u201d (klawisz <b>1</b>) zapisuje kamer\u0119 i pe\u0142n\u0105 klatk\u0119 (WYSIWYG). Zaznaczone widoki s\u0105 kamerami automatu, serii PPTX i serii delty.
+\u201eGeneruj zrzuty\u201d (klawisz <b>K</b>) eksportuje zaznaczone widoki. \u201eNagrywaj uk\u0142ad\u201d do\u0142\u0105cza komendy z command.tcl do widoku. Raport HTML jest te\u017c <b>sesj\u0105</b>.</li>
+</ul>
+
+<h3>Prezentacja PPTX i podgl\u0105d slajdu</h3>
+<ul>
+<li>Interaktywny podgl\u0105d (w\u0142asny kadr myszk\u0105, szybkie dopasowania, zapisane kadry), karta \u201ePodgl\u0105d slajdu\u201d i okno \u201ePodgl\u0105d na \u017cywo\u201d (F6).</li>
+<li><b>Seria (F7)</b>: metryki \u00d7 kamery \u2192 slajdy z obrazem, legend\u0105 i tabel\u0105; delta: bie\u017c\u0105cy wynik albo metryki \u00d7 widoki; raport i powierzchnie \u2192 slajdy z tabel\u0105.
+Przed zapisem podgl\u0105d wszystkich slajd\u00f3w (Utw\u00f3rz / Anuluj), po zapisie galeria. Nowa prezentacja 16:9 albo dopisanie do istniej\u0105cej (kopia .bak.pptx).</li>
 </ul>
 """
 
 _HELP_EN = """
-<h2>HM Quality Studio 3.0 \u2013 one tool instead of three macros</h2>
+<h2>HM Quality Studio 4.0 \u2013 one tool instead of three macros</h2>
 <p>The window is modeless: you can rotate the model, change the display and remember views while it is open.
-Settings (thresholds, legends, options, frames) are saved automatically in <code>.hm_quality_studio.json</code> in the user folder.
-Shortcuts: <b>F5</b> metrics analysis, <b>F6</b> live preview, <b>F7</b> series \u2192 PPTX, <b>1</b> remember view, <b>K</b> screenshots, <b>F1</b> help.
-The <b>Start</b> tab shows the status of every step with \u201cGo\u201d buttons.</p>
+Settings (thresholds, legends, options, frames, files) are saved automatically in <code>.hm_quality_studio.json</code> in the user folder.
+Shortcuts: <b>F8</b> REF vs INF workflow, <b>F5</b> metrics analysis, <b>F6</b> live preview, <b>F7</b> series \u2192 PPTX, <b>1</b> remember view, <b>K</b> screenshots, <b>F1</b> help.
+The sidebar lists the pages; the <b>Start</b> page shows the status of every step. \u201cRestore mesh\u201d removes the tool colors and shows dimmed components \u2013 nothing is lost.</p>
 
-<h3>1. Metrics &amp; color groups</h3>
+<h3>REF vs INF workflow (fastest path)</h3>
 <ul>
-<li>Tick metrics: <b>Aspect Ratio, Jacobian Ratio, Jacobian Zero, Skewness</b>. They are read <b>simultaneously</b> in one pass
-(2D and/or 3D, whole mesh or displayed only). <b>Threshold split</b>: within limits = one green group, out of limits = color bands,
-beyond the last edge = a separate \u201cbeyond scale\u201d group.</li>
-<li>Manual / automatic legend; colors from the <b>64-color HyperMesh palette</b>, so the legend, the window and the slide show exactly the mesh colors.
-\u201cShow on mesh\u201d switches the metric without re-reading; sets for all metrics; \u201cRestore mesh\u201d puts elements back \u2013 nothing is lost.</li>
-<li>HM data names (aspect / aspectratio, skew / skewness \u2026) are chosen automatically; bulk reads pair values with element IDs.
-<b>Diagnostics</b> (window header) shows the data names with sample values and checks bulk-vs-single read consistency and geometry references.</li>
+<li>Choose the <b>REF</b> file, the <b>INF</b> file and the <b>output folder</b>; optionally views (\u201cViews\u201d page \u2013 ticked views are the cameras; none = current camera).</li>
+<li>The workflow loads REF, then INF (each file <b>once</b>): computes the delta of all ticked metrics, the quality report and the surface analysis on the same model.</li>
+<li>For each metric it applies the view to the mesh (the other metrics and non-tool components <b>dimmed</b>, \u201cno change\u201d elements <b>colorless and transparent</b>)
+and captures every view into <code>01_delta/&lt;metric&gt;/</code> (+ legend SVG).</li>
+<li>Quality reports REF, INF and comparison \u2192 <code>02_raport_jakosci</code>; critical elements from surfaces \u2192 <code>03_powierzchnie</code>;
+presentation \u2192 <code>04_prezentacja</code> (slides previewed before saving); the run folder gets <code>podsumowanie.txt</code> and <code>index.html</code> with a gallery.</li>
 </ul>
 
-<h3>2. Delta REF / INF</h3>
+<h3>Delta REF / INF (several metrics)</h3>
 <ul>
-<li><b>Mode</b>: delta REF \u2192 INF (two models), one model: bands by value, one model: threshold split. Files are loaded in sequence
-(<b>they replace the model in the session</b>), elements matched by ID. Worsening D: AR / Skewness INF \u2212 REF; Jacobian REF \u2212 INF;
-displacement: max node displacement [mm]. Below the \u201cno change\u201d threshold = gray, unmatched = magenta.</li>
-<li>Metric and element type are <b>separate</b> choices. \u201cCheck delta (by ID)\u201d shows Q(REF), Q(INF), \u0394, D and the band of the element
-<b>from the last analysis</b> \u2013 independent of the current window options.</li>
+<li><b>Mode</b>: delta REF \u2192 INF (two models), one model: bands by value, one model: threshold split. Files are loaded in sequence (<b>they replace the model in the session</b>);
+elements are matched by ID. Metrics (AR, Jacobian, Skewness, node displacement) are read <b>at once</b>; each has its own \u201cno change\u201d threshold and scale.
+Worsening D: AR / Skewness INF \u2212 REF; Jacobian REF \u2212 INF; displacement: max node displacement [mm].</li>
+<li><b>Show on mesh</b> switches the metric without re-reading: its elements go to the band components (ANSYS palette: blue \u2192 red), the components of the other metrics
+are then empty and dimmed. A component holds an element only once \u2013 hence one metric on the mesh at a time.</li>
+<li>\u201cNo change\u201d elements: <b>colorless (white) + transparency</b>. Level and color change <b>immediately</b> after the analysis (slider / \u201cApply on the mesh\u201d).
+The macro tries several ways of setting transparency (different HM versions) and verifies by reading back; if none works the elements stay white (\u201cDiagnostics\u201d shows which way works).</li>
+<li>\u201cDim non-tool components\u201d: only the current metric and \u201cno change\u201d stay on screen and on shots. \u201cShots: metrics \u00d7 views \u2192 PPTX\u201d builds the series
+(each metric \u00d7 each ticked view) + a summary slide. \u201cCheck delta (by ID)\u201d shows Q(REF), Q(INF), \u0394, D and the band <b>from the last analysis</b>.</li>
 </ul>
 
-<h3>3. Quality report</h3>
+<h3>Surfaces \u2013 critical elements</h3>
 <ul>
-<li>TXT, CSV, XLSX (charts) and interactive HTML (0\u2013100 score, histograms, trend, <code>*createmark</code>). REF vs INF comparison with an element
-identity check (IDs, types, topology, values, volume / area) and a <b>node comparison</b> (nodes in total, common IDs, only A / only B,
-unchanged, MOVED beyond the tolerance, max / mean displacement, most displaced nodes; \u201cNodes\u201d sheet in the XLSX) with a verdict.</li>
+<li>Pick surfaces: IDs (e.g. <code>12 13 20-25</code>), \u201cPick in HM\u201d (interactive) or \u201cFrom HM selection\u201d. The macro takes the nodes on the surfaces and the 3D (and/or 2D)
+elements with \u2265 N nodes on them (3 = a whole face). When the mesh is not associated with geometry, the source can be a component (e.g. the 2D surface mesh), a set or element IDs.</li>
+<li><b>Tolerance criteria</b> [from, to] are specific to this function (independent of the report and delta thresholds). Result: count and % of elements within tolerance in REF and INF,
+delta in percentage points, share meeting all criteria, worst elements, sets of out-of-tolerance elements. TXT / CSV / XLSX / HTML, PPTX slide.</li>
 </ul>
 
-<h3>4. Views &amp; screenshots</h3>
+<h3>Metrics &amp; color groups (one model)</h3>
 <ul>
-<li>\u201cRemember view\u201d (key <b>1</b>) stores the camera and the <b>full frame</b> (WYSIWYG); \u201cGenerate screenshots\u201d (key <b>K</b>) exports the ticked views.
-\u201cRecord layout\u201d attaches command.tcl commands to the view. The HTML report is also a <b>session</b>.</li>
+<li>Tick metrics: <b>Aspect Ratio, Jacobian Ratio, Jacobian Zero, Skewness</b> \u2013 read simultaneously. <b>Threshold split</b>: within limits = one green group,
+out of limits = color bands (ANSYS palette without green), beyond the last edge = a separate group. Components get the <b>exact RGB color</b> (HM 2021+) or the nearest
+of the 64-color palette \u2013 legend, window and slide always show the color really used on the mesh.</li>
 </ul>
 
-<h3>5. PowerPoint and slide preview (as in ANSYS SHOTS)</h3>
+<h3>Quality report</h3>
 <ul>
-<li><b>Interactive preview</b> on the PowerPoint tab: the \u201ccustom frame\u201d layout \u2013 drag the image, scale it with the corner handles (Shift = proportions),
-quick fits (1/2 left, full\u2026), frames saved under your own names. Dragging the image in another layout switches to the custom frame.</li>
-<li>The <b>\u201cSlide preview\u201d</b> tab (read only): a sample slide from the current state + \u201cwhat will be made\u201d. The <b>\u201cLive preview\u201d (F6)</b> window:
-the same in a separate window, refreshed by itself after every option change.</li>
-<li><b>Series (F7)</b>: each metric (+ combined view) \u00d7 camera \u2192 slide with image, legend and statistics table (native PowerPoint shapes).
-<b>All slides are previewed</b> before saving (titles, layout, removal, \u201cCreate\u201d / \u201cCancel\u201d); after saving a <b>gallery of the exported slides</b>
-with \u201cOpen the presentation\u201d / \u201cOpen folder\u201d. New 16:9 deck or append to an existing one (<code>.bak.pptx</code> backup).</li>
+<li>TXT, CSV, XLSX (charts) and interactive HTML (0\u2013100 score, histograms, trend, <code>*createmark</code>). Comparison: _REF / _INF reports + comparison report
+(element identity, node comparison, verdict).</li>
+</ul>
+
+<h3>Views &amp; screenshots</h3>
+<ul>
+<li>\u201cRemember view\u201d (key <b>1</b>) stores the camera and the full frame (WYSIWYG). Ticked views are the cameras of the workflow, the PPTX series and the delta series.
+\u201cGenerate screenshots\u201d (key <b>K</b>) exports the ticked views. The HTML report is also a <b>session</b>.</li>
+</ul>
+
+<h3>PowerPoint and slide preview</h3>
+<ul>
+<li>Interactive preview (custom frame by mouse, quick fits, saved frames), the \u201cSlide preview\u201d page and the \u201cLive preview\u201d window (F6).</li>
+<li><b>Series (F7)</b>: metrics \u00d7 cameras \u2192 slides with image, legend and table; delta: current result or metrics \u00d7 views; report and surfaces \u2192 table slides.
+All slides are previewed before saving (Create / Cancel), a gallery follows. New 16:9 deck or append to an existing one (.bak.pptx backup).</li>
 </ul>
 """
-
-
 # ================================ START ================================
 # Uruchomienie w HyperMeshu otwiera okno. Ponowne uruchomienie skryptu przy
 # otwartym oknie zamyka stare (ustawienia sa zapisywane) i otwiera nowe -
