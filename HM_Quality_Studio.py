@@ -10317,7 +10317,7 @@ class LayoutBar(_QWidget):
         v.setSpacing(3)
         self.rb = {}
         rbs = [QtWidgets.QLabel(T("Uk\u0142ad:", "Layout:"))]
-        for key, pl, en in (("right", "obraz + legenda z prawej", "image + legend right"), ("left", "legenda z lewej", "legend left"),
+        for key, pl, en in (("right", "legenda z prawej", "legend right"), ("left", "legenda z lewej", "legend left"),
                             ("full", "sam obraz", "image only"), ("custom", "w\u0142asny kadr (przeci\u0105gaj)", "custom frame (drag)")):
             rb = QtWidgets.QRadioButton(T(pl, en))
             rb.toggled.connect(lambda on, k=key: on and self._set("layout", k))
@@ -10328,7 +10328,8 @@ class LayoutBar(_QWidget):
         self.cb_title.toggled.connect(lambda on: self._set("title_on", on))
         self.cb_stats = QtWidgets.QCheckBox(T("tabela statystyk", "statistics table"))
         self.cb_stats.toggled.connect(lambda on: self._set("stats_on", on))
-        v.addLayout(hrow(*(rbs + [12, self.cb_title, self.cb_stats, None])))
+        v.addLayout(hrow(*(rbs + [None])))
+        v.addLayout(hrow(QtWidgets.QLabel(T("Na slajdzie:", "On the slide:")), self.cb_title, self.cb_stats, None))
         tip(self.rb["custom"], T("Obraz mo\u017cna przeci\u0105ga\u0107 na podgl\u0105dzie (po\u0142o\u017cenie) i skalowa\u0107 uchwytami w rogach (Shift = proporcje). "
                                  "Dwuklik = kadr domy\u015blny. Legenda trafia w wi\u0119ksz\u0105 woln\u0105 stref\u0119 obok obrazu.",
                                  "Drag the image on the preview (position) and scale it with the corner handles (Shift = keep proportions). "
@@ -10810,7 +10811,6 @@ class StartTab(_QWidget):
         self.lab_model = QtWidgets.QLabel()
         self.lab_model.setTextInteractionFlags(QtCore.Qt.TextSelectableByMouse)
         self.lab_model.setWordWrap(True)
-        self.lab_model.setSizePolicy(QtWidgets.QSizePolicy.Ignored, QtWidgets.QSizePolicy.Preferred)
         b_ref = QtWidgets.QPushButton(T("Od\u015bwie\u017c", "Refresh"))
         b_ref.clicked.connect(lambda: self.studio.runner.run(self.refresh, busy=False))
         tip(b_ref, T("Odczytuje ponownie liczby element\u00f3w, w\u0119z\u0142\u00f3w i komponent\u00f3w z sesji HyperMesha.",
@@ -11550,8 +11550,8 @@ class DeltaTab(_QWidget):
         self.sp_bands = QtWidgets.QSpinBox()
         self.sp_bands.setRange(2, 96)
         self.cb_nice = QtWidgets.QCheckBox(T("\u201e\u0142adna\u201d g\u00f3rna granica", "\u201cnice\u201d scale top"))
-        p.addLayout(hrow(QtWidgets.QLabel(T("Elementy:", "Elements:")), self.cb_2d, self.cb_3d, 20, self.cb_auto,
-                         QtWidgets.QLabel(T("pasm:", "bands:")), self.sp_bands, self.cb_nice, None), 5, 0, 1, 4)
+        p.addLayout(hrow(QtWidgets.QLabel(T("Elementy:", "Elements:")), self.cb_2d, self.cb_3d, None), 5, 0, 1, 4)
+        p.addLayout(hrow(QtWidgets.QLabel(T("Skala:", "Scale:")), self.cb_auto, 12, QtWidgets.QLabel(T("pasm:", "bands:")), self.sp_bands, self.cb_nice, None), 6, 0, 1, 4)
         p.setColumnStretch(4, 1)
         v.addWidget(group(T("3  Metryki (liczone naraz) i elementy", "3  Metrics (computed together) and elements"), p))
         # --- 4 wyswietlanie ---
@@ -12754,6 +12754,7 @@ class PptTab(_QWidget):
         f.addWidget(self.e_file, 0, 0)
         f.addWidget(b_f, 0, 1)
         f.addLayout(hrow(self.rb_app, self.rb_new, None), 1, 0, 1, 2)
+        f.setColumnStretch(0, 1)
         v.addWidget(group(T("1  Plik prezentacji", "1  Presentation file"), f))
         # --- zawartosc + interaktywny podglad ---
         c = QtWidgets.QGridLayout()
