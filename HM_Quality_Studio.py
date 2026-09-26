@@ -3397,13 +3397,14 @@ class DeltaEngine(object):
         self.rgb_ok, self.rgb_bad = DELTA_OK_RGB, DELTA_BAD_RGB
 
     # ---------------------------------------------------------- nazwy
-    @staticmethod
-    def metric_label(m=None):
+    def metric_label(self, m=None):
+        """Nazwa metryki; bez argumentu - metryka pokazywana na siatce."""
+        m = m or self.cur_metric()
         return {"ar": "Aspect Ratio", "jac": "Jacobian", "skew": "Skewness"}.get(
             m, T("Przesuni\u0119cie [mm]", "Displacement [mm]"))
 
     def label(self, m=None):
-        return self.metric_label(m or self.cur_metric())
+        return self.metric_label(m)
 
     def delta_label(self, m=None):
         m = m or self.cur_metric()
